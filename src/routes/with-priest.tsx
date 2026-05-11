@@ -50,7 +50,7 @@ function Page() {
   const [sent, setSent] = useState(false);
   return (
     <PageShell>
-      <section className="relative h-[40vh] md:h-[50vh] min-h-[320px] flex items-end overflow-hidden">
+      <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
         <img src={heroImg} alt={t("Священник в молитве", "Preot în rugăciune")} className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/75" />
         <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 md:pb-14 w-full">
@@ -61,7 +61,7 @@ function Page() {
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-6 py-14 md:py-20">
+      <section className="max-w-5xl mx-auto px-6 py-10 md:py-10">
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-10">
           {t("Священники, сопровождающие наши группы", "Preoții care însoțesc grupurile noastre")}
         </h2>
@@ -84,7 +84,7 @@ function Page() {
         </div>
       </section>
 
-      <section className="bg-secondary/60 py-14 md:py-20">
+      <section className="bg-secondary/60 py-10 md:py-10">
         <div className="max-w-3xl mx-auto px-6">
           <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-10">
             {t("Часто задаваемые вопросы", "Întrebări frecvente")}
@@ -106,7 +106,7 @@ function Page() {
         </div>
       </section>
 
-      <section className="max-w-2xl mx-auto px-6 py-14 md:py-20">
+      <section className="max-w-2xl mx-auto px-6 py-10 md:py-10">
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-3">
           {t("Задать вопрос", "Pune o întrebare")}
         </h2>
@@ -114,7 +114,7 @@ function Page() {
           {t("Священник ответит лично на ваш email.", "Preotul va răspunde personal la e-mailul dumneavoastră.")}
         </p>
         {sent ? (
-          <div className="p-6 bg-card border border-gold/40 rounded-sm text-foreground/85 font-serif italic">
+          <div className="p-5 bg-card border border-gold/40 rounded-sm text-foreground/85 font-serif italic">
             {t("Спасибо, ваш вопрос отправлен.", "Mulțumim, întrebarea a fost trimisă.")}
           </div>
         ) : (

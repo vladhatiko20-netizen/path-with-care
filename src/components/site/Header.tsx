@@ -60,7 +60,16 @@ export function Header() {
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-3 group" aria-label="Home">
+        <Link
+          to="/"
+          className="flex items-center gap-3 group"
+          aria-label="Home"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+        >
           <span className="text-3xl md:text-4xl text-accent leading-none select-none" aria-hidden>☦</span>
           <div className="flex flex-col leading-none">
             <span className="font-serif text-2xl md:text-[30px] tracking-[0.08em] text-foreground">

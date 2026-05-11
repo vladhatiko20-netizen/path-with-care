@@ -58,7 +58,7 @@ function Page() {
 
   return (
     <PageShell>
-      <section className="relative h-[40vh] md:h-[50vh] min-h-[320px] flex items-end overflow-hidden">
+      <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
         <img src={heroImg} alt={t("Иконы и святыни", "Icoane și obiecte sfinte")} className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/75" />
         <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 md:pb-14 w-full">
@@ -69,7 +69,7 @@ function Page() {
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-14 md:py-20">
+      <section className="max-w-6xl mx-auto px-6 py-10 md:py-10">
         <p className="prose-warm text-base md:text-lg font-serif italic text-foreground/85 mb-10 max-w-3xl leading-[1.85]">
           {t(
             "Многие православные святыни и духовная литература трудно найти в Молдове, особенно — со святых мест. Если вы хотели бы получить определённую икону, книгу или другую святыню — оставьте предзаказ. Анна привозит их из своих паломнических поездок.",
@@ -109,7 +109,7 @@ function Page() {
 
       {order && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setOrder(null)}>
-          <div className="bg-background border border-gold/40 rounded-sm max-w-md w-full p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-background border border-gold/40 rounded-sm max-w-md w-full p-5 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <p className="overline mb-2">{t("Предзаказ", "Pre-comandă")}</p>
             <h3 className="font-serif text-2xl text-foreground mb-5">{lang === "ru" ? order.ru : order.ro}</h3>
             {sent ? (
