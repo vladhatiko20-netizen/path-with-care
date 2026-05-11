@@ -1,26 +1,34 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Home, Map, Calendar, BookOpen, Image as ImageIcon, Heart, Phone } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import priestImg from "@/assets/menu-priest.jpg";
+
+type NavItem = {
+  to: string;
+  ru: string;
+  ro: string;
+  icon?: React.ComponentType<{ size?: number; className?: string }>;
+  thumb?: string;
+};
+
+const navItems: NavItem[] = [
+  { to: "/", ru: "Главная", ro: "Acasă", icon: Home },
+  { to: "/destinations", ru: "Направления", ro: "Destinații", icon: Map },
+  { to: "/calendar", ru: "Календарь поездок", ro: "Calendar", icon: Calendar },
+  { to: "/with-priest", ru: "Диалог со священником", ro: "Dialog cu preotul", thumb: priestImg },
+  { to: "/blog", ru: "Православный блог", ro: "Blog ortodox", icon: BookOpen },
+  { to: "/catalog", ru: "Иконы и святыни", ro: "Icoane și obiecte sfinte", icon: ImageIcon },
+  { to: "/about", ru: "О нас", ro: "Despre", icon: Heart },
+  { to: "/contacts", ru: "Контакты", ro: "Contacte", icon: Phone },
+];
 
 export function Header() {
   const { lang, setLang, t } = useLang();
   const [open, setOpen] = useState(false);
 
-  const navItems = [
-    { to: "/", ru: "Главная", ro: "Acasă" },
-    { to: "/destinations", ru: "Направления", ro: "Destinații" },
-    { to: "/calendar", ru: "Календарь", ro: "Calendar" },
-    { to: "/with-priest", ru: "Со священником", ro: "Cu preotul" },
-    { to: "/blog", ru: "Блог", ro: "Blog" },
-    { to: "/catalog", ru: "Атрибутика", ro: "Iconografie" },
-    { to: "/about", ru: "О нас", ro: "Despre" },
-    { to: "/contacts", ru: "Контакты", ro: "Contacte" },
-  ] as const;
-
   return (
     <header className="bg-background border-b border-gold/30 sticky top-0 z-40 backdrop-blur-sm bg-background/95">
-      {/* Top thin bar */}
       <div className="border-b border-border/40">
         <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center text-[11px] text-muted-foreground">
           <a
@@ -35,39 +43,36 @@ export function Header() {
             <button
               onClick={() => setLang("ru")}
               className={lang === "ru" ? "text-foreground gold-underline" : "hover:text-foreground transition-colors"}
-              aria-label="Русский"
-            >
-              RU
-            </button>
+            >RU</button>
             <span className="text-border">·</span>
             <button
               onClick={() => setLang("ro")}
               className={lang === "ro" ? "text-foreground gold-underline" : "hover:text-foreground transition-colors"}
-              aria-label="Română"
-            >
-              RO
-            </button>
+            >RO</button>
           </div>
         </div>
       </div>
 
-      {/* Main bar */}
-      <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-6">
-        <Link to="/" className="flex flex-col leading-none group" aria-label="Home">
-          <span className="font-serif text-2xl md:text-[28px] tracking-wide text-foreground">
-            {t("Путь к Святыням", "Drum spre Sfinte Locuri")}
-          </span>
-          <span className="h-px w-12 bg-gold mt-1.5 group-hover:w-20 transition-all duration-500" />
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
+        <Link to="/" className="flex items-center gap-3 group" aria-label="Home">
+          <span className="text-3xl md:text-4xl text-accent leading-none select-none" aria-hidden>☦</span>
+          <div className="flex flex-col leading-none">
+            <span className="font-serif text-2xl md:text-[30px] tracking-[0.08em] text-foreground">
+              {t("ПАЛОМНИК", "PELERIN")}
+            </span>
+            <span className="text-[11px] md:text-xs text-muted-foreground mt-1 font-serif italic tracking-wide">
+              {t("Паломнические поездки из Кишинёва", "Pelerinaje din Chișinău")}
+            </span>
+          </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-7 font-serif text-[15px]">
-          {navItems.map((item) => (
+        <nav className="hidden lg:flex items-center gap-6 font-serif text-[14px]">
+          {navItems.slice(1).map((item) => (
             <Link
               key={item.to}
               to={item.to}
               className="text-foreground/80 hover:text-foreground transition-colors"
               activeProps={{ className: "text-foreground gold-underline" }}
-              activeOptions={{ exact: item.to === "/" }}
             >
               {t(item.ru, item.ro)}
             </Link>
@@ -83,26 +88,39 @@ export function Header() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
         <nav className="lg:hidden border-t border-border/50 bg-card">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col gap-1 font-serif">
-            {navItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="py-2.5 text-foreground/80 hover:text-foreground border-b border-border/30 last:border-0"
-                activeProps={{ className: "text-foreground gold-underline" }}
-                activeOptions={{ exact: item.to === "/" }}
-              >
-                {t(item.ru, item.ro)}
-              </Link>
-            ))}
+          <div className="max-w-7xl mx-auto px-4 py-2 flex flex-col font-serif">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-4 py-3 px-2 border-b border-gold/20 last:border-0 hover:bg-secondary/50 transition-colors"
+                  activeProps={{ className: "bg-secondary/60" }}
+                >
+                  <span className="flex-shrink-0 w-10 h-10 rounded-sm overflow-hidden bg-secondary border border-gold/30 flex items-center justify-center">
+                    {item.thumb ? (
+                      <img src={item.thumb} alt="" className="w-full h-full object-cover" />
+                    ) : Icon ? (
+                      <Icon size={20} className="text-accent" />
+                    ) : (
+                      <span className="text-accent text-lg">☦</span>
+                    )}
+                  </span>
+                  <span className="text-foreground/90 text-[15px]">{t(item.ru, item.ro)}</span>
+                </Link>
+              );
+            })}
             <a
               href="tel:+37368778676"
-              className="py-3 mt-2 text-sm text-muted-foreground"
+              className="flex items-center gap-4 py-3 px-2 mt-1 text-sm text-muted-foreground"
             >
+              <span className="w-10 h-10 rounded-sm bg-accent/10 border border-accent/30 flex items-center justify-center">
+                <Phone size={18} className="text-accent" />
+              </span>
               +373 68 77 86 76 — {t("Анна", "Anna")}
             </a>
           </div>
