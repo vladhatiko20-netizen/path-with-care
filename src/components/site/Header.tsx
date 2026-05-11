@@ -1,26 +1,32 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Home, Map, Calendar, BookOpen, Image as ImageIcon, Heart, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import priestImg from "@/assets/menu-priest.jpg";
+import thumbHome from "@/assets/menu-home.jpg";
+import thumbDestinations from "@/assets/menu-destinations.jpg";
+import thumbCalendar from "@/assets/menu-calendar.jpg";
+import thumbPriest from "@/assets/menu-priest.jpg";
+import thumbBlog from "@/assets/menu-blog.jpg";
+import thumbCatalog from "@/assets/menu-catalog.jpg";
+import thumbAbout from "@/assets/menu-about.jpg";
+import thumbContacts from "@/assets/menu-contacts.jpg";
 
 type NavItem = {
   to: string;
   ru: string;
   ro: string;
-  icon?: React.ComponentType<{ size?: number; className?: string }>;
-  thumb?: string;
+  thumb: string;
 };
 
 const navItems: NavItem[] = [
-  { to: "/", ru: "Главная", ro: "Acasă", icon: Home },
-  { to: "/destinations", ru: "Направления", ro: "Destinații", icon: Map },
-  { to: "/calendar", ru: "Календарь поездок", ro: "Calendar", icon: Calendar },
-  { to: "/with-priest", ru: "Диалог со священником", ro: "Dialog cu preotul", thumb: priestImg },
-  { to: "/blog", ru: "Православный блог", ro: "Blog ortodox", icon: BookOpen },
-  { to: "/catalog", ru: "Иконы и святыни", ro: "Icoane și obiecte sfinte", icon: ImageIcon },
-  { to: "/about", ru: "О нас", ro: "Despre", icon: Heart },
-  { to: "/contacts", ru: "Контакты", ro: "Contacte", icon: Phone },
+  { to: "/", ru: "Главная", ro: "Acasă", thumb: thumbHome },
+  { to: "/destinations", ru: "Направления", ro: "Destinații", thumb: thumbDestinations },
+  { to: "/calendar", ru: "Календарь поездок", ro: "Calendar", thumb: thumbCalendar },
+  { to: "/with-priest", ru: "Диалог со священником", ro: "Dialog cu preotul", thumb: thumbPriest },
+  { to: "/blog", ru: "Православный блог", ro: "Blog ortodox", thumb: thumbBlog },
+  { to: "/catalog", ru: "Иконы и святыни", ro: "Icoane și obiecte sfinte", thumb: thumbCatalog },
+  { to: "/about", ru: "О нас", ro: "Despre", thumb: thumbAbout },
+  { to: "/contacts", ru: "Контакты", ro: "Contacte", thumb: thumbContacts },
 ];
 
 export function Header() {
@@ -91,35 +97,33 @@ export function Header() {
       {open && (
         <nav className="lg:hidden border-t border-border/50 bg-card">
           <div className="max-w-7xl mx-auto px-4 py-2 flex flex-col font-serif">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-4 py-3 px-2 border-b border-gold/20 last:border-0 hover:bg-secondary/50 transition-colors"
-                  activeProps={{ className: "bg-secondary/60" }}
-                >
-                  <span className="flex-shrink-0 w-10 h-10 rounded-sm overflow-hidden bg-secondary border border-gold/30 flex items-center justify-center">
-                    {item.thumb ? (
-                      <img src={item.thumb} alt="" className="w-full h-full object-cover" />
-                    ) : Icon ? (
-                      <Icon size={20} className="text-accent" />
-                    ) : (
-                      <span className="text-accent text-lg">☦</span>
-                    )}
-                  </span>
-                  <span className="text-foreground/90 text-[15px]">{t(item.ru, item.ro)}</span>
-                </Link>
-              );
-            })}
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 py-4 px-3 border-b border-gold/20 last:border-0 hover:bg-secondary/50 transition-colors"
+                activeProps={{ className: "bg-secondary/60" }}
+              >
+                <span className="flex-shrink-0 w-[60px] h-[60px] rounded-lg overflow-hidden bg-secondary border-2 border-gold/40 shadow-sm">
+                  <img
+                    src={item.thumb}
+                    alt=""
+                    loading="lazy"
+                    width={60}
+                    height={60}
+                    className="w-full h-full object-cover"
+                  />
+                </span>
+                <span className="font-serif text-foreground/90 text-[16px]">{t(item.ru, item.ro)}</span>
+              </Link>
+            ))}
             <a
               href="tel:+37368778676"
-              className="flex items-center gap-4 py-3 px-2 mt-1 text-sm text-muted-foreground"
+              className="flex items-center gap-4 py-4 px-3 mt-1 text-sm text-muted-foreground"
             >
-              <span className="w-10 h-10 rounded-sm bg-accent/10 border border-accent/30 flex items-center justify-center">
-                <Phone size={18} className="text-accent" />
+              <span className="w-[60px] h-[60px] rounded-lg bg-accent/10 border-2 border-accent/30 flex items-center justify-center">
+                <Phone size={22} className="text-accent" />
               </span>
               +373 68 77 86 76 — {t("Анна", "Anna")}
             </a>
