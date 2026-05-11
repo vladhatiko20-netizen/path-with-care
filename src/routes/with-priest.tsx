@@ -5,10 +5,10 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/with-priest")({
   head: () => ({
     meta: [
-      { title: "Со священником — Путь к Святыням" },
-      { name: "description", content: "Беседы со священниками: подготовка к паломничеству, исповедь, духовные вопросы. Можно задать вопрос лично." },
-      { property: "og:title", content: "Со священником — Путь к Святыням" },
-      { property: "og:description", content: "Беседы со священниками: подготовка к паломничеству, исповедь, духовные вопросы. Можно задать вопрос лично." },
+      { title: "Диалог со священником — Паломник" },
+      { name: "description", content: "Беседы со священниками: подготовка к паломничеству, исповедь, духовные вопросы." },
+      { property: "og:title", content: "Диалог со священником — Паломник" },
+      { property: "og:description", content: "Беседы со священниками: подготовка к паломничеству, исповедь, духовные вопросы." },
     ],
   }),
   component: Page,
@@ -21,7 +21,7 @@ function Page() {
       <section className="max-w-4xl mx-auto px-6 py-24 md:py-32">
         <p className="overline mb-5">{t("Раздел", "Secțiune")}</p>
         <h1 className="font-serif text-5xl md:text-6xl font-light text-foreground mb-8 leading-tight">
-          {t("Со священником", "Cu preotul")}
+          {t("Диалог со священником", "Dialog cu preotul")}
         </h1>
         <p className="prose-warm text-lg md:text-xl font-serif italic text-foreground/85 leading-[1.85]">
           {t(
