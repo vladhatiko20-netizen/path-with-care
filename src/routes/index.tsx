@@ -161,42 +161,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* О ПАЛОМНИЧЕСТВЕ */}
-      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <img
-              src={aboutPilgrimageImg}
-              alt={t("Иконы и свечи в храме", "Icoane și lumânări")}
-              loading="lazy"
-              width={1024}
-              height={1280}
-              className="w-full h-auto rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
-            />
-          </div>
-          <div>
-            <p className="overline mb-3">{t("О паломничестве", "Despre pelerinaj")}</p>
-            <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
-              {t("Что такое паломническая поездка", "Ce este o călătorie de pelerinaj")}
-            </h2>
-            <div className="space-y-4 text-foreground/85 leading-[1.8]">
-              <p>{t(
-                "Паломничество — это поездка к святым местам с молитвой и с открытым сердцем. Мы готовим программы так, чтобы каждый паломник мог в спокойном темпе побывать у святынь, помолиться, исповедаться, причаститься.",
-                "Pelerinajul este o călătorie la locurile sfinte cu rugăciune și cu inima deschisă. Pregătim programele astfel încât fiecare pelerin să poată vizita sanctuarele într-un ritm liniștit, să se roage, să se spovedească, să se împărtășească."
-              )}</p>
-              <p>{t(
-                "В каждой группе — священник, который сопровождает паломников от Кишинёва до святых мест и обратно. Размещение — рядом со святынями, чтобы можно было неспешно посещать утренние и вечерние службы.",
-                "În fiecare grup — un preot care însoțește pelerinii de la Chișinău până la locurile sfinte și înapoi. Cazare lângă sanctuare, pentru a putea participa la slujbele de dimineață și de seară."
-              )}</p>
-              <p>{t(
-                "Если для вас это первое паломничество — не волнуйтесь, мы подскажем и поможем со всем: от документов до того, как правильно прикладываться к мощам.",
-                "Dacă acesta este primul pelerinaj pentru dumneavoastră — nu vă faceți griji, vă vom ajuta cu toate: de la documente până la cum să vă închinați la moaște."
-              )}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* DIRECTIONS */}
       <section className="bg-secondary/60 py-14 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
@@ -246,17 +210,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* BLESSING */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="divider-gold overline mb-7">{t("С молитвой", "Cu rugăciune")}</p>
-          <p className="font-serif italic text-2xl md:text-3xl text-foreground/85 leading-relaxed">
-            {t("По благословению ", "Cu binecuvântarea ")}
-            <span className="text-muted-foreground">[…]</span>
-          </p>
-        </div>
-      </section>
-
       {/* UPCOMING TRIPS */}
       <section className="bg-card/60 py-14 md:py-16 border-y border-border/60">
         <div className="max-w-5xl mx-auto px-6">
@@ -297,9 +250,48 @@ function HomePage() {
           </div>
 
           <div className="mt-8 text-center">
-            <Link to="/calendar" className="inline-block font-serif text-foreground gold-underline hover:text-gold transition-colors">
-              {t("Все поездки 2026 года", "Toate călătoriile 2026")} →
+            <Link
+              to="/calendar"
+              className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 transition-colors rounded-sm shadow-md"
+            >
+              {t("Смотреть все поездки 2026", "Vezi toate călătoriile 2026")}
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* О ПАЛОМНИЧЕСТВЕ */}
+      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <img
+              src={aboutPilgrimageImg}
+              alt={t("Иконы и свечи в храме", "Icoane și lumânări")}
+              loading="lazy"
+              width={1024}
+              height={1280}
+              className="w-full h-auto rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+            />
+          </div>
+          <div>
+            <p className="overline mb-3">{t("О паломничестве", "Despre pelerinaj")}</p>
+            <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
+              {t("Что такое паломническая поездка", "Ce este o călătorie de pelerinaj")}
+            </h2>
+            <div className="space-y-4 text-foreground/85 leading-[1.8]">
+              <p>{t(
+                "Паломничество — это поездка к святым местам с молитвой и с открытым сердцем. Мы готовим программы так, чтобы каждый паломник мог в спокойном темпе побывать у святынь, помолиться, исповедаться, причаститься.",
+                "Pelerinajul este o călătorie la locurile sfinte cu rugăciune și cu inima deschisă. Pregătim programele astfel încât fiecare pelerin să poată vizita sanctuarele într-un ritm liniștit, să se roage, să se spovedească, să se împărtășească."
+              )}</p>
+              <p>{t(
+                "В каждой группе — священник, который сопровождает паломников от Кишинёва до святых мест и обратно. Размещение — рядом со святынями, чтобы можно было неспешно посещать утренние и вечерние службы.",
+                "În fiecare grup — un preot care însoțește pelerinii de la Chișinău până la locurile sfinte și înapoi. Cazare lângă sanctuare, pentru a putea participa la slujbele de dimineață și de seară."
+              )}</p>
+              <p>{t(
+                "Если для вас это первое паломничество — не волнуйтесь, мы подскажем и поможем со всем: от документов до того, как правильно прикладываться к мощам.",
+                "Dacă acesta este primul pelerinaj pentru dumneavoastră — nu vă faceți griji, vă vom ajuta cu toate: de la documente până la cum să vă închinați la moaște."
+              )}</p>
+            </div>
           </div>
         </div>
       </section>
