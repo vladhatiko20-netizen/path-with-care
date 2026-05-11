@@ -9,12 +9,54 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WithPriestRouteImport } from './routes/with-priest'
+import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
 import { Route as DestinationsRouteImport } from './routes/destinations'
+import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as CatalogRouteImport } from './routes/catalog'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WithPriestRoute = WithPriestRouteImport.update({
+  id: '/with-priest',
+  path: '/with-priest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrthodoxCalendarRoute = OrthodoxCalendarRouteImport.update({
+  id: '/orthodox-calendar',
+  path: '/orthodox-calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DestinationsRoute = DestinationsRouteImport.update({
   id: '/destinations',
   path: '/destinations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactsRoute = ContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CatalogRoute = CatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +67,142 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
+  '/calendar': typeof CalendarRoute
+  '/catalog': typeof CatalogRoute
+  '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/orthodox-calendar': typeof OrthodoxCalendarRoute
+  '/with-priest': typeof WithPriestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
+  '/calendar': typeof CalendarRoute
+  '/catalog': typeof CatalogRoute
+  '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/orthodox-calendar': typeof OrthodoxCalendarRoute
+  '/with-priest': typeof WithPriestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/blog': typeof BlogRoute
+  '/calendar': typeof CalendarRoute
+  '/catalog': typeof CatalogRoute
+  '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/orthodox-calendar': typeof OrthodoxCalendarRoute
+  '/with-priest': typeof WithPriestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/destinations'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/calendar'
+    | '/catalog'
+    | '/contacts'
+    | '/destinations'
+    | '/orthodox-calendar'
+    | '/with-priest'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/destinations'
-  id: '__root__' | '/' | '/destinations'
+  to:
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/calendar'
+    | '/catalog'
+    | '/contacts'
+    | '/destinations'
+    | '/orthodox-calendar'
+    | '/with-priest'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/blog'
+    | '/calendar'
+    | '/catalog'
+    | '/contacts'
+    | '/destinations'
+    | '/orthodox-calendar'
+    | '/with-priest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  BlogRoute: typeof BlogRoute
+  CalendarRoute: typeof CalendarRoute
+  CatalogRoute: typeof CatalogRoute
+  ContactsRoute: typeof ContactsRoute
   DestinationsRoute: typeof DestinationsRoute
+  OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
+  WithPriestRoute: typeof WithPriestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/with-priest': {
+      id: '/with-priest'
+      path: '/with-priest'
+      fullPath: '/with-priest'
+      preLoaderRoute: typeof WithPriestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/orthodox-calendar': {
+      id: '/orthodox-calendar'
+      path: '/orthodox-calendar'
+      fullPath: '/orthodox-calendar'
+      preLoaderRoute: typeof OrthodoxCalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/destinations': {
       id: '/destinations'
       path: '/destinations'
       fullPath: '/destinations'
       preLoaderRoute: typeof DestinationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacts': {
+      id: '/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/catalog': {
+      id: '/catalog'
+      path: '/catalog'
+      fullPath: '/catalog'
+      preLoaderRoute: typeof CatalogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +217,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  BlogRoute: BlogRoute,
+  CalendarRoute: CalendarRoute,
+  CatalogRoute: CatalogRoute,
+  ContactsRoute: ContactsRoute,
   DestinationsRoute: DestinationsRoute,
+  OrthodoxCalendarRoute: OrthodoxCalendarRoute,
+  WithPriestRoute: WithPriestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
