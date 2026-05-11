@@ -162,10 +162,10 @@ function HomePage() {
       </section>
 
       {/* DIRECTIONS */}
-      <section className="bg-secondary/60 py-10 md:py-12">
+      <section className="bg-secondary/60 pt-4 pb-10 md:pt-12 md:pb-12">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-10">
-            <p className="overline mb-3">{t("Направления", "Destinații")}</p>
+          <div className="text-center mb-8 md:mb-10">
+            <p className="overline mb-1 md:mb-3">{t("Направления", "Destinații")}</p>
             <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light">
               {t("Куда мы ездим", "Unde călătorim")}
             </h2>
