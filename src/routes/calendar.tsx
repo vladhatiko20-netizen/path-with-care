@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-calendar.jpg";
@@ -58,6 +58,7 @@ const months: Month[] = [
 
 function Page() {
   const { t, lang } = useLang();
+  const navigate = useNavigate();
   return (
     <PageShell>
       <section className="relative h-[40vh] md:h-[50vh] min-h-[320px] flex items-end overflow-hidden">
@@ -92,8 +93,7 @@ function Page() {
                   <table className="w-full font-serif">
                     <tbody>
                       {m.trips.map((row, i) => (
-                        <Link key={i} to="/contacts" className="contents">
-                          <tr className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
+                        <tr key={i} onClick={() => navigate({ to: "/contacts" })} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
                             <td className="py-3 pr-3 text-accent text-lg leading-none align-middle w-8">☦</td>
                             <td className="py-3 pr-3 text-foreground/85 text-[15px] whitespace-nowrap">{row.date[lang]}</td>
                             <td className="py-3 pr-3 text-foreground text-[15px]">{row.dest[lang]}</td>
@@ -103,7 +103,6 @@ function Page() {
                               {row.seats} {t("мест", "locuri")}
                             </td>
                           </tr>
-                        </Link>
                       ))}
                     </tbody>
                   </table>
