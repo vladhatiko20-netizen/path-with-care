@@ -26,7 +26,7 @@ export const Route = createFileRoute("/about")({
 });
 
 function Page() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const gallery = [
     { img: annaJerusalem, ru: "Иерусалим, 2024 — у Гроба Господня", ro: "Ierusalim, 2024 — la Sfântul Mormânt" },
@@ -192,7 +192,7 @@ function Page() {
               </div>
             </article>
             {team.map((m, i) => {
-              const c = (useLangValue(m));
+              const c = lang === "ru" ? m.ru : m.ro;
               return (
                 <article key={i} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
                   <div className="aspect-[4/5] overflow-hidden">
@@ -229,10 +229,4 @@ function Page() {
       </section>
     </PageShell>
   );
-}
-
-// helper to pick lang content from team member object inside component
-function useLangValue<T extends { ru: any; ro: any }>(m: T) {
-  const { lang } = useLang();
-  return lang === "ru" ? m.ru : m.ro;
 }
