@@ -45,15 +45,22 @@ export function Header() {
           >
             {t("Подразделение Eldorado Tur ↗", "Diviziune Eldorado Tur ↗")}
           </a>
-          <div className="flex items-center gap-3 font-serif text-xs">
+          <div className="flex items-center gap-2 font-serif">
             <button
               onClick={() => setLang("ru")}
-              className={lang === "ru" ? "text-foreground gold-underline" : "hover:text-foreground transition-colors"}
+              className={`px-3 py-1 rounded text-[15px] md:text-base font-medium tracking-wide transition-colors ${
+                lang === "ru"
+                  ? "bg-[#6b1f24] text-cream"
+                  : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
+              }`}
             >RU</button>
-            <span className="text-border">·</span>
             <button
               onClick={() => setLang("ro")}
-              className={lang === "ro" ? "text-foreground gold-underline" : "hover:text-foreground transition-colors"}
+              className={`px-3 py-1 rounded text-[15px] md:text-base font-medium tracking-wide transition-colors ${
+                lang === "ro"
+                  ? "bg-[#6b1f24] text-cream"
+                  : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
+              }`}
             >RO</button>
           </div>
         </div>
@@ -65,29 +72,30 @@ export function Header() {
           className="flex items-center gap-3 group"
           aria-label="Home"
           onClick={() => {
+            setOpen(false);
             if (typeof window !== "undefined") {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }
           }}
         >
-          <span className="text-3xl md:text-4xl text-accent leading-none select-none" aria-hidden>☦</span>
+          <span className="text-3xl md:text-[3.25rem] text-accent leading-none select-none" aria-hidden>☦</span>
           <div className="flex flex-col leading-none">
-            <span className="font-serif text-2xl md:text-[30px] tracking-[0.08em] text-foreground">
+            <span className="font-serif text-2xl md:text-[34px] tracking-[0.08em] text-foreground">
               {t("ПАЛОМНИК", "PELERIN")}
             </span>
-            <span className="text-[11px] md:text-xs text-muted-foreground mt-1 font-serif italic tracking-wide">
+            <span className="text-[11px] md:text-[15px] text-muted-foreground mt-1 font-serif italic tracking-wide">
               {t("Паломнические поездки из Кишинёва", "Pelerinaje din Chișinău")}
             </span>
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 font-serif text-[14px]">
+        <nav className="hidden lg:flex items-center gap-6 font-serif text-[17px] font-medium">
           {navItems.slice(1).map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="text-foreground/80 hover:text-foreground transition-colors"
-              activeProps={{ className: "text-foreground gold-underline" }}
+              className="text-[#8a3a1f] hover:text-[#a04826] transition-colors"
+              activeProps={{ className: "text-[#a04826] gold-underline" }}
             >
               {t(item.ru, item.ro)}
             </Link>
@@ -104,7 +112,7 @@ export function Header() {
       </div>
 
       {open && (
-        <nav className="lg:hidden border-t border-border/50 bg-card max-h-[calc(100vh-80px)] overflow-y-auto overscroll-contain">
+        <nav className="lg:hidden border-t border-border/50 bg-card max-h-[calc(100vh-80px)] overflow-y-auto overscroll-contain animate-fade-in">
           <div className="max-w-7xl mx-auto px-4 py-2 flex flex-col font-serif">
             {navItems.map((item) => (
               <Link
