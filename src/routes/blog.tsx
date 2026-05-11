@@ -5,10 +5,10 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
-      { title: "Блог — Путь к Святыням" },
-      { name: "description", content: "Истории паломников, практические советы, рассказы о святых местах и их хранителях." },
-      { property: "og:title", content: "Блог — Путь к Святыням" },
-      { property: "og:description", content: "Истории паломников, практические советы, рассказы о святых местах и их хранителях." },
+      { title: "Православный блог — Паломник" },
+      { name: "description", content: "Истории паломников, практические советы, рассказы о святых местах." },
+      { property: "og:title", content: "Православный блог — Паломник" },
+      { property: "og:description", content: "Истории паломников, практические советы, рассказы о святых местах." },
     ],
   }),
   component: Page,
@@ -21,7 +21,7 @@ function Page() {
       <section className="max-w-4xl mx-auto px-6 py-24 md:py-32">
         <p className="overline mb-5">{t("Раздел", "Secțiune")}</p>
         <h1 className="font-serif text-5xl md:text-6xl font-light text-foreground mb-8 leading-tight">
-          {t("Блог", "Blog")}
+          {t("Православный блог", "Blog ortodox")}
         </h1>
         <p className="prose-warm text-lg md:text-xl font-serif italic text-foreground/85 leading-[1.85]">
           {t(
