@@ -441,6 +441,43 @@ function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* BLESSING */}
+      <section className="py-16 md:py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <p className="divider-gold overline mb-7">{t("С молитвой", "Cu rugăciune")}</p>
+          <p className="font-serif italic text-2xl md:text-3xl text-foreground/85 leading-relaxed">
+            {t("По благословению ", "Cu binecuvântarea ")}
+            <span className="text-muted-foreground">[…]</span>
+          </p>
+        </div>
+      </section>
+
+      {/* TRUST BADGES */}
+      <section className="bg-secondary/50 py-14 md:py-16 border-t border-border/60">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid sm:grid-cols-3 gap-5">
+            <div className="bg-card border border-gold/30 rounded-sm p-6 text-center">
+              <div className="text-3xl mb-3">🕊️</div>
+              <p className="font-serif text-foreground/85 leading-snug">
+                {t("Духовное сопровождение в каждой поездке", "Însoțire duhovnicească în fiecare călătorie")}
+              </p>
+            </div>
+            <div className="bg-card border border-gold/30 rounded-sm p-6 text-center">
+              <div className="text-3xl mb-3">📜</div>
+              <p className="font-serif text-foreground/85 leading-snug">
+                {t("Лицензированное агентство (Минкультуры РМ)", "Agenție licențiată (Min. Culturii RM)")}
+              </p>
+            </div>
+            <div className="bg-card border border-gold/30 rounded-sm p-6 text-center">
+              <div className="text-3xl mb-3">💛</div>
+              <p className="font-serif text-foreground/85 leading-snug">
+                {t("Личное участие Анны", "Implicarea personală a Annei")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
     </PageShell>
   );
 }
