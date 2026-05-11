@@ -147,13 +147,13 @@ function HomePage() {
           <div className="mt-7 md:mt-9 flex flex-wrap items-center justify-center gap-3 md:gap-4">
             <Link
               to="/destinations"
-              className="inline-flex items-center px-6 md:px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 transition-colors rounded-sm shadow-md"
+              className="inline-flex items-center px-6 md:px-7 py-3 bg-accent text-primary-foreground text-[15px] md:text-base font-serif tracking-wide hover:bg-accent/90 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm shadow-md"
             >
               {t("Посмотреть направления", "Vezi destinațiile")}
             </Link>
             <Link
               to="/calendar"
-              className="inline-flex items-center px-6 md:px-7 py-3 border border-white/80 text-white text-sm font-serif tracking-wide hover:bg-white/10 transition-colors rounded-sm backdrop-blur-sm"
+              className="inline-flex items-center px-6 md:px-7 py-3 border border-white/80 text-white text-[15px] md:text-base font-serif tracking-wide hover:bg-white/10 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm backdrop-blur-sm"
             >
               {t("Ближайшие поездки", "Călătoriile apropiate")}
             </Link>
