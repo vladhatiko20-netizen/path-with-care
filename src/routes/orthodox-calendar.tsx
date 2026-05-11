@@ -18,7 +18,7 @@ function Page() {
   const { t } = useLang();
   return (
     <PageShell>
-      <section className="max-w-4xl mx-auto px-6 py-24 md:py-32">
+      <section className="max-w-4xl mx-auto px-6 py-12 md:py-12">
         <p className="overline mb-5">{t("Раздел", "Secțiune")}</p>
         <h1 className="font-serif text-5xl md:text-6xl font-light text-foreground mb-8 leading-tight">
           {t("Православный календарь", "Calendar ortodox")}

@@ -120,7 +120,7 @@ function HomePage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative h-[50vh] md:h-[60vh] min-h-[420px] flex items-center overflow-hidden">
+      <section className="relative h-[58vh] md:h-[75vh] min-h-[480px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroImg}
@@ -162,7 +162,7 @@ function HomePage() {
       </section>
 
       {/* DIRECTIONS */}
-      <section className="bg-secondary/60 py-14 md:py-16">
+      <section className="bg-secondary/60 py-10 md:py-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-10">
             <p className="overline mb-3">{t("Направления", "Destinații")}</p>
@@ -211,7 +211,7 @@ function HomePage() {
       </section>
 
       {/* UPCOMING TRIPS */}
-      <section className="bg-card/60 py-14 md:py-16 border-y border-border/60">
+      <section className="bg-card/60 py-10 md:py-12 border-y border-border/60">
         <div className="max-w-5xl mx-auto px-6">
           <div className="mb-8">
             <p className="overline mb-2">{t("Расписание", "Program")}</p>
@@ -261,7 +261,7 @@ function HomePage() {
       </section>
 
       {/* О ПАЛОМНИЧЕСТВЕ */}
-      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24">
+      <section className="max-w-6xl mx-auto px-6 py-10 md:py-12">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <img
@@ -297,7 +297,7 @@ function HomePage() {
       </section>
 
       {/* PRIEST CONVERSATION TEASER */}
-      <section className="py-20">
+      <section className="py-10">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
           <div>
             <p className="overline mb-3">{t("Беседы", "Conversații")}</p>
@@ -334,7 +334,7 @@ function HomePage() {
       </section>
 
       {/* BLOG TEASER */}
-      <section className="bg-secondary/50 py-16 md:py-20">
+      <section className="bg-secondary/50 py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-10">
             <p className="overline mb-2">{t("Православный блог", "Blog ortodox")}</p>
@@ -344,7 +344,7 @@ function HomePage() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {blogTeasers.map((post, i) => (
-              <article key={i} className="bg-card border border-gold/30 p-6 rounded-sm">
+              <article key={i} className="bg-card border border-gold/30 p-5 rounded-sm">
                 <p className="overline text-[10px] mb-3">{t("История", "Poveste")} · {i + 1}</p>
                 <h3 className="font-serif text-lg text-foreground mb-4 leading-snug min-h-[3.5rem]">
                   {t(post.ru, post.ro)}
@@ -364,7 +364,7 @@ function HomePage() {
       </section>
 
       {/* ORTHODOX CALENDAR TEASER */}
-      <section className="py-16">
+      <section className="py-12">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="overline mb-3">{t("Календарь", "Calendar")}</p>
           <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6">
@@ -443,7 +443,7 @@ function HomePage() {
       </section>
 
       {/* BLESSING */}
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="divider-gold overline mb-7">{t("С молитвой", "Cu rugăciune")}</p>
           <p className="font-serif italic text-2xl md:text-3xl text-foreground/85 leading-relaxed">
@@ -454,22 +454,22 @@ function HomePage() {
       </section>
 
       {/* TRUST BADGES */}
-      <section className="bg-secondary/50 py-14 md:py-16 border-t border-border/60">
+      <section className="bg-secondary/50 py-10 md:py-12 border-t border-border/60">
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid sm:grid-cols-3 gap-5">
-            <div className="bg-card border border-gold/30 rounded-sm p-6 text-center">
+            <div className="bg-card border border-gold/30 rounded-sm p-5 text-center">
               <div className="text-3xl mb-3">🕊️</div>
               <p className="font-serif text-foreground/85 leading-snug">
                 {t("Духовное сопровождение в каждой поездке", "Însoțire duhovnicească în fiecare călătorie")}
               </p>
             </div>
-            <div className="bg-card border border-gold/30 rounded-sm p-6 text-center">
+            <div className="bg-card border border-gold/30 rounded-sm p-5 text-center">
               <div className="text-3xl mb-3">📜</div>
               <p className="font-serif text-foreground/85 leading-snug">
                 {t("Лицензированное агентство (Минкультуры РМ)", "Agenție licențiată (Min. Culturii RM)")}
               </p>
             </div>
-            <div className="bg-card border border-gold/30 rounded-sm p-6 text-center">
+            <div className="bg-card border border-gold/30 rounded-sm p-5 text-center">
               <div className="text-3xl mb-3">💛</div>
               <p className="font-serif text-foreground/85 leading-snug">
                 {t("Личное участие Анны", "Implicarea personală a Annei")}

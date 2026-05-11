@@ -61,7 +61,7 @@ function Page() {
   const navigate = useNavigate();
   return (
     <PageShell>
-      <section className="relative h-[40vh] md:h-[50vh] min-h-[320px] flex items-end overflow-hidden">
+      <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
         <img src={heroImg} alt={t("Православный календарь", "Calendar ortodox")} className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/75" />
         <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 md:pb-14 w-full">
@@ -72,7 +72,7 @@ function Page() {
         </div>
       </section>
 
-      <section className="max-w-5xl mx-auto px-6 py-14 md:py-20">
+      <section className="max-w-5xl mx-auto px-6 py-10 md:py-10">
         <p className="prose-warm text-base md:text-lg font-serif italic text-foreground/80 mb-10 max-w-3xl">
           {t(
             "Все паломнические поездки 2026 года по месяцам. Нажмите на строку, чтобы оставить заявку.",

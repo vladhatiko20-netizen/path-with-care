@@ -57,7 +57,7 @@ function Page() {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="bg-card flex items-center px-6 md:px-12 py-14 md:py-20">
+          <div className="bg-card flex items-center px-6 md:px-12 py-10 md:py-10">
             <div>
               <p className="overline mb-4">{t("О нас", "Despre noi")}</p>
               <h1 className="font-serif text-3xl md:text-[44px] lg:text-5xl font-light text-foreground leading-[1.1] mb-6">
@@ -105,7 +105,7 @@ function Page() {
       <div className="text-center text-2xl text-gold pb-4" aria-hidden>☦</div>
 
       {/* GALLERY */}
-      <section className="bg-secondary/50 py-16 md:py-20">
+      <section className="bg-secondary/50 py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-10">
             <p className="overline mb-3">{t("Из поездок", "Din călătorii")}</p>
@@ -132,7 +132,7 @@ function Page() {
       </section>
 
       {/* VIDEO */}
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="overline mb-3">{t("Видео", "Video")}</p>
           <h2 className="font-serif text-2xl md:text-3xl font-light text-foreground mb-6">
@@ -149,7 +149,7 @@ function Page() {
       <div className="text-center text-2xl text-gold pb-4" aria-hidden>☦</div>
 
       {/* ELDORADO LINK */}
-      <section className="bg-card/70 border-y border-border/60 py-14">
+      <section className="bg-card/70 border-y border-border/60 py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="overline mb-3">{t("Часть агентства", "Parte din agenție")}</p>
           <p className="text-foreground/85 leading-relaxed mb-6 font-serif text-lg">
@@ -170,7 +170,7 @@ function Page() {
       </section>
 
       {/* TEAM */}
-      <section className="py-16 md:py-20">
+      <section className="py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-10 text-center">
             <p className="overline mb-3">{t("Команда", "Echipa")}</p>

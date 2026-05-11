@@ -5,7 +5,7 @@ export function Footer() {
   const { t } = useLang();
   return (
     <footer className="bg-secondary mt-24 border-t border-border">
-      <div className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-12">
         <div>
           <div className="flex items-center gap-2 mb-2">
             <span className="text-2xl text-accent" aria-hidden>☦</span>
