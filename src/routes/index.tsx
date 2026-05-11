@@ -120,34 +120,40 @@ function HomePage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative min-h-[78vh] flex items-center overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <img src={heroImg} alt="" className="w-full h-full object-cover" width={1920} height={1088} />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/55 to-background/85" />
+      <section className="relative h-[50vh] md:h-[60vh] min-h-[420px] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroImg}
+            alt={t("Православный храм с золотыми куполами", "Biserică ortodoxă cu cupole aurii")}
+            className="w-full h-full object-cover"
+            width={1920}
+            height={1080}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65" />
         </div>
-        <div className="max-w-4xl mx-auto px-6 py-24 md:py-32 text-center w-full">
-          <p className="overline mb-5 drop-shadow-sm">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center w-full">
+          <p className="overline mb-4 md:mb-5 drop-shadow">
             {t("ПАЛОМНИЧЕСКИЕ ПОЕЗДКИ К СВЯТЫНЯМ", "PELERINAJE LA SANCTUARE")}
           </p>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-[56px] text-foreground font-light leading-[1.1] mb-6">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[56px] text-white font-light leading-[1.1] mb-5 drop-shadow-lg">
             {t("Организуем поездки к святым местам", "Organizăm călătorii la locurile sfinte")}
           </h1>
-          <p className="text-base md:text-lg text-foreground/85 max-w-2xl mx-auto leading-relaxed font-serif italic">
+          <p className="text-base md:text-lg text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow">
             {t(
               "Друзья, давайте вместе отправимся к святыням православного мира. И вместе — ко Христу.",
               "Prieteni, să mergem împreună la sanctuarele lumii ortodoxe. Și împreună — spre Hristos."
             )}
           </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-7 md:mt-9 flex flex-wrap items-center justify-center gap-3 md:gap-4">
             <Link
               to="/destinations"
-              className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 transition-colors rounded-sm shadow-md"
+              className="inline-flex items-center px-6 md:px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 transition-colors rounded-sm shadow-md"
             >
               {t("Посмотреть направления", "Vezi destinațiile")}
             </Link>
             <Link
               to="/calendar"
-              className="inline-flex items-center px-7 py-3 bg-background/70 backdrop-blur-sm border border-gold text-foreground text-sm font-serif tracking-wide hover:bg-background transition-colors rounded-sm"
+              className="inline-flex items-center px-6 md:px-7 py-3 border border-white/80 text-white text-sm font-serif tracking-wide hover:bg-white/10 transition-colors rounded-sm backdrop-blur-sm"
             >
               {t("Ближайшие поездки", "Călătoriile apropiate")}
             </Link>
