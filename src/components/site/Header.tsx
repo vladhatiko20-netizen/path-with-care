@@ -95,7 +95,7 @@ export function Header() {
       </div>
 
       {open && (
-        <nav className="lg:hidden border-t border-border/50 bg-card">
+        <nav className="lg:hidden border-t border-border/50 bg-card max-h-[calc(100vh-80px)] overflow-y-auto overscroll-contain">
           <div className="max-w-7xl mx-auto px-4 py-2 flex flex-col font-serif">
             {navItems.map((item) => (
               <Link
