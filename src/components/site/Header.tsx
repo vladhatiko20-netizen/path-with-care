@@ -36,7 +36,7 @@ export function Header() {
   return (
     <header className="bg-background border-b border-gold/30 sticky top-0 z-40 backdrop-blur-sm bg-background/95">
       <div className="border-b border-border/40">
-        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center text-[11px] text-muted-foreground">
+        <div className="max-w-7xl mx-auto pl-3 pr-6 md:pl-2 md:pr-6 py-2 flex justify-between items-center text-[11px] text-muted-foreground">
           <a
             href="https://eldoradotur.md"
             target="_blank"
@@ -66,10 +66,10 @@ export function Header() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
+      <div className="max-w-7xl mx-auto pl-3 pr-6 md:pl-2 md:pr-6 py-4 flex items-center justify-between gap-4">
         <Link
           to="/"
-          className="flex items-center gap-3 group"
+          className="flex items-center gap-3 group shrink-0"
           aria-label="Home"
           onClick={() => {
             setOpen(false);
@@ -78,9 +78,9 @@ export function Header() {
             }
           }}
         >
-          <span className="text-3xl md:text-[3.25rem] text-accent leading-none select-none" aria-hidden>☦</span>
+          <span className="text-3xl md:text-[3.75rem] text-accent leading-none select-none" aria-hidden>☦</span>
           <div className="flex flex-col leading-none">
-            <span className="font-serif text-2xl md:text-[34px] tracking-[0.08em] text-foreground">
+            <span className="font-serif font-semibold text-2xl md:text-[34px] tracking-[0.08em] text-foreground">
               {t("ПАЛОМНИК", "PELERIN")}
             </span>
             <span className="text-[11px] md:text-[15px] text-muted-foreground mt-1 font-serif italic tracking-wide">
@@ -89,12 +89,12 @@ export function Header() {
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 font-serif text-[17px] font-medium">
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-5 font-serif text-[16px] xl:text-[17px] font-medium whitespace-nowrap">
           {navItems.slice(1).map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="text-[#8a3a1f] hover:text-[#a04826] transition-colors"
+              className="text-[#8a3a1f] hover:text-[#a04826] inline-block transition-all duration-300 ease-out hover:scale-105"
               activeProps={{ className: "text-[#a04826] gold-underline" }}
             >
               {t(item.ru, item.ro)}
