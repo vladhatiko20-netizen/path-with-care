@@ -16,8 +16,7 @@ export const Route = createFileRoute("/orthodox-calendar")({
 });
 
 function Page() {
-  const { t } = useLang();
-  const { lang } = useLang();
+  const { t, lang } = useLang();
   const now = new Date();
   const todayStr = now.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
     day: "numeric", month: "long", year: "numeric",
