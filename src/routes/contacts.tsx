@@ -64,10 +64,13 @@ function Page() {
           <div>
             <div className="aspect-[4/3] rounded-sm overflow-hidden border border-gold/30">
               <iframe
-                title="Google Maps"
-                src="https://www.google.com/maps?q=bd.+Dacia+20,+Chisinau&output=embed"
+                title="Google Maps — бд. Дачия 20, Кишинёв"
+                src="https://www.google.com/maps?q=bd.+Dacia+20,+Chisinau,+Moldova&hl=ru&z=16&output=embed"
                 className="w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
                 loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
           </div>

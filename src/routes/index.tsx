@@ -16,6 +16,7 @@ import catNikolayImg from "@/assets/cat-nikolay.jpg";
 import catLadanImg from "@/assets/cat-ladan.jpg";
 import catBookImg from "@/assets/cat-book.jpg";
 import catJerusalemImg from "@/assets/cat-jerusalem.jpg";
+import { nextFeast, todayFeast, formatFeastDate } from "@/lib/orthodox-feasts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -113,9 +114,12 @@ const catalogTeasers = [
 
 function HomePage() {
   const { t, lang } = useLang();
-  const today = new Date().toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
+  const now = new Date();
+  const today = now.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
     day: "numeric", month: "long", year: "numeric",
   });
+  const feastToday = todayFeast(now);
+  const feastNext = nextFeast(now);
 
   return (
     <PageShell>
@@ -373,11 +377,17 @@ function HomePage() {
           <p className="font-serif italic text-xl text-foreground/85 leading-relaxed mb-2">
             {t("Сегодня — ", "Astăzi — ")}<span className="text-gold">{today}</span>
           </p>
+          {feastToday && (
+            <p className="font-serif italic text-foreground/85 mb-2">
+              {t("Память сегодня: ", "Astăzi pomenim: ")}
+              <span className="text-foreground">{lang === "ru" ? feastToday.ru : feastToday.ro}</span>
+            </p>
+          )}
           <p className="font-serif italic text-muted-foreground mb-7">
-            {t(
-              "Ближайший праздник: Введение во храм Пресвятой Богородицы (4 декабря)",
-              "Următoarea sărbătoare: Intrarea în Biserică a Maicii Domnului (4 decembrie)"
-            )}
+            {t("Ближайший праздник: ", "Următoarea sărbătoare: ")}
+            <span className="text-foreground/80">
+              {lang === "ru" ? feastNext.ru : feastNext.ro} ({formatFeastDate(feastNext, lang)})
+            </span>
           </p>
           <Link to="/orthodox-calendar" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
             {t("Посмотреть весь календарь", "Vezi calendarul complet")} →
