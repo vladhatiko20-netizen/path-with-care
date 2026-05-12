@@ -24,6 +24,7 @@ const navItems: NavItem[] = [
   { to: "/calendar", ru: "Календарь поездок", ro: "Calendar", thumb: thumbCalendar },
   { to: "/with-priest", ru: "Диалог со священником", ro: "Dialog cu preotul", thumb: thumbPriest },
   { to: "/blog", ru: "Православный блог", ro: "Blog ortodox", thumb: thumbBlog },
+  { to: "/orthodox-calendar", ru: "Православный календарь", ro: "Calendar ortodox", thumb: thumbCalendar },
   { to: "/catalog", ru: "Иконы и святыни", ro: "Icoane și obiecte sfinte", thumb: thumbCatalog },
   { to: "/about", ru: "О нас", ro: "Despre", thumb: thumbAbout },
   { to: "/contacts", ru: "Контакты", ro: "Contacte", thumb: thumbContacts },
