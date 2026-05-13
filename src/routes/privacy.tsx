@@ -7,6 +7,8 @@ export const Route = createFileRoute("/privacy")({
     meta: [
       { title: "Политика конфиденциальности — Паломник" },
       { name: "description", content: "Политика конфиденциальности сайта Паломник." },
+      { property: "og:title", content: "Политика конфиденциальности — Паломник" },
+      { property: "og:description", content: "Политика конфиденциальности сайта Паломник: как мы обрабатываем персональные данные." },
     ],
   }),
   component: Page,
