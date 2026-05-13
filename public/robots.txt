@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://path-with-care.lovable.app/sitemap.xml
