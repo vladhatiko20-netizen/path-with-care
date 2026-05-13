@@ -16,6 +16,9 @@ export const Route = createFileRoute("/destinations")({
     meta: [
       { title: "Направления — Паломник" },
       { name: "description", content: "Восемь направлений к православным святыням мира из Кишинёва — Иерусалим, Бари, Корфу, Афон, Грузия, Румыния, Украина, Молдова." },
+      { name: "author", content: "Паломник" },
+      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
+      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "Направления — Паломник" },
       { property: "og:description", content: "Восемь направлений к православным святыням мира из Кишинёва." },
       { property: "og:image", content: heroImg },

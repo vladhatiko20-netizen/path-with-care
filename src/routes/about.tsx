@@ -17,6 +17,9 @@ export const Route = createFileRoute("/about")({
     meta: [
       { title: "О нас — Паломник" },
       { name: "description", content: "Анна Плотник — путешественница и паломница. Подразделение SRL Eldorado Tur." },
+      { name: "author", content: "Паломник" },
+      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
+      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "О нас — Паломник" },
       { property: "og:description", content: "Анна Плотник — путешественница и паломница." },
       { property: "og:image", content: annaHero },
