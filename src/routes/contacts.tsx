@@ -93,7 +93,7 @@ function Page() {
             <div className="aspect-[4/3] rounded-sm overflow-hidden border border-gold/30">
               <iframe
                 title="Google Maps — бд. Дачия 20, Кишинёв"
-                src="https://www.google.com/maps?q=bd.+Dacia+20,+Chisinau,+Moldova&hl=ru&z=16&output=embed"
+                src="https://www.google.com/maps?q=Bulevardul+Dacia+20,+Chi%C8%99in%C4%83u,+Moldova&hl=ru&z=16&output=embed"
                 className="w-full h-full"
                 style={{ border: 0 }}
                 allowFullScreen
