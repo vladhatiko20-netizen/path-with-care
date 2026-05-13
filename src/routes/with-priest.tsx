@@ -12,6 +12,9 @@ export const Route = createFileRoute("/with-priest")({
     meta: [
       { title: "Диалог со священником — Паломник" },
       { name: "description", content: "Беседы со священниками, сопровождающими наши паломнические группы. Часто задаваемые вопросы и форма для личного вопроса." },
+      { name: "author", content: "Паломник" },
+      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
+      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "Диалог со священником — Паломник" },
       { property: "og:description", content: "Беседы со священниками, сопровождающими паломников." },
       { property: "og:image", content: heroImg },

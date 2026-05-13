@@ -8,6 +8,9 @@ export const Route = createFileRoute("/calendar")({
     meta: [
       { title: "Календарь поездок 2026 — Паломник" },
       { name: "description", content: "Полный календарь паломнических поездок на 2026 год по месяцам и направлениям." },
+      { name: "author", content: "Паломник" },
+      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
+      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "Календарь поездок 2026 — Паломник" },
       { property: "og:description", content: "Полный календарь паломнических поездок на 2026 год." },
       { property: "og:image", content: heroImg },

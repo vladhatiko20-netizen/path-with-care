@@ -9,6 +9,9 @@ export const Route = createFileRoute("/contacts")({
     meta: [
       { title: "Контакты — Паломник" },
       { name: "description", content: "Адрес офиса в Кишинёве, телефоны, электронная почта, часы работы и форма обратной связи." },
+      { name: "author", content: "Паломник" },
+      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
+      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "Контакты — Паломник" },
       { property: "og:description", content: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв." },
       { property: "og:image", content: heroImg },
@@ -90,7 +93,7 @@ function Page() {
             <div className="aspect-[4/3] rounded-sm overflow-hidden border border-gold/30">
               <iframe
                 title="Google Maps — бд. Дачия 20, Кишинёв"
-                src="https://www.google.com/maps?q=bd.+Dacia+20,+Chisinau,+Moldova&hl=ru&z=16&output=embed"
+                src="https://www.google.com/maps?q=Bulevardul+Dacia+20,+Chi%C8%99in%C4%83u,+Moldova&hl=ru&z=16&output=embed"
                 className="w-full h-full"
                 style={{ border: 0 }}
                 allowFullScreen
