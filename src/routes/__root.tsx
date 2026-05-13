@@ -73,11 +73,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Pilgrim's Path offers spiritual journeys to Orthodox holy sites," },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Pilgrim's Path offers spiritual journeys to Orthodox holy sites," },
+      { title: "Паломник — Православные паломнические поездки" },
+      { name: "description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
+      { name: "author", content: "Паломник" },
+      { property: "og:title", content: "Паломник — Православные паломнические поездки" },
+      { property: "og:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
@@ -90,6 +90,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Паломник",
+          url: "https://path-with-care.lovable.app",
+          description: "Православные паломнические поездки из Кишинёва.",
+          parentOrganization: { "@type": "Organization", name: "SRL Eldorado Tur" },
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "бд. Дачия 20, оф. 81",
+            addressLocality: "Кишинёв",
+            postalCode: "MD2060",
+            addressCountry: "MD",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Паломник",
+          url: "https://path-with-care.lovable.app",
+        }),
       },
     ],
   }),
