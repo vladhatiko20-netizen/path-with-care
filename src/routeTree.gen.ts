@@ -14,6 +14,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as CatalogRouteImport } from './routes/catalog'
@@ -46,6 +47,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const OrthodoxCalendarRoute = OrthodoxCalendarRouteImport.update({
   id: '/orthodox-calendar',
   path: '/orthodox-calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DestinationsRoute = DestinationsRouteImport.update({
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/destinations'
+    | '/login'
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/destinations'
+    | '/login'
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/destinations'
+    | '/login'
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
@@ -191,6 +203,7 @@ export interface RootRouteChildren {
   CatalogRoute: typeof CatalogRoute
   ContactsRoute: typeof ContactsRoute
   DestinationsRoute: typeof DestinationsRoute
+  LoginRoute: typeof LoginRoute
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
   PublicOfferRoute: typeof PublicOfferRoute
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       path: '/orthodox-calendar'
       fullPath: '/orthodox-calendar'
       preLoaderRoute: typeof OrthodoxCalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/destinations': {
@@ -303,6 +323,7 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogRoute: CatalogRoute,
   ContactsRoute: ContactsRoute,
   DestinationsRoute: DestinationsRoute,
+  LoginRoute: LoginRoute,
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
   PublicOfferRoute: PublicOfferRoute,
@@ -313,3 +334,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

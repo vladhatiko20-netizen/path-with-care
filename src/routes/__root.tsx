@@ -10,6 +10,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { LangProvider } from "@/lib/i18n";
+import { AuthProvider } from "@/lib/use-auth";
 
 function NotFoundComponent() {
   return (
@@ -147,9 +148,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LangProvider>
-        <Outlet />
-      </LangProvider>
+      <AuthProvider>
+        <LangProvider>
+          <Outlet />
+        </LangProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
