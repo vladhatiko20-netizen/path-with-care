@@ -27,6 +27,8 @@ import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
 import { Route as AdminAdminPilgrimagesRouteImport } from './routes/_admin/admin.pilgrimages'
 import { Route as AdminAdminBlogRouteImport } from './routes/_admin/admin.blog'
+import { Route as AdminAdminPilgrimagesNewRouteImport } from './routes/_admin/admin.pilgrimages.new'
+import { Route as AdminAdminPilgrimagesIdRouteImport } from './routes/_admin/admin.pilgrimages.$id'
 import { Route as AdminAdminBlogNewRouteImport } from './routes/_admin/admin.blog.new'
 import { Route as AdminAdminBlogIdRouteImport } from './routes/_admin/admin.blog.$id'
 
@@ -119,6 +121,17 @@ const AdminAdminBlogRoute = AdminAdminBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AdminAdminRoute,
 } as any)
+const AdminAdminPilgrimagesNewRoute =
+  AdminAdminPilgrimagesNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AdminAdminPilgrimagesRoute,
+  } as any)
+const AdminAdminPilgrimagesIdRoute = AdminAdminPilgrimagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminAdminPilgrimagesRoute,
+} as any)
 const AdminAdminBlogNewRoute = AdminAdminBlogNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -147,9 +160,11 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/blog': typeof AdminAdminBlogRouteWithChildren
-  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRoute
+  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
+  '/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -168,9 +183,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/blog': typeof AdminAdminBlogRouteWithChildren
-  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRoute
+  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
+  '/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -191,9 +208,11 @@ export interface FileRoutesById {
   '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/blog_/$slug': typeof BlogSlugRoute
   '/_admin/admin/blog': typeof AdminAdminBlogRouteWithChildren
-  '/_admin/admin/pilgrimages': typeof AdminAdminPilgrimagesRoute
+  '/_admin/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/_admin/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
+  '/_admin/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -217,6 +236,8 @@ export interface FileRouteTypes {
     | '/admin/pilgrimages'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/pilgrimages/$id'
+    | '/admin/pilgrimages/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -238,6 +259,8 @@ export interface FileRouteTypes {
     | '/admin/pilgrimages'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/pilgrimages/$id'
+    | '/admin/pilgrimages/new'
   id:
     | '__root__'
     | '/'
@@ -260,6 +283,8 @@ export interface FileRouteTypes {
     | '/_admin/admin/pilgrimages'
     | '/_admin/admin/blog/$id'
     | '/_admin/admin/blog/new'
+    | '/_admin/admin/pilgrimages/$id'
+    | '/_admin/admin/pilgrimages/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -408,6 +433,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminBlogRouteImport
       parentRoute: typeof AdminAdminRoute
     }
+    '/_admin/admin/pilgrimages/new': {
+      id: '/_admin/admin/pilgrimages/new'
+      path: '/new'
+      fullPath: '/admin/pilgrimages/new'
+      preLoaderRoute: typeof AdminAdminPilgrimagesNewRouteImport
+      parentRoute: typeof AdminAdminPilgrimagesRoute
+    }
+    '/_admin/admin/pilgrimages/$id': {
+      id: '/_admin/admin/pilgrimages/$id'
+      path: '/$id'
+      fullPath: '/admin/pilgrimages/$id'
+      preLoaderRoute: typeof AdminAdminPilgrimagesIdRouteImport
+      parentRoute: typeof AdminAdminPilgrimagesRoute
+    }
     '/_admin/admin/blog/new': {
       id: '/_admin/admin/blog/new'
       path: '/new'
@@ -439,14 +478,29 @@ const AdminAdminBlogRouteWithChildren = AdminAdminBlogRoute._addFileChildren(
   AdminAdminBlogRouteChildren,
 )
 
+interface AdminAdminPilgrimagesRouteChildren {
+  AdminAdminPilgrimagesIdRoute: typeof AdminAdminPilgrimagesIdRoute
+  AdminAdminPilgrimagesNewRoute: typeof AdminAdminPilgrimagesNewRoute
+}
+
+const AdminAdminPilgrimagesRouteChildren: AdminAdminPilgrimagesRouteChildren = {
+  AdminAdminPilgrimagesIdRoute: AdminAdminPilgrimagesIdRoute,
+  AdminAdminPilgrimagesNewRoute: AdminAdminPilgrimagesNewRoute,
+}
+
+const AdminAdminPilgrimagesRouteWithChildren =
+  AdminAdminPilgrimagesRoute._addFileChildren(
+    AdminAdminPilgrimagesRouteChildren,
+  )
+
 interface AdminAdminRouteChildren {
   AdminAdminBlogRoute: typeof AdminAdminBlogRouteWithChildren
-  AdminAdminPilgrimagesRoute: typeof AdminAdminPilgrimagesRoute
+  AdminAdminPilgrimagesRoute: typeof AdminAdminPilgrimagesRouteWithChildren
 }
 
 const AdminAdminRouteChildren: AdminAdminRouteChildren = {
   AdminAdminBlogRoute: AdminAdminBlogRouteWithChildren,
-  AdminAdminPilgrimagesRoute: AdminAdminPilgrimagesRoute,
+  AdminAdminPilgrimagesRoute: AdminAdminPilgrimagesRouteWithChildren,
 }
 
 const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
