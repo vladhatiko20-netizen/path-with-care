@@ -100,6 +100,7 @@ const upcoming = [
 ];
 
 const blogTeasers = [
+  { ru: "Зачем ехать в паломничество, если есть храм рядом с домом?", ro: "De ce să mergi în pelerinaj, dacă ai biserică lângă casă?", to: "/blog/pochemu-palomnichestvo" },
   { ru: "Афон глазами того, кто впервые там", ro: "Athos prin ochii unui pelerin la prima vizită" },
   { ru: "Иерусалим в Страстную: что я увидел", ro: "Ierusalim în Săptămâna Patimilor" },
   { ru: "Грузинские монастыри — встреча с Богом", ro: "Mănăstirile Georgiei — întâlnire cu Dumnezeu" },
@@ -347,17 +348,20 @@ function HomePage() {
             </h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {blogTeasers.map((post, i) => (
-              <article key={i} className="bg-card border border-gold/30 p-5 rounded-sm">
-                <p className="overline text-[10px] mb-3">{t("История", "Poveste")} · {i + 1}</p>
-                <h3 className="font-serif text-lg text-foreground mb-4 leading-snug min-h-[3.5rem]">
-                  {t(post.ru, post.ro)}
-                </h3>
-                <Link to="/blog" className="text-sm font-serif text-foreground gold-underline hover:text-gold transition-colors">
-                  {t("Читать", "Citește")} →
-                </Link>
-              </article>
-            ))}
+            {blogTeasers.slice(0, 3).map((post, i) => {
+              const to = (post as { to?: string }).to ?? "/blog";
+              return (
+                <article key={i} className="bg-card border border-gold/30 p-5 rounded-sm">
+                  <p className="overline text-[10px] mb-3">{t("История", "Poveste")} · {i + 1}</p>
+                  <h3 className="font-serif text-lg text-foreground mb-4 leading-snug min-h-[3.5rem]">
+                    {t(post.ru, post.ro)}
+                  </h3>
+                  <Link to={to} className="text-sm font-serif text-foreground gold-underline hover:text-gold transition-colors">
+                    {t("Читать", "Citește")} →
+                  </Link>
+                </article>
+              );
+            })}
           </div>
           <div className="mt-8">
             <Link to="/blog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
