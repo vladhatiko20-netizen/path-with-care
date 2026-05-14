@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound, ErrorComponent, useRouter } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
+import DOMPurify from "isomorphic-dompurify";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { getBlogPostBySlug, type BlogPostFull } from "@/lib/blog.functions";
@@ -81,6 +82,7 @@ function PostPage() {
     lang === "ru" ? "ru-RU" : "ro-RO",
     { day: "numeric", month: "long", year: "numeric" },
   );
+  const isHtml = /<\/?[a-z][\s\S]*>/i.test(body);
 
   return (
     <PageShell>
@@ -94,6 +96,12 @@ function PostPage() {
         </h1>
 
         <div className="prose-blog">
+          {isHtml ? (
+            <div
+              className="prose prose-lg max-w-none text-foreground/85"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}
+            />
+          ) : (
           <ReactMarkdown
             components={{
               h2: ({ children }) => (
@@ -124,6 +132,7 @@ function PostPage() {
           >
             {body}
           </ReactMarkdown>
+          )}
         </div>
 
         <p className="text-xs text-muted-foreground font-serif tracking-wider mt-12">

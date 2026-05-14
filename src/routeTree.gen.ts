@@ -14,14 +14,23 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
+import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
+import { Route as AdminAdminPilgrimagesRouteImport } from './routes/_admin/admin.pilgrimages'
+import { Route as AdminAdminBlogRouteImport } from './routes/_admin/admin.blog'
+import { Route as AdminAdminPilgrimagesNewRouteImport } from './routes/_admin/admin.pilgrimages.new'
+import { Route as AdminAdminPilgrimagesIdRouteImport } from './routes/_admin/admin.pilgrimages.$id'
+import { Route as AdminAdminBlogNewRouteImport } from './routes/_admin/admin.blog.new'
+import { Route as AdminAdminBlogIdRouteImport } from './routes/_admin/admin.blog.$id'
 
 const WithPriestRoute = WithPriestRouteImport.update({
   id: '/with-priest',
@@ -46,6 +55,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const OrthodoxCalendarRoute = OrthodoxCalendarRouteImport.update({
   id: '/orthodox-calendar',
   path: '/orthodox-calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DestinationsRoute = DestinationsRouteImport.update({
@@ -78,6 +92,10 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -88,6 +106,42 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAdminRoute = AdminAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminPilgrimagesRoute = AdminAdminPilgrimagesRouteImport.update({
+  id: '/pilgrimages',
+  path: '/pilgrimages',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminBlogRoute = AdminAdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminPilgrimagesNewRoute =
+  AdminAdminPilgrimagesNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AdminAdminPilgrimagesRoute,
+  } as any)
+const AdminAdminPilgrimagesIdRoute = AdminAdminPilgrimagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminAdminPilgrimagesRoute,
+} as any)
+const AdminAdminBlogNewRoute = AdminAdminBlogNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminAdminBlogRoute,
+} as any)
+const AdminAdminBlogIdRoute = AdminAdminBlogIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminAdminBlogRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -97,12 +151,20 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
+  '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/admin/blog': typeof AdminAdminBlogRouteWithChildren
+  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
+  '/admin/blog/$id': typeof AdminAdminBlogIdRoute
+  '/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
+  '/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -112,28 +174,45 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
+  '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/admin/blog': typeof AdminAdminBlogRouteWithChildren
+  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
+  '/admin/blog/$id': typeof AdminAdminBlogIdRoute
+  '/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
+  '/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_admin': typeof AdminRouteWithChildren
   '/about': typeof AboutRoute
   '/blog': typeof BlogRoute
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/destinations': typeof DestinationsRoute
+  '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
+  '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/blog_/$slug': typeof BlogSlugRoute
+  '/_admin/admin/blog': typeof AdminAdminBlogRouteWithChildren
+  '/_admin/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
+  '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
+  '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/_admin/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
+  '/_admin/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -145,12 +224,20 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/destinations'
+    | '/login'
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
+    | '/admin'
     | '/blog/$slug'
+    | '/admin/blog'
+    | '/admin/pilgrimages'
+    | '/admin/blog/$id'
+    | '/admin/blog/new'
+    | '/admin/pilgrimages/$id'
+    | '/admin/pilgrimages/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -160,37 +247,56 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/destinations'
+    | '/login'
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
+    | '/admin'
     | '/blog/$slug'
+    | '/admin/blog'
+    | '/admin/pilgrimages'
+    | '/admin/blog/$id'
+    | '/admin/blog/new'
+    | '/admin/pilgrimages/$id'
+    | '/admin/pilgrimages/new'
   id:
     | '__root__'
     | '/'
+    | '/_admin'
     | '/about'
     | '/blog'
     | '/calendar'
     | '/catalog'
     | '/contacts'
     | '/destinations'
+    | '/login'
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
+    | '/_admin/admin'
     | '/blog_/$slug'
+    | '/_admin/admin/blog'
+    | '/_admin/admin/pilgrimages'
+    | '/_admin/admin/blog/$id'
+    | '/_admin/admin/blog/new'
+    | '/_admin/admin/pilgrimages/$id'
+    | '/_admin/admin/pilgrimages/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AboutRoute: typeof AboutRoute
   BlogRoute: typeof BlogRoute
   CalendarRoute: typeof CalendarRoute
   CatalogRoute: typeof CatalogRoute
   ContactsRoute: typeof ContactsRoute
   DestinationsRoute: typeof DestinationsRoute
+  LoginRoute: typeof LoginRoute
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
   PublicOfferRoute: typeof PublicOfferRoute
@@ -236,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrthodoxCalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/destinations': {
       id: '/destinations'
       path: '/destinations'
@@ -278,6 +391,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -292,17 +412,121 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/admin': {
+      id: '/_admin/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminAdminRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/pilgrimages': {
+      id: '/_admin/admin/pilgrimages'
+      path: '/pilgrimages'
+      fullPath: '/admin/pilgrimages'
+      preLoaderRoute: typeof AdminAdminPilgrimagesRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/blog': {
+      id: '/_admin/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminAdminBlogRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/pilgrimages/new': {
+      id: '/_admin/admin/pilgrimages/new'
+      path: '/new'
+      fullPath: '/admin/pilgrimages/new'
+      preLoaderRoute: typeof AdminAdminPilgrimagesNewRouteImport
+      parentRoute: typeof AdminAdminPilgrimagesRoute
+    }
+    '/_admin/admin/pilgrimages/$id': {
+      id: '/_admin/admin/pilgrimages/$id'
+      path: '/$id'
+      fullPath: '/admin/pilgrimages/$id'
+      preLoaderRoute: typeof AdminAdminPilgrimagesIdRouteImport
+      parentRoute: typeof AdminAdminPilgrimagesRoute
+    }
+    '/_admin/admin/blog/new': {
+      id: '/_admin/admin/blog/new'
+      path: '/new'
+      fullPath: '/admin/blog/new'
+      preLoaderRoute: typeof AdminAdminBlogNewRouteImport
+      parentRoute: typeof AdminAdminBlogRoute
+    }
+    '/_admin/admin/blog/$id': {
+      id: '/_admin/admin/blog/$id'
+      path: '/$id'
+      fullPath: '/admin/blog/$id'
+      preLoaderRoute: typeof AdminAdminBlogIdRouteImport
+      parentRoute: typeof AdminAdminBlogRoute
+    }
   }
 }
 
+interface AdminAdminBlogRouteChildren {
+  AdminAdminBlogIdRoute: typeof AdminAdminBlogIdRoute
+  AdminAdminBlogNewRoute: typeof AdminAdminBlogNewRoute
+}
+
+const AdminAdminBlogRouteChildren: AdminAdminBlogRouteChildren = {
+  AdminAdminBlogIdRoute: AdminAdminBlogIdRoute,
+  AdminAdminBlogNewRoute: AdminAdminBlogNewRoute,
+}
+
+const AdminAdminBlogRouteWithChildren = AdminAdminBlogRoute._addFileChildren(
+  AdminAdminBlogRouteChildren,
+)
+
+interface AdminAdminPilgrimagesRouteChildren {
+  AdminAdminPilgrimagesIdRoute: typeof AdminAdminPilgrimagesIdRoute
+  AdminAdminPilgrimagesNewRoute: typeof AdminAdminPilgrimagesNewRoute
+}
+
+const AdminAdminPilgrimagesRouteChildren: AdminAdminPilgrimagesRouteChildren = {
+  AdminAdminPilgrimagesIdRoute: AdminAdminPilgrimagesIdRoute,
+  AdminAdminPilgrimagesNewRoute: AdminAdminPilgrimagesNewRoute,
+}
+
+const AdminAdminPilgrimagesRouteWithChildren =
+  AdminAdminPilgrimagesRoute._addFileChildren(
+    AdminAdminPilgrimagesRouteChildren,
+  )
+
+interface AdminAdminRouteChildren {
+  AdminAdminBlogRoute: typeof AdminAdminBlogRouteWithChildren
+  AdminAdminPilgrimagesRoute: typeof AdminAdminPilgrimagesRouteWithChildren
+}
+
+const AdminAdminRouteChildren: AdminAdminRouteChildren = {
+  AdminAdminBlogRoute: AdminAdminBlogRouteWithChildren,
+  AdminAdminPilgrimagesRoute: AdminAdminPilgrimagesRouteWithChildren,
+}
+
+const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
+  AdminAdminRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAdminRoute: typeof AdminAdminRouteWithChildren
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminRoute: AdminAdminRouteWithChildren,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AboutRoute: AboutRoute,
   BlogRoute: BlogRoute,
   CalendarRoute: CalendarRoute,
   CatalogRoute: CatalogRoute,
   ContactsRoute: ContactsRoute,
   DestinationsRoute: DestinationsRoute,
+  LoginRoute: LoginRoute,
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
   PublicOfferRoute: PublicOfferRoute,
@@ -313,13 +537,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
