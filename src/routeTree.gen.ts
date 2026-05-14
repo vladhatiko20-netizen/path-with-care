@@ -21,7 +21,7 @@ import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogPochemuPalomnichestvoRouteImport } from './routes/blog_.pochemu-palomnichestvo'
+import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 
 const WithPriestRoute = WithPriestRouteImport.update({
   id: '/with-priest',
@@ -83,12 +83,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogPochemuPalomnichestvoRoute =
-  BlogPochemuPalomnichestvoRouteImport.update({
-    id: '/blog_/pochemu-palomnichestvo',
-    path: '/blog/pochemu-palomnichestvo',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -103,7 +102,7 @@ export interface FileRoutesByFullPath {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/blog/pochemu-palomnichestvo': typeof BlogPochemuPalomnichestvoRoute
+  '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -118,7 +117,7 @@ export interface FileRoutesByTo {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/blog/pochemu-palomnichestvo': typeof BlogPochemuPalomnichestvoRoute
+  '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,7 +133,7 @@ export interface FileRoutesById {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/blog_/pochemu-palomnichestvo': typeof BlogPochemuPalomnichestvoRoute
+  '/blog_/$slug': typeof BlogSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,7 +150,7 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/blog/pochemu-palomnichestvo'
+    | '/blog/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -166,7 +165,7 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/blog/pochemu-palomnichestvo'
+    | '/blog/$slug'
   id:
     | '__root__'
     | '/'
@@ -181,7 +180,7 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/blog_/pochemu-palomnichestvo'
+    | '/blog_/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -197,7 +196,7 @@ export interface RootRouteChildren {
   PublicOfferRoute: typeof PublicOfferRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
-  BlogPochemuPalomnichestvoRoute: typeof BlogPochemuPalomnichestvoRoute
+  BlogSlugRoute: typeof BlogSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -286,11 +285,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog_/pochemu-palomnichestvo': {
-      id: '/blog_/pochemu-palomnichestvo'
-      path: '/blog/pochemu-palomnichestvo'
-      fullPath: '/blog/pochemu-palomnichestvo'
-      preLoaderRoute: typeof BlogPochemuPalomnichestvoRouteImport
+    '/blog_/$slug': {
+      id: '/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -309,7 +308,7 @@ const rootRouteChildren: RootRouteChildren = {
   PublicOfferRoute: PublicOfferRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
-  BlogPochemuPalomnichestvoRoute: BlogPochemuPalomnichestvoRoute,
+  BlogSlugRoute: BlogSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

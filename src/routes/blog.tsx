@@ -1,13 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, ErrorComponent, useRouter } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { listBlogPosts, type BlogPostSummary } from "@/lib/blog.functions";
+import { resolveBlogImage } from "@/lib/blog-images";
 import heroImg from "@/assets/hero-blog.jpg";
-import imgAthos from "@/assets/dest-athos.jpg";
-import imgJerusalem from "@/assets/dest-jerusalem.jpg";
-import imgGeorgia from "@/assets/dest-georgia.jpg";
-import imgFirst from "@/assets/about-pilgrimage.jpg";
-import imgNikolay from "@/assets/cat-nikolay.jpg";
-import imgCalendar from "@/assets/menu-calendar.jpg";
+
+const blogListQueryOptions = () =>
+  queryOptions({
+    queryKey: ["blog-posts"],
+    queryFn: () => listBlogPosts(),
+  });
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -22,21 +25,51 @@ export const Route = createFileRoute("/blog")({
       { property: "og:image", content: heroImg },
     ],
   }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(blogListQueryOptions());
+  },
+  errorComponent: ({ error }) => {
+    const router = useRouter();
+    return (
+      <PageShell>
+        <div className="max-w-2xl mx-auto px-6 py-20 text-center">
+          <ErrorComponent error={error} />
+          <button
+            onClick={() => router.invalidate()}
+            className="mt-6 inline-flex items-center px-6 py-3 bg-accent text-primary-foreground text-sm font-serif rounded-sm"
+          >
+            Повторить
+          </button>
+        </div>
+      </PageShell>
+    );
+  },
+  notFoundComponent: () => (
+    <PageShell>
+      <div className="max-w-2xl mx-auto px-6 py-20 text-center">
+        <h1 className="font-serif text-3xl mb-4">Страница не найдена</h1>
+        <Link to="/" className="text-accent font-serif italic hover:underline">
+          ← На главную
+        </Link>
+      </div>
+    </PageShell>
+  ),
   component: Page,
 });
 
-const posts = [
-  { img: imgFirst, date: "05.2026", slug: "/blog/pochemu-palomnichestvo", ru: { title: "Зачем ехать в паломничество, если есть храм рядом с домом?", excerpt: "Честный разговор о том, зачем нужны паломничества, если приходской храм рядом с домом — и когда лучше остаться." }, ro: { title: "De ce să mergi în pelerinaj, dacă ai biserică lângă casă?", excerpt: "O discuție sinceră despre rostul pelerinajului, când ai biserica parohială aproape — și când e mai bine să rămâi." } },
-  { img: imgAthos, date: "12.02.2026", ru: { title: "Афон глазами того, кто впервые там", excerpt: "Тишина, литургия в три часа ночи, и понимание того, что Святая Гора живёт молитвой уже тысячу лет." }, ro: { title: "Athos prin ochii unui pelerin la prima vizită", excerpt: "Liniște, liturghie la trei dimineața, și înțelegerea că Muntele Sfânt trăiește prin rugăciune de o mie de ani." } },
-  { img: imgJerusalem, date: "05.04.2026", ru: { title: "Иерусалим в Страстную седмицу", excerpt: "Как идут дни от Лазаревой субботы до Пасхи в Святом Граде. Личный опыт — без громких слов." }, ro: { title: "Ierusalim în Săptămâna Patimilor", excerpt: "Cum trec zilele de la Sâmbăta lui Lazăr până la Paști în Cetatea Sfântă." } },
-  { img: imgGeorgia, date: "20.06.2026", ru: { title: "Грузинские монастыри — разговор с Богом", excerpt: "Светицховели, Бодбе, Давида Гареджи — три места, где время становится другим." }, ro: { title: "Mănăstirile Georgiei — dialog cu Dumnezeu", excerpt: "Svetițhoveli, Bodbe, David Gareja — trei locuri unde timpul curge altfel." } },
-  { img: imgFirst, date: "10.01.2026", ru: { title: "Как готовиться к первому паломничеству", excerpt: "Самое важное — не суета сборов, а внутренняя готовность. Несколько простых советов." }, ro: { title: "Cum să te pregătești pentru primul pelerinaj", excerpt: "Cel mai important — pregătirea interioară. Câteva sfaturi simple." } },
-  { img: imgNikolay, date: "18.12.2025", ru: { title: "Святитель Николай — заступник путешествующих", excerpt: "Почему именно к нему едут в Бари из всех уголков мира уже почти тысячу лет." }, ro: { title: "Sf. Nicolae — ocrotitorul călătorilor", excerpt: "De ce la el se merge la Bari din toate colțurile lumii." } },
-  { img: imgCalendar, date: "01.01.2026", ru: { title: "Православный календарь: значимые даты 2026", excerpt: "Пасха, двунадесятые праздники, посты — и как они связаны с нашими поездками." }, ro: { title: "Calendar ortodox: datele importante 2026", excerpt: "Paștele, marile sărbători, posturi — și legătura cu călătoriile noastre." } },
-];
+function formatDate(iso: string, lang: "ru" | "ro") {
+  const d = new Date(iso);
+  return d.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
 
 function Page() {
   const { t, lang } = useLang();
+  const { data: posts } = useSuspenseQuery(blogListQueryOptions());
+
   return (
     <PageShell>
       <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
@@ -51,35 +84,36 @@ function Page() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-10 md:py-10">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((p, i) => {
-            const c = lang === "ru" ? p.ru : p.ro;
-            const card = (
-              <article key={i} className="group bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500">
-                <div className="aspect-[16/10] overflow-hidden">
-                  <img src={p.img} alt={c.title} loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1200ms]" />
-                </div>
-                <div className="p-5">
-                  <p className="text-xs text-muted-foreground font-serif tracking-wider mb-2">{p.date}</p>
-                  <h2 className="font-serif text-xl text-foreground mb-2 leading-tight">{c.title}</h2>
-                  <p className="text-sm text-foreground/70 leading-relaxed mb-4">{c.excerpt}</p>
-                  <span className="text-sm text-accent font-serif italic group-hover:underline">
-                    {t("Читать →", "Citește →")}
-                  </span>
-                </div>
-              </article>
-            );
-            const slug = (p as { slug?: string }).slug;
-            if (slug === "/blog/pochemu-palomnichestvo") {
+        {posts.length === 0 ? (
+          <p className="text-center text-foreground/70 font-serif italic py-16">
+            {t("Пока нет публикаций.", "Încă nu sunt publicații.")}
+          </p>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {posts.map((p: BlogPostSummary) => {
+              const title = lang === "ru" ? p.title_ru : p.title_ro;
+              const excerpt = lang === "ru" ? p.excerpt_ru : p.excerpt_ro;
+              const img = resolveBlogImage(p.cover_image);
               return (
-                <Link key={i} to="/blog/pochemu-palomnichestvo" className="block">
-                  {card}
+                <Link key={p.slug} to="/blog/$slug" params={{ slug: p.slug }} className="block">
+                  <article className="group bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500 h-full">
+                    <div className="aspect-[16/10] overflow-hidden">
+                      <img src={img} alt={title} loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1200ms]" />
+                    </div>
+                    <div className="p-5">
+                      <p className="text-xs text-muted-foreground font-serif tracking-wider mb-2">{formatDate(p.published_at, lang)}</p>
+                      <h2 className="font-serif text-xl text-foreground mb-2 leading-tight">{title}</h2>
+                      {excerpt && <p className="text-sm text-foreground/70 leading-relaxed mb-4">{excerpt}</p>}
+                      <span className="text-sm text-accent font-serif italic group-hover:underline">
+                        {t("Читать →", "Citește →")}
+                      </span>
+                    </div>
+                  </article>
                 </Link>
               );
-            }
-            return card;
-          })}
-        </div>
+            })}
+          </div>
+        )}
       </section>
     </PageShell>
   );
