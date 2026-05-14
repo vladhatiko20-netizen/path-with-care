@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { adminListPilgrimages, adminDeletePilgrimage } from "@/lib/admin.functions";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 
-export const Route = createFileRoute("/_admin/admin/pilgrimages")({
+export const Route = createFileRoute("/_admin/admin/pilgrimages/")({
   component: Page,
 });
 
