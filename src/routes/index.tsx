@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
 import heroImg from "@/assets/hero-monastery.jpg";
@@ -17,6 +18,7 @@ import catLadanImg from "@/assets/cat-ladan.jpg";
 import catBookImg from "@/assets/cat-book.jpg";
 import catJerusalemImg from "@/assets/cat-jerusalem.jpg";
 import { nextFeast, todayFeast, formatFeastDate } from "@/lib/orthodox-feasts";
+import { listBlogPosts } from "@/lib/blog.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -99,13 +101,6 @@ const upcoming = [
   { date: { ru: "5 ноября 2026", ro: "5 noiembrie 2026" }, dest: { ru: "Молдова — выходного дня", ro: "Moldova — weekend" }, dur: { ru: "2 дня", ro: "2 zile" }, price: "€60", seats: { ru: "20 мест", ro: "20 locuri" }, urgent: false },
 ];
 
-const blogTeasers = [
-  { ru: "Зачем ехать в паломничество, если есть храм рядом с домом?", ro: "De ce să mergi în pelerinaj, dacă ai biserică lângă casă?", to: "/blog/pochemu-palomnichestvo" },
-  { ru: "Афон глазами того, кто впервые там", ro: "Athos prin ochii unui pelerin la prima vizită" },
-  { ru: "Иерусалим в Страстную: что я увидел", ro: "Ierusalim în Săptămâna Patimilor" },
-  { ru: "Грузинские монастыри — встреча с Богом", ro: "Mănăstirile Georgiei — întâlnire cu Dumnezeu" },
-];
-
 const catalogTeasers = [
   { img: catNikolayImg, ru: "Икона Святителя Николая (Бари)", ro: "Icoana Sf. Nicolae (Bari)" },
   { img: catLadanImg, ru: "Ладан Афонский", ro: "Tămâie de Athos" },
@@ -115,6 +110,10 @@ const catalogTeasers = [
 
 function HomePage() {
   const { t, lang } = useLang();
+  const { data: blogPosts } = useQuery({
+    queryKey: ["blog-posts"],
+    queryFn: () => listBlogPosts(),
+  });
   const now = new Date();
   const today = now.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
     day: "numeric", month: "long", year: "numeric",
