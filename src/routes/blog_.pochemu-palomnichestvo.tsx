@@ -3,7 +3,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/about-pilgrimage.jpg";
 
-export const Route = createFileRoute("/blog/pochemu-palomnichestvo")({
+export const Route = createFileRoute("/blog_/pochemu-palomnichestvo")({
   head: () => ({
     meta: [
       { title: "Зачем ехать в паломничество, если есть храм рядом с домом? — Паломник" },
