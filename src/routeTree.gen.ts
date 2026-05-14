@@ -25,6 +25,7 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
+import { Route as AdminAdminPilgrimagesRouteImport } from './routes/_admin/admin.pilgrimages'
 import { Route as AdminAdminBlogRouteImport } from './routes/_admin/admin.blog'
 import { Route as AdminAdminBlogNewRouteImport } from './routes/_admin/admin.blog.new'
 import { Route as AdminAdminBlogIdRouteImport } from './routes/_admin/admin.blog.$id'
@@ -108,6 +109,11 @@ const AdminAdminRoute = AdminAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminPilgrimagesRoute = AdminAdminPilgrimagesRouteImport.update({
+  id: '/pilgrimages',
+  path: '/pilgrimages',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
 const AdminAdminBlogRoute = AdminAdminBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -141,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/blog': typeof AdminAdminBlogRouteWithChildren
+  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
 }
@@ -161,6 +168,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/blog': typeof AdminAdminBlogRouteWithChildren
+  '/admin/pilgrimages': typeof AdminAdminPilgrimagesRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
 }
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/blog_/$slug': typeof BlogSlugRoute
   '/_admin/admin/blog': typeof AdminAdminBlogRouteWithChildren
+  '/_admin/admin/pilgrimages': typeof AdminAdminPilgrimagesRoute
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
 }
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog/$slug'
     | '/admin/blog'
+    | '/admin/pilgrimages'
     | '/admin/blog/$id'
     | '/admin/blog/new'
   fileRoutesByTo: FileRoutesByTo
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/blog/$slug'
     | '/admin/blog'
+    | '/admin/pilgrimages'
     | '/admin/blog/$id'
     | '/admin/blog/new'
   id:
@@ -246,6 +257,7 @@ export interface FileRouteTypes {
     | '/_admin/admin'
     | '/blog_/$slug'
     | '/_admin/admin/blog'
+    | '/_admin/admin/pilgrimages'
     | '/_admin/admin/blog/$id'
     | '/_admin/admin/blog/new'
   fileRoutesById: FileRoutesById
@@ -382,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/pilgrimages': {
+      id: '/_admin/admin/pilgrimages'
+      path: '/pilgrimages'
+      fullPath: '/admin/pilgrimages'
+      preLoaderRoute: typeof AdminAdminPilgrimagesRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
     '/_admin/admin/blog': {
       id: '/_admin/admin/blog'
       path: '/blog'
@@ -422,10 +441,12 @@ const AdminAdminBlogRouteWithChildren = AdminAdminBlogRoute._addFileChildren(
 
 interface AdminAdminRouteChildren {
   AdminAdminBlogRoute: typeof AdminAdminBlogRouteWithChildren
+  AdminAdminPilgrimagesRoute: typeof AdminAdminPilgrimagesRoute
 }
 
 const AdminAdminRouteChildren: AdminAdminRouteChildren = {
   AdminAdminBlogRoute: AdminAdminBlogRouteWithChildren,
+  AdminAdminPilgrimagesRoute: AdminAdminPilgrimagesRoute,
 }
 
 const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
