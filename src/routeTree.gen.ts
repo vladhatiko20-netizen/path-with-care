@@ -24,7 +24,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
-import { Route as AdminAdminRouteImport } from './routes/_admin/admin'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as AdminAdminPilgrimagesRouteImport } from './routes/_admin/admin.pilgrimages'
 import { Route as AdminAdminBlogRouteImport } from './routes/_admin/admin.blog'
 import { Route as AdminAdminPilgrimagesNewRouteImport } from './routes/_admin/admin.pilgrimages.new'
@@ -106,20 +106,20 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminAdminRoute = AdminAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminPilgrimagesRoute = AdminAdminPilgrimagesRouteImport.update({
-  id: '/pilgrimages',
-  path: '/pilgrimages',
-  getParentRoute: () => AdminAdminRoute,
+  id: '/admin/pilgrimages',
+  path: '/admin/pilgrimages',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminBlogRoute = AdminAdminBlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => AdminAdminRoute,
+  id: '/admin/blog',
+  path: '/admin/blog',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminPilgrimagesNewRoute =
   AdminAdminPilgrimagesNewRouteImport.update({
@@ -157,10 +157,10 @@ export interface FileRoutesByFullPath {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/blog': typeof AdminAdminBlogRouteWithChildren
   '/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
+  '/admin/': typeof AdminAdminIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
@@ -180,10 +180,10 @@ export interface FileRoutesByTo {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/admin': typeof AdminAdminRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/blog': typeof AdminAdminBlogRouteWithChildren
   '/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
+  '/admin': typeof AdminAdminIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
@@ -205,10 +205,10 @@ export interface FileRoutesById {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/blog_/$slug': typeof BlogSlugRoute
   '/_admin/admin/blog': typeof AdminAdminBlogRouteWithChildren
   '/_admin/admin/pilgrimages': typeof AdminAdminPilgrimagesRouteWithChildren
+  '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/_admin/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
@@ -230,10 +230,10 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/admin'
     | '/blog/$slug'
     | '/admin/blog'
     | '/admin/pilgrimages'
+    | '/admin/'
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pilgrimages/$id'
@@ -253,10 +253,10 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/admin'
     | '/blog/$slug'
     | '/admin/blog'
     | '/admin/pilgrimages'
+    | '/admin'
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/pilgrimages/$id'
@@ -277,10 +277,10 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/_admin/admin'
     | '/blog_/$slug'
     | '/_admin/admin/blog'
     | '/_admin/admin/pilgrimages'
+    | '/_admin/admin/'
     | '/_admin/admin/blog/$id'
     | '/_admin/admin/blog/new'
     | '/_admin/admin/pilgrimages/$id'
@@ -412,26 +412,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_admin/admin': {
-      id: '/_admin/admin'
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
       path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminAdminRouteImport
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/admin/pilgrimages': {
       id: '/_admin/admin/pilgrimages'
-      path: '/pilgrimages'
+      path: '/admin/pilgrimages'
       fullPath: '/admin/pilgrimages'
       preLoaderRoute: typeof AdminAdminPilgrimagesRouteImport
-      parentRoute: typeof AdminAdminRoute
+      parentRoute: typeof AdminRoute
     }
     '/_admin/admin/blog': {
       id: '/_admin/admin/blog'
-      path: '/blog'
+      path: '/admin/blog'
       fullPath: '/admin/blog'
       preLoaderRoute: typeof AdminAdminBlogRouteImport
-      parentRoute: typeof AdminAdminRoute
+      parentRoute: typeof AdminRoute
     }
     '/_admin/admin/pilgrimages/new': {
       id: '/_admin/admin/pilgrimages/new'
@@ -493,26 +493,16 @@ const AdminAdminPilgrimagesRouteWithChildren =
     AdminAdminPilgrimagesRouteChildren,
   )
 
-interface AdminAdminRouteChildren {
+interface AdminRouteChildren {
   AdminAdminBlogRoute: typeof AdminAdminBlogRouteWithChildren
   AdminAdminPilgrimagesRoute: typeof AdminAdminPilgrimagesRouteWithChildren
-}
-
-const AdminAdminRouteChildren: AdminAdminRouteChildren = {
-  AdminAdminBlogRoute: AdminAdminBlogRouteWithChildren,
-  AdminAdminPilgrimagesRoute: AdminAdminPilgrimagesRouteWithChildren,
-}
-
-const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
-  AdminAdminRouteChildren,
-)
-
-interface AdminRouteChildren {
-  AdminAdminRoute: typeof AdminAdminRouteWithChildren
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminAdminRoute: AdminAdminRouteWithChildren,
+  AdminAdminBlogRoute: AdminAdminBlogRouteWithChildren,
+  AdminAdminPilgrimagesRoute: AdminAdminPilgrimagesRouteWithChildren,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -537,3 +527,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
