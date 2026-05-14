@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blog_posts: {
+        Row: {
+          body_ro: string | null
+          body_ru: string | null
+          cover_image: string | null
+          created_at: string
+          excerpt_ro: string | null
+          excerpt_ru: string | null
+          id: string
+          is_published: boolean
+          published_at: string
+          slug: string
+          title_ro: string
+          title_ru: string
+          updated_at: string
+        }
+        Insert: {
+          body_ro?: string | null
+          body_ru?: string | null
+          cover_image?: string | null
+          created_at?: string
+          excerpt_ro?: string | null
+          excerpt_ru?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string
+          slug: string
+          title_ro: string
+          title_ru: string
+          updated_at?: string
+        }
+        Update: {
+          body_ro?: string | null
+          body_ru?: string | null
+          cover_image?: string | null
+          created_at?: string
+          excerpt_ro?: string | null
+          excerpt_ru?: string | null
+          id?: string
+          is_published?: boolean
+          published_at?: string
+          slug?: string
+          title_ro?: string
+          title_ru?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pilgrimages: {
+        Row: {
+          cover_image: string | null
+          created_at: string
+          description_ro: string | null
+          description_ru: string | null
+          destination_ro: string
+          destination_ru: string
+          end_date: string
+          id: string
+          is_published: boolean
+          price_eur: number | null
+          slug: string
+          start_date: string
+          title_ro: string
+          title_ru: string
+          updated_at: string
+          with_priest: boolean
+        }
+        Insert: {
+          cover_image?: string | null
+          created_at?: string
+          description_ro?: string | null
+          description_ru?: string | null
+          destination_ro: string
+          destination_ru: string
+          end_date: string
+          id?: string
+          is_published?: boolean
+          price_eur?: number | null
+          slug: string
+          start_date: string
+          title_ro: string
+          title_ru: string
+          updated_at?: string
+          with_priest?: boolean
+        }
+        Update: {
+          cover_image?: string | null
+          created_at?: string
+          description_ro?: string | null
+          description_ru?: string | null
+          destination_ro?: string
+          destination_ru?: string
+          end_date?: string
+          id?: string
+          is_published?: boolean
+          price_eur?: number | null
+          slug?: string
+          start_date?: string
+          title_ro?: string
+          title_ru?: string
+          updated_at?: string
+          with_priest?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
