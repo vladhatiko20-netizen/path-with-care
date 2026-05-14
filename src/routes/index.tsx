@@ -346,22 +346,29 @@ function HomePage() {
               {t("Истории паломников", "Povești de pelerini")}
             </h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {blogTeasers.slice(0, 3).map((post, i) => {
-              const to = (post as { to?: string }).to ?? "/blog";
-              return (
-                <article key={i} className="bg-card border border-gold/30 p-5 rounded-sm">
+          {blogPosts && blogPosts.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-6">
+              {blogPosts.slice(0, 3).map((post, i) => (
+                <article key={post.slug} className="bg-card border border-gold/30 p-5 rounded-sm">
                   <p className="overline text-[10px] mb-3">{t("История", "Poveste")} · {i + 1}</p>
                   <h3 className="font-serif text-lg text-foreground mb-4 leading-snug min-h-[3.5rem]">
-                    {t(post.ru, post.ro)}
+                    {lang === "ru" ? post.title_ru : post.title_ro}
                   </h3>
-                  <Link to={to} className="text-sm font-serif text-foreground gold-underline hover:text-gold transition-colors">
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: post.slug }}
+                    className="text-sm font-serif text-foreground gold-underline hover:text-gold transition-colors"
+                  >
                     {t("Читать", "Citește")} →
                   </Link>
                 </article>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-foreground/60 font-serif italic">
+              {t("Скоро здесь появятся новые истории.", "În curând vor apărea povești noi.")}
+            </p>
+          )}
           <div className="mt-8">
             <Link to="/blog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
               {t("Все истории", "Toate poveștile")} →
