@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-blog.jpg";
@@ -26,6 +26,7 @@ export const Route = createFileRoute("/blog")({
 });
 
 const posts = [
+  { img: imgFirst, date: "05.2026", slug: "/blog/pochemu-palomnichestvo", ru: { title: "Зачем ехать в паломничество, если есть храм рядом с домом?", excerpt: "Честный разговор о том, зачем нужны паломничества, если приходской храм рядом с домом — и когда лучше остаться." }, ro: { title: "De ce să mergi în pelerinaj, dacă ai biserică lângă casă?", excerpt: "O discuție sinceră despre rostul pelerinajului, când ai biserica parohială aproape — și când e mai bine să rămâi." } },
   { img: imgAthos, date: "12.02.2026", ru: { title: "Афон глазами того, кто впервые там", excerpt: "Тишина, литургия в три часа ночи, и понимание того, что Святая Гора живёт молитвой уже тысячу лет." }, ro: { title: "Athos prin ochii unui pelerin la prima vizită", excerpt: "Liniște, liturghie la trei dimineața, și înțelegerea că Muntele Sfânt trăiește prin rugăciune de o mie de ani." } },
   { img: imgJerusalem, date: "05.04.2026", ru: { title: "Иерусалим в Страстную седмицу", excerpt: "Как идут дни от Лазаревой субботы до Пасхи в Святом Граде. Личный опыт — без громких слов." }, ro: { title: "Ierusalim în Săptămâna Patimilor", excerpt: "Cum trec zilele de la Sâmbăta lui Lazăr până la Paști în Cetatea Sfântă." } },
   { img: imgGeorgia, date: "20.06.2026", ru: { title: "Грузинские монастыри — разговор с Богом", excerpt: "Светицховели, Бодбе, Давида Гареджи — три места, где время становится другим." }, ro: { title: "Mănăstirile Georgiei — dialog cu Dumnezeu", excerpt: "Svetițhoveli, Bodbe, David Gareja — trei locuri unde timpul curge altfel." } },
@@ -53,7 +54,7 @@ function Page() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {posts.map((p, i) => {
             const c = lang === "ru" ? p.ru : p.ro;
-            return (
+            const card = (
               <article key={i} className="group bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500">
                 <div className="aspect-[16/10] overflow-hidden">
                   <img src={p.img} alt={c.title} loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1200ms]" />
@@ -68,6 +69,15 @@ function Page() {
                 </div>
               </article>
             );
+            const slug = (p as { slug?: string }).slug;
+            if (slug === "/blog/pochemu-palomnichestvo") {
+              return (
+                <Link key={i} to="/blog/pochemu-palomnichestvo" className="block">
+                  {card}
+                </Link>
+              );
+            }
+            return card;
           })}
         </div>
       </section>

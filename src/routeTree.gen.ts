@@ -21,6 +21,7 @@ import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogPochemuPalomnichestvoRouteImport } from './routes/blog.pochemu-palomnichestvo'
 
 const WithPriestRoute = WithPriestRouteImport.update({
   id: '/with-priest',
@@ -82,11 +83,17 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogPochemuPalomnichestvoRoute =
+  BlogPochemuPalomnichestvoRouteImport.update({
+    id: '/pochemu-palomnichestvo',
+    path: '/pochemu-palomnichestvo',
+    getParentRoute: () => BlogRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
@@ -96,11 +103,12 @@ export interface FileRoutesByFullPath {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
+  '/blog/pochemu-palomnichestvo': typeof BlogPochemuPalomnichestvoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
@@ -110,12 +118,13 @@ export interface FileRoutesByTo {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
+  '/blog/pochemu-palomnichestvo': typeof BlogPochemuPalomnichestvoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
@@ -125,6 +134,7 @@ export interface FileRoutesById {
   '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
+  '/blog/pochemu-palomnichestvo': typeof BlogPochemuPalomnichestvoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
+    | '/blog/pochemu-palomnichestvo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
+    | '/blog/pochemu-palomnichestvo'
   id:
     | '__root__'
     | '/'
@@ -169,12 +181,13 @@ export interface FileRouteTypes {
     | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
+    | '/blog/pochemu-palomnichestvo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CalendarRoute: typeof CalendarRoute
   CatalogRoute: typeof CatalogRoute
   ContactsRoute: typeof ContactsRoute
@@ -272,13 +285,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/pochemu-palomnichestvo': {
+      id: '/blog/pochemu-palomnichestvo'
+      path: '/pochemu-palomnichestvo'
+      fullPath: '/blog/pochemu-palomnichestvo'
+      preLoaderRoute: typeof BlogPochemuPalomnichestvoRouteImport
+      parentRoute: typeof BlogRoute
+    }
   }
 }
+
+interface BlogRouteChildren {
+  BlogPochemuPalomnichestvoRoute: typeof BlogPochemuPalomnichestvoRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogPochemuPalomnichestvoRoute: BlogPochemuPalomnichestvoRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   CalendarRoute: CalendarRoute,
   CatalogRoute: CatalogRoute,
   ContactsRoute: ContactsRoute,
@@ -292,13 +322,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
