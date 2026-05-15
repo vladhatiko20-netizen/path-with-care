@@ -280,20 +280,20 @@ function HomePage() {
           <div>
             <p className="overline mb-3">{t("О паломничестве", "Despre pelerinaj")}</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
-              {t("Что такое паломническая поездка", "Ce este o călătorie de pelerinaj")}
+              {t("Что такое паломничество?", "Ce este pelerinajul?")}
             </h2>
             <div className="space-y-4 text-foreground/85 leading-[1.8]">
               <p>{t(
-                "Паломничество — это поездка к святым местам с молитвой и с открытым сердцем. Мы готовим программы так, чтобы каждый паломник мог в спокойном темпе побывать у святынь, помолиться, исповедаться, причаститься.",
-                "Pelerinajul este o călătorie la locurile sfinte cu rugăciune și cu inima deschisă. Pregătim programele astfel încât fiecare pelerin să poată vizita sanctuarele într-un ritm liniștit, să se roage, să se spovedească, să se împărtășească."
+                "Паломничеством называют путешествие к святым местам с молитвой и открытым сердцем. Туда, где присутствие Божие ощущается особенно глубоко; где жизнь святых угодников и верных последователей Христа связывает прошлое с настоящим; где веками не прерывается молитва и где Церковь бережно хранит живое свидетельство веры.",
+                "Pelerinajul este o călătorie către locurile sfinte, făcută cu rugăciune și cu inima deschisă. Spre locurile unde prezența lui Dumnezeu se simte în chip deosebit de adânc; unde viața sfinților și a credincioșilor care L-au urmat pe Hristos unește trecutul cu prezentul; unde rugăciunea nu s-a întrerupt de veacuri și unde Biserica păstrează cu grijă mărturia vie a credinței."
               )}</p>
               <p>{t(
-                "В каждой группе — священник, который сопровождает паломников от Кишинёва до святых мест и обратно. Размещение — рядом со святынями, чтобы можно было неспешно посещать утренние и вечерние службы.",
-                "În fiecare grup — un preot care însoțește pelerinii de la Chișinău până la locurile sfinte și înapoi. Cazare lângă sanctuare, pentru a putea participa la slujbele de dimineață și de seară."
+                "Мы продумываем каждую поездку так, чтобы у паломника было время без спешки и суеты побыть у древних святынь, помолиться, исповедаться и причаститься. Останавливаемся в местах, где сама земля хранит память о тех, кто шёл этим путём до нас. В нашем расписании предусмотрено время и для литургии, и для молитвы у раки, и просто для внутренней тишины, чтобы сердце верующего пребывало в спокойствии и благоговении.",
+                "Gândim fiecare pelerinaj astfel încât omul să aibă timp, fără grabă și fără agitație, să stea la vechile sfințenii, să se roage, să se spovedească și să se împărtășească. Ne oprim în locuri unde însăși țărâna păstrează amintirea celor care au mers pe acest drum înaintea noastră. În program este prevăzut timp atât pentru Sfânta Liturghie, cât și pentru rugăciune la racla cu moaște, dar și pentru acea liniște lăuntrică în care inima credinciosului poate rămâne în pace și cu evlavie."
               )}</p>
               <p>{t(
-                "Если для вас это первое паломничество — не волнуйтесь, мы подскажем и поможем со всем: от документов до того, как правильно прикладываться к мощам.",
-                "Dacă acesta este primul pelerinaj pentru dumneavoastră — nu vă faceți griji, vă vom ajuta cu toate: de la documente până la cum să vă închinați la moaște."
+                "Если для вас это первое паломничество, мы поможем со всем: от подготовки документов до того, как зажечь свечу у древней иконы.",
+                "Dacă acesta este primul dumneavoastră pelerinaj, vă vom ajuta cu tot ce este nevoie: de la pregătirea actelor până la momentul în care veți aprinde o lumânare înaintea unei icoane vechi."
               )}</p>
             </div>
           </div>
