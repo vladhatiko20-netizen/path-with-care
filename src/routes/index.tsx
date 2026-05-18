@@ -116,12 +116,12 @@ function HomePage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative h-[58vh] md:h-[75vh] min-h-[480px] flex items-center overflow-hidden">
+      <section className="relative h-[58vh] md:h-screen md:min-h-screen min-h-[480px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroImg}
             alt={t("Православный храм с золотыми куполами", "Biserică ortodoxă cu cupole aurii")}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center md:object-top"
             width={1920}
             height={1080}
           />
