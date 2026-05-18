@@ -22,10 +22,9 @@ const navItems: NavItem[] = [
   { to: "/", ru: "Главная", ro: "Acasă", thumb: thumbHome },
   { to: "/destinations", ru: "Направления", ro: "Destinații", thumb: thumbDestinations },
   { to: "/calendar", ru: "Календарь поездок", ro: "Calendar", thumb: thumbCalendar },
-  { to: "/with-priest", ru: "Диалог со священником", ro: "Dialog cu preotul", thumb: thumbPriest },
-  { to: "/blog", ru: "Православный блог", ro: "Blog ortodox", thumb: thumbBlog },
-  { to: "/orthodox-calendar", ru: "Православный календарь", ro: "Calendar ortodox", thumb: thumbCalendar },
-  { to: "/catalog", ru: "Иконы и святыни", ro: "Icoane și obiecte sfinte", thumb: thumbCatalog },
+  { to: "/with-priest", ru: "Вопросы священнику", ro: "Întrebări preotului", thumb: thumbPriest },
+  { to: "/blog", ru: "Блог", ro: "Blog", thumb: thumbBlog },
+  { to: "/catalog", ru: "Святыни", ro: "Obiecte sfinte", thumb: thumbCatalog },
   { to: "/about", ru: "О нас", ro: "Despre", thumb: thumbAbout },
   { to: "/contacts", ru: "Контакты", ro: "Contacte", thumb: thumbContacts },
 ];
@@ -36,7 +35,8 @@ export function Header() {
 
   return (
     <header className="bg-background border-b border-gold/30 sticky top-0 z-40 backdrop-blur-sm bg-background/95">
-      <div className="border-b border-border/40">
+      {/* Top bar — mobile only */}
+      <div className="border-b border-border/40 lg:hidden">
         <div className="max-w-7xl mx-auto pl-3 pr-6 md:pl-2 md:pr-6 py-2 flex justify-between items-center text-[11px] text-muted-foreground">
           <a
             href="https://eldoradotur.md"
@@ -44,7 +44,7 @@ export function Header() {
             rel="noopener noreferrer"
             className="hover:text-gold transition-colors tracking-wide"
           >
-            {t("Подразделение Eldorado Tur ↗", "Diviziune Eldorado Tur ↗")}
+            {t("Eldorado Tur ↗", "Eldorado Tur ↗")}
           </a>
           <div className="flex items-center gap-2 font-serif">
             <button
@@ -67,7 +67,7 @@ export function Header() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto pl-3 pr-6 md:pl-2 md:pr-6 py-4 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto pl-3 pr-3 lg:pl-4 lg:pr-4 py-4 flex items-center justify-between gap-4">
         <Link
           to="/"
           className="flex items-center gap-3 group shrink-0"
@@ -85,23 +85,51 @@ export function Header() {
               {t("ПАЛОМНИК", "PELERIN")}
             </span>
             <span className="text-[11px] md:text-[15px] text-muted-foreground mt-1 font-serif italic tracking-wide">
-              {t("Паломнические поездки из Кишинёва", "Pelerinaje din Chișinău")}
+              {t("Путь к святыням", "Cale spre sfinte locuri")}
             </span>
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-4 xl:gap-5 font-serif text-[16px] xl:text-[17px] font-medium whitespace-nowrap">
-          {navItems.slice(1).map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="text-[#8a3a1f] hover:text-[#a04826] inline-block transition-all duration-300 ease-out hover:scale-105"
-              activeProps={{ className: "text-[#a04826] gold-underline" }}
-            >
-              {t(item.ru, item.ro)}
-            </Link>
-          ))}
-        </nav>
+        <div className="hidden lg:flex flex-col items-end gap-1">
+          <nav className="flex items-center gap-4 xl:gap-5 font-serif text-[15px] xl:text-[16px] font-medium whitespace-nowrap">
+            {navItems.slice(1).map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="text-[#8a3a1f] hover:text-[#a04826] inline-block transition-all duration-300 ease-out hover:scale-105"
+                activeProps={{ className: "text-[#a04826] gold-underline" }}
+              >
+                {t(item.ru, item.ro)}
+              </Link>
+            ))}
+            <div className="flex items-center gap-1 ml-2">
+              <button
+                onClick={() => setLang("ru")}
+                className={`px-1.5 py-0.5 rounded text-[12px] font-medium tracking-wide transition-colors ${
+                  lang === "ru"
+                    ? "bg-[#6b1f24] text-cream"
+                    : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
+                }`}
+              >RU</button>
+              <button
+                onClick={() => setLang("ro")}
+                className={`px-1.5 py-0.5 rounded text-[12px] font-medium tracking-wide transition-colors ${
+                  lang === "ro"
+                    ? "bg-[#6b1f24] text-cream"
+                    : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
+                }`}
+              >RO</button>
+            </div>
+          </nav>
+          <a
+            href="https://eldoradotur.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] text-muted-foreground hover:text-gold transition-colors tracking-wide"
+          >
+            Eldorado Tur ↗
+          </a>
+        </div>
 
         <button
           onClick={() => setOpen(!open)}

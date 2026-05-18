@@ -377,34 +377,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ORTHODOX CALENDAR TEASER */}
-      <section className="py-12">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="overline mb-3">{t("Календарь", "Calendar")}</p>
-          <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6">
-            {t("Православный календарь", "Calendar ortodox")}
-          </h2>
-          <p className="font-serif italic text-xl text-foreground/85 leading-relaxed mb-2">
-            {t("Сегодня — ", "Astăzi — ")}<span className="text-gold">{today}</span>
-          </p>
-          {feastToday && (
-            <p className="font-serif italic text-foreground/85 mb-2">
-              {t("Память сегодня: ", "Astăzi pomenim: ")}
-              <span className="text-foreground">{lang === "ru" ? feastToday.ru : feastToday.ro}</span>
-            </p>
-          )}
-          <p className="font-serif italic text-muted-foreground mb-7">
-            {t("Ближайший праздник: ", "Următoarea sărbătoare: ")}
-            <span className="text-foreground/80">
-              {lang === "ru" ? feastNext.ru : feastNext.ro} ({formatFeastDate(feastNext, lang)})
-            </span>
-          </p>
-          <Link to="/orthodox-calendar" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
-            {t("Посмотреть весь календарь", "Vezi calendarul complet")} →
-          </Link>
-        </div>
-      </section>
-
       {/* ICONS & RELICS */}
       <section className="bg-card/70 pt-0 pb-16 md:pb-20 border-t border-border/60">
         <div className="aspect-[16/7] md:aspect-[16/5] w-full overflow-hidden">
