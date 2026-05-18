@@ -67,7 +67,7 @@ export function Header() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto pl-3 pr-3 lg:pl-4 lg:pr-4 py-4 flex items-center justify-between gap-4">
+      <div className="pl-3 pr-3 lg:pl-0 lg:pr-0 py-4 flex items-center justify-between gap-4">
         <Link
           to="/"
           className="flex items-center gap-3 group shrink-0"
@@ -84,15 +84,14 @@ export function Header() {
             <span className="font-serif font-semibold text-2xl md:text-[34px] tracking-[0.08em] text-foreground">
               {t("ПАЛОМНИК", "PELERIN")}
             </span>
-            <span className="text-[11px] md:text-[15px] text-muted-foreground mt-1 font-serif italic tracking-wide">
+            <span className="text-[11px] md:text-[17px] text-muted-foreground mt-1 font-serif italic tracking-wide">
               {t("Путь к святыням", "Cale spre sfinte locuri")}
             </span>
           </div>
         </Link>
 
-        <div className="hidden lg:flex flex-col items-end gap-1">
-          <nav className="flex items-center gap-4 xl:gap-5 font-serif text-[15px] xl:text-[16px] font-medium whitespace-nowrap">
-            {navItems.slice(1).map((item) => (
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-5 font-serif text-sm font-medium whitespace-nowrap">
+          {navItems.slice(1).map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -101,31 +100,33 @@ export function Header() {
               >
                 {t(item.ru, item.ro)}
               </Link>
-            ))}
-            <div className="flex items-center gap-1 ml-2">
-              <button
-                onClick={() => setLang("ru")}
-                className={`px-1.5 py-0.5 rounded text-[12px] font-medium tracking-wide transition-colors ${
-                  lang === "ru"
-                    ? "bg-[#6b1f24] text-cream"
-                    : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
-                }`}
-              >RU</button>
-              <button
-                onClick={() => setLang("ro")}
-                className={`px-1.5 py-0.5 rounded text-[12px] font-medium tracking-wide transition-colors ${
-                  lang === "ro"
-                    ? "bg-[#6b1f24] text-cream"
-                    : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
-                }`}
-              >RO</button>
-            </div>
-          </nav>
+          ))}
+        </nav>
+
+        <div className="hidden lg:flex flex-col items-end justify-between self-stretch pr-3">
+          <div className="flex items-center gap-2 font-serif">
+            <button
+              onClick={() => setLang("ru")}
+              className={`px-3 py-1 rounded text-[15px] font-medium tracking-wide transition-colors ${
+                lang === "ru"
+                  ? "bg-[#6b1f24] text-cream"
+                  : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
+              }`}
+            >RU</button>
+            <button
+              onClick={() => setLang("ro")}
+              className={`px-3 py-1 rounded text-[15px] font-medium tracking-wide transition-colors ${
+                lang === "ro"
+                  ? "bg-[#6b1f24] text-cream"
+                  : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
+              }`}
+            >RO</button>
+          </div>
           <a
             href="https://eldoradotur.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-muted-foreground hover:text-gold transition-colors tracking-wide"
+            className="text-[17px] text-muted-foreground hover:text-gold transition-colors tracking-wide font-serif italic mt-1"
           >
             Eldorado Tur ↗
           </a>
