@@ -17,7 +17,6 @@ import catNikolayImg from "@/assets/cat-nikolay.jpg";
 import catLadanImg from "@/assets/cat-ladan.jpg";
 import catBookImg from "@/assets/cat-book.jpg";
 import catJerusalemImg from "@/assets/cat-jerusalem.jpg";
-import { nextFeast, todayFeast, formatFeastDate } from "@/lib/orthodox-feasts";
 import { listBlogPosts } from "@/lib/blog.functions";
 
 export const Route = createFileRoute("/")({
@@ -114,13 +113,6 @@ function HomePage() {
     queryKey: ["blog-posts"],
     queryFn: () => listBlogPosts(),
   });
-  const now = new Date();
-  const today = now.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {
-    day: "numeric", month: "long", year: "numeric",
-  });
-  const feastToday = todayFeast(now);
-  const feastNext = nextFeast(now);
-
   return (
     <PageShell>
       {/* HERO */}
