@@ -128,7 +128,7 @@ function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center w-full">
-          <p className="overline mb-4 md:mb-5 drop-shadow text-sm md:text-lg">
+          <p className="overline mb-4 md:mb-5 drop-shadow text-sm md:text-2xl">
             {t("ВЫЕЗД ИЗ КИШИНЁВА", "PLECARE DIN CHIȘINĂU")}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[56px] text-white font-light leading-[1.1] mb-5 drop-shadow-lg">
@@ -137,13 +137,13 @@ function HomePage() {
               "Călătorii către sfințeniile lumii ortodoxe"
             )}
           </h1>
-          <p className="text-lg md:text-xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow">
+          <p className="text-lg md:text-3xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow">
             {t(
               "Паломничество – это вдохновение христианской жизни",
               "Pelerinajul – este inspirația vieții creștine"
             )}
           </p>
-          <p className="text-base md:text-lg text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow mt-2">
+          <p className="text-base md:text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow mt-2">
             {t(
               "– иеромонах Игнатий (Блинов)",
               "– ieromonahul Ignatie (Blinov)"
