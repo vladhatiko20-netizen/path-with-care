@@ -42,7 +42,7 @@ export function Header() {
             href="https://eldoradotur.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-gold transition-colors tracking-wide"
+            className="text-accent hover:text-accent/80 transition-colors tracking-wide text-[14px]"
           >
             {t("Eldorado Tur ↗", "Eldorado Tur ↗")}
           </a>
@@ -67,7 +67,7 @@ export function Header() {
         </div>
       </div>
 
-      <div className="pl-3 pr-3 lg:pl-0 lg:pr-0 py-4 flex items-center justify-between gap-4">
+      <div className="pl-3 pr-3 lg:pl-8 lg:pr-0 py-4 flex items-center justify-between gap-4">
         <Link
           to="/"
           className="flex items-center gap-3 group shrink-0"
@@ -80,17 +80,17 @@ export function Header() {
           }}
         >
           <span className="text-3xl md:text-[3.75rem] text-accent leading-none select-none" aria-hidden>☦</span>
-          <div className="flex flex-col leading-none">
+          <div className="flex flex-col leading-none items-center">
             <span className="font-serif font-semibold text-2xl md:text-[34px] tracking-[0.08em] text-foreground">
               {t("ПАЛОМНИК", "PELERIN")}
             </span>
-            <span className="text-[11px] md:text-[17px] text-muted-foreground mt-1 font-serif italic tracking-wide">
-              {t("Путь к святыням", "Cale spre sfinte locuri")}
+            <span className="text-[15px] md:text-[17px] text-muted-foreground mt-1 font-serif italic tracking-wide text-center">
+              {t("Путь к Святыням", "Cale spre sfinte locuri")}
             </span>
           </div>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-4 xl:gap-5 font-serif text-sm font-medium whitespace-nowrap">
+        <nav className="hidden lg:flex items-center gap-4 xl:gap-5 font-serif text-base xl:text-lg font-medium whitespace-nowrap">
           {navItems.slice(1).map((item) => (
               <Link
                 key={item.to}
@@ -126,7 +126,7 @@ export function Header() {
             href="https://eldoradotur.md"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[17px] text-muted-foreground hover:text-gold transition-colors tracking-wide font-serif italic mt-1"
+            className="text-[17px] text-accent hover:text-accent/80 transition-colors tracking-wide font-serif italic mt-1"
           >
             Eldorado Tur ↗
           </a>
