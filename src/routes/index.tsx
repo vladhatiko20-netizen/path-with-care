@@ -116,7 +116,7 @@ function HomePage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative h-[58vh] md:h-screen md:min-h-screen min-h-[480px] flex items-center overflow-hidden">
+      <section className="relative h-[58vh] md:h-[calc(100vh-75px)] md:min-h-[calc(100vh-75px)] min-h-[480px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroImg}
