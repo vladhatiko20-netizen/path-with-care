@@ -128,28 +128,37 @@ function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/40 to-black/65" />
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center w-full">
-          <p className="overline mb-4 md:mb-5 drop-shadow">
-            {t("ПАЛОМНИЧЕСКИЕ ПОЕЗДКИ К СВЯТЫНЯМ", "PELERINAJE LA SANCTUARE")}
+          <p className="overline mb-4 md:mb-5 drop-shadow text-sm md:text-base">
+            {t("ВЫЕЗД ИЗ КИШИНЁВА", "PLECARE DIN CHIȘINĂU")}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[56px] text-white font-light leading-[1.1] mb-5 drop-shadow-lg">
-            {t("Организуем поездки к святым местам", "Organizăm călătorii la locurile sfinte")}
-          </h1>
-          <p className="text-base md:text-lg text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow">
             {t(
-              "Друзья, давайте вместе отправимся к святыням православного мира. И вместе — ко Христу.",
-              "Prieteni, să mergem împreună la sanctuarele lumii ortodoxe. Și împreună — spre Hristos."
+              "Поездки к святым местам православного мира",
+              "Călătorii la locurile sfinte ale lumii ortodoxe"
+            )}
+          </h1>
+          <p className="text-lg md:text-xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif drop-shadow">
+            {t(
+              "Паломничество – это вдохновение христианской жизни",
+              "Pelerinajul – este inspirația vieții creștine"
+            )}
+          </p>
+          <p className="text-lg md:text-xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow mt-2">
+            {t(
+              "– иеромонах Игнатий (Блинов)",
+              "– ieromonahul Ignatie (Blinov)"
             )}
           </p>
           <div className="mt-7 md:mt-9 flex flex-wrap items-center justify-center gap-3 md:gap-4">
             <Link
               to="/destinations"
-              className="inline-flex items-center px-6 md:px-7 py-3 bg-accent text-primary-foreground text-[15px] md:text-base font-serif tracking-wide hover:bg-accent/90 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm shadow-md"
+              className="inline-flex items-center px-6 md:px-7 py-3 bg-accent text-primary-foreground text-base md:text-lg font-serif tracking-wide hover:bg-accent/90 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm shadow-md"
             >
               {t("Посмотреть направления", "Vezi destinațiile")}
             </Link>
             <Link
               to="/calendar"
-              className="inline-flex items-center px-6 md:px-7 py-3 border border-white/80 text-white text-[15px] md:text-base font-serif tracking-wide hover:bg-white/10 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm backdrop-blur-sm"
+              className="inline-flex items-center px-6 md:px-7 py-3 border border-white/80 text-white text-base md:text-lg font-serif tracking-wide hover:bg-white/10 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm backdrop-blur-sm"
             >
               {t("Ближайшие поездки", "Călătoriile apropiate")}
             </Link>
