@@ -89,6 +89,12 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  @media (min-width: 768px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
     font-weight: 400;

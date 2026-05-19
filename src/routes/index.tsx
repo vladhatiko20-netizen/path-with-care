@@ -5,6 +5,7 @@ import { PageShell } from "@/components/site/PageShell";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
+import blogHeroImg from "@/assets/hero-blog.jpg";
 import jerusalemImg from "@/assets/dest-jerusalem.jpg";
 import bariImg from "@/assets/dest-bari.jpg";
 import corfuImg from "@/assets/dest-corfu.jpg";
@@ -13,10 +14,6 @@ import georgiaImg from "@/assets/dest-georgia.jpg";
 import romaniaImg from "@/assets/dest-romania.jpg";
 import ukraineImg from "@/assets/dest-ukraine.jpg";
 import moldovaImg from "@/assets/dest-moldova.jpg";
-import catNikolayImg from "@/assets/cat-nikolay.jpg";
-import catLadanImg from "@/assets/cat-ladan.jpg";
-import catBookImg from "@/assets/cat-book.jpg";
-import catJerusalemImg from "@/assets/cat-jerusalem.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 
 export const Route = createFileRoute("/")({
@@ -98,13 +95,6 @@ const upcoming = [
   { date: { ru: "10 сентября 2026", ro: "10 septembrie 2026" }, dest: { ru: "Румыния — монастыри", ro: "România — mănăstiri" }, dur: { ru: "5 дней", ro: "5 zile" }, price: "€450", seats: { ru: "14 мест", ro: "14 locuri" }, urgent: false },
   { date: { ru: "1 октября 2026", ro: "1 octombrie 2026" }, dest: { ru: "Корфу", ro: "Corfu" }, dur: { ru: "6 дней", ro: "6 zile" }, price: "€750", seats: { ru: "10 мест", ro: "10 locuri" }, urgent: false },
   { date: { ru: "5 ноября 2026", ro: "5 noiembrie 2026" }, dest: { ru: "Молдова — выходного дня", ro: "Moldova — weekend" }, dur: { ru: "2 дня", ro: "2 zile" }, price: "€60", seats: { ru: "20 мест", ro: "20 locuri" }, urgent: false },
-];
-
-const catalogTeasers = [
-  { img: catNikolayImg, ru: "Икона Святителя Николая (Бари)", ro: "Icoana Sf. Nicolae (Bari)" },
-  { img: catLadanImg, ru: "Ладан Афонский", ro: "Tămâie de Athos" },
-  { img: catBookImg, ru: "«Старец Силуан Афонский» (книга)", ro: "„Stareţul Siluan Athonitul” (carte)" },
-  { img: catJerusalemImg, ru: "Иерусалимская иконка", ro: "Iconiță din Ierusalim" },
 ];
 
 function HomePage() {
@@ -303,7 +293,7 @@ function HomePage() {
 
       {/* PRIEST CONVERSATION TEASER */}
       <section className="py-10">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+        <Link to="/with-priest" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
           <div>
             <p className="overline mb-3">{t("Беседы", "Conversații")}</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
@@ -321,9 +311,9 @@ function HomePage() {
               <li>— {t("Что взять с собой в Иерусалим?", "Ce să iei cu tine la Ierusalim?")}</li>
               <li>— {t("Как правильно прикладываться к мощам?", "Cum ne închinăm la moaște?")}</li>
             </ul>
-            <Link to="/with-priest" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
+            <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
               {t("Перейти к беседам", "Treci la conversații")} →
-            </Link>
+            </span>
           </div>
           <div>
             <img
@@ -335,51 +325,50 @@ function HomePage() {
               className="w-full h-auto rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
             />
           </div>
-        </div>
+        </Link>
       </section>
 
       {/* BLOG TEASER */}
       <section className="bg-secondary/50 py-12 md:py-10">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="mb-10">
+        <Link to="/blog" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
+          <div className="hidden md:block">
+            <img
+              src={blogHeroImg}
+              alt={t("Истории паломников", "Povești de pelerini")}
+              loading="lazy"
+              width={1200}
+              height={1200}
+              className="w-full aspect-square object-cover rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+            />
+          </div>
+          <div>
             <p className="overline mb-2">{t("Православный блог", "Blog ortodox")}</p>
-            <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground">
+            <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6">
               {t("Истории паломников", "Povești de pelerini")}
             </h2>
-          </div>
-          {blogPosts && blogPosts.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-6">
-              {blogPosts.slice(0, 3).map((post, i) => (
-                <article key={post.slug} className="bg-card border border-gold/30 p-5 rounded-sm">
-                  <p className="overline text-[10px] mb-3">{t("История", "Poveste")} · {i + 1}</p>
-                  <h3 className="font-serif text-lg text-foreground mb-4 leading-snug min-h-[3.5rem]">
-                    {lang === "ru" ? post.title_ru : post.title_ro}
-                  </h3>
-                  <Link
-                    to="/blog/$slug"
-                    params={{ slug: post.slug }}
-                    className="text-sm font-serif text-foreground gold-underline hover:text-gold transition-colors"
-                  >
-                    {t("Читать", "Citește")} →
-                  </Link>
-                </article>
-              ))}
-            </div>
-          ) : (
-            <p className="text-foreground/60 font-serif italic">
-              {t("Скоро здесь появятся новые истории.", "În curând vor apărea povești noi.")}
-            </p>
-          )}
-          <div className="mt-8">
-            <Link to="/blog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
+            {blogPosts && blogPosts.length > 0 ? (
+              <ul className="space-y-3 mb-7">
+                {blogPosts.slice(0, 3).map((post) => (
+                  <li key={post.slug} className="font-serif text-foreground/85 leading-snug border-b border-gold/20 pb-3 last:border-b-0">
+                    — {lang === "ru" ? post.title_ru : post.title_ro}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-foreground/60 font-serif italic mb-7">
+                {t("Скоро здесь появятся новые истории.", "În curând vor apărea povești noi.")}
+              </p>
+            )}
+            <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
               {t("Все истории", "Toate poveștile")} →
-            </Link>
+            </span>
           </div>
-        </div>
+        </Link>
       </section>
 
       {/* ICONS & RELICS */}
       <section className="bg-card/70 pt-0 pb-16 md:pb-20 border-t border-border/60">
+        <Link to="/catalog" className="block group">
         <div className="aspect-[16/7] w-full overflow-hidden md:hidden">
           <img
             src={catalogHeroImg}
@@ -391,7 +380,7 @@ function HomePage() {
           />
         </div>
         <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-16">
-          <div className="mb-9 md:mb-12 md:grid md:grid-cols-2 md:gap-12 md:items-stretch">
+          <div className="md:grid md:grid-cols-2 md:gap-12 md:items-stretch">
             <div className="max-w-2xl md:max-w-none md:flex md:flex-col md:justify-center">
               <p className="overline mb-3">{t("По предзаказу", "La pre-comandă")}</p>
               <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-5 leading-tight">
@@ -404,9 +393,9 @@ function HomePage() {
                 )}
               </p>
               <div className="hidden md:block">
-                <Link to="/catalog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
+                <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
                   {t("Каталог", "Catalog")} →
-                </Link>
+                </span>
               </div>
             </div>
             <div className="hidden md:block">
@@ -420,36 +409,13 @@ function HomePage() {
               />
             </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {catalogTeasers.map((item, i) => (
-              <Link key={i} to="/catalog" className="group block bg-background border border-gold/30 rounded-sm overflow-hidden hover:border-gold transition-all">
-                <div className="aspect-square overflow-hidden">
-                  <img
-                    src={item.img}
-                    alt={t(item.ru, item.ro)}
-                    loading="lazy"
-                    width={768}
-                    height={768}
-                    className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-700"
-                  />
-                </div>
-                <div className="p-4">
-                  <p className="font-serif text-foreground leading-snug mb-1 text-[15px]">
-                    {t(item.ru, item.ro)}
-                  </p>
-                  <p className="text-xs text-muted-foreground italic">
-                    {t("по предзаказу", "la pre-comandă")}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
           <div className="mt-9 md:hidden">
-            <Link to="/catalog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
+            <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
               {t("Каталог", "Catalog")} →
-            </Link>
+            </span>
           </div>
         </div>
+        </Link>
       </section>
 
       {/* BLESSING */}
