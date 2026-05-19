@@ -332,9 +332,9 @@ function HomePage() {
       {/* BLOG TEASER */}
       <section className="bg-secondary/50 py-12 md:py-10">
         <Link to="/blog" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
-          <div className="hidden md:block">
+          <div>
             <img
-              src={blogHeroImg}
+              src="https://images.pexels.com/photos/10618234/pexels-photo-10618234.jpeg"
               alt={t("Истории паломников", "Povești de pelerini")}
               loading="lazy"
               width={1200}
