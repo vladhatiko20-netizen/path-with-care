@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { adminSavePilgrimage } from "@/lib/admin.functions";
+import { ImageUpload } from "./ImageUpload";
 
 type Initial = {
   id?: string;
@@ -93,10 +94,12 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
         <textarea className={cls} rows={4} value={form.description_ro ?? ""} onChange={(e) => set("description_ro", e.target.value || null)} maxLength={5000} />
       </div>
 
-      <div>
-        <label className="block text-sm font-serif mb-1">Обложка (ключ или URL)</label>
-        <input className={cls} value={form.cover_image ?? ""} onChange={(e) => set("cover_image", e.target.value || null)} maxLength={500} />
-      </div>
+      <ImageUpload
+        value={form.cover_image}
+        onChange={(url) => set("cover_image", url)}
+        folder="pilgrimages"
+        label="Обложка паломничества"
+      />
 
       <div className="flex flex-wrap gap-6">
         <label className="flex items-center gap-2 text-sm">
