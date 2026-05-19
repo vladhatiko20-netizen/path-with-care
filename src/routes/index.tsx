@@ -5,6 +5,7 @@ import { PageShell } from "@/components/site/PageShell";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
+import blogHeroImg from "@/assets/hero-blog.jpg";
 import jerusalemImg from "@/assets/dest-jerusalem.jpg";
 import bariImg from "@/assets/dest-bari.jpg";
 import corfuImg from "@/assets/dest-corfu.jpg";
@@ -13,10 +14,6 @@ import georgiaImg from "@/assets/dest-georgia.jpg";
 import romaniaImg from "@/assets/dest-romania.jpg";
 import ukraineImg from "@/assets/dest-ukraine.jpg";
 import moldovaImg from "@/assets/dest-moldova.jpg";
-import catNikolayImg from "@/assets/cat-nikolay.jpg";
-import catLadanImg from "@/assets/cat-ladan.jpg";
-import catBookImg from "@/assets/cat-book.jpg";
-import catJerusalemImg from "@/assets/cat-jerusalem.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 
 export const Route = createFileRoute("/")({
@@ -98,13 +95,6 @@ const upcoming = [
   { date: { ru: "10 сентября 2026", ro: "10 septembrie 2026" }, dest: { ru: "Румыния — монастыри", ro: "România — mănăstiri" }, dur: { ru: "5 дней", ro: "5 zile" }, price: "€450", seats: { ru: "14 мест", ro: "14 locuri" }, urgent: false },
   { date: { ru: "1 октября 2026", ro: "1 octombrie 2026" }, dest: { ru: "Корфу", ro: "Corfu" }, dur: { ru: "6 дней", ro: "6 zile" }, price: "€750", seats: { ru: "10 мест", ro: "10 locuri" }, urgent: false },
   { date: { ru: "5 ноября 2026", ro: "5 noiembrie 2026" }, dest: { ru: "Молдова — выходного дня", ro: "Moldova — weekend" }, dur: { ru: "2 дня", ro: "2 zile" }, price: "€60", seats: { ru: "20 мест", ro: "20 locuri" }, urgent: false },
-];
-
-const catalogTeasers = [
-  { img: catNikolayImg, ru: "Икона Святителя Николая (Бари)", ro: "Icoana Sf. Nicolae (Bari)" },
-  { img: catLadanImg, ru: "Ладан Афонский", ro: "Tămâie de Athos" },
-  { img: catBookImg, ru: "«Старец Силуан Афонский» (книга)", ro: "„Stareţul Siluan Athonitul” (carte)" },
-  { img: catJerusalemImg, ru: "Иерусалимская иконка", ro: "Iconiță din Ierusalim" },
 ];
 
 function HomePage() {
