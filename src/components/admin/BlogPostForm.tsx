@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { adminSaveBlogPost } from "@/lib/admin.functions";
 import { RichEditor } from "./RichEditor";
+import { ImageUpload } from "./ImageUpload";
 
 type Initial = {
   id?: string;
@@ -59,12 +60,12 @@ export function BlogPostForm({ initial }: { initial: Initial }) {
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-serif mb-1">Обложка (ключ изображения или URL)</label>
-        <input className={cls} value={form.cover_image ?? ""} onChange={(e) => set("cover_image", e.target.value || null)}
-          placeholder="например: about-pilgrimage или https://..." maxLength={500} />
-        <p className="text-xs text-muted-foreground mt-1">Доступные ключи: about-pilgrimage, dest-athos, dest-jerusalem, dest-georgia, cat-nikolay, menu-calendar, hero-blog</p>
-      </div>
+      <ImageUpload
+        value={form.cover_image}
+        onChange={(url) => set("cover_image", url)}
+        folder="blog"
+        label="Обложка статьи"
+      />
 
       <div className="flex gap-2 border-b border-border">
         {(["ru", "ro"] as const).map((l) => (
