@@ -380,7 +380,7 @@ function HomePage() {
 
       {/* ICONS & RELICS */}
       <section className="bg-card/70 pt-0 pb-16 md:pb-20 border-t border-border/60">
-        <div className="aspect-[16/7] md:aspect-[16/5] w-full overflow-hidden">
+        <div className="aspect-[16/7] w-full overflow-hidden md:hidden">
           <img
             src={catalogHeroImg}
             alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
@@ -390,18 +390,35 @@ function HomePage() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="max-w-6xl mx-auto px-6 pt-12">
-          <div className="mb-9 max-w-2xl">
-            <p className="overline mb-3">{t("По предзаказу", "La pre-comandă")}</p>
-            <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-5">
-              {t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură duhovnicească")}
-            </h2>
-            <p className="text-foreground/75 leading-relaxed">
-              {t(
-                "Многие православные святыни и духовная литература трудно найти в Молдове. Мы привозим их из паломнических поездок — со Святой Земли, из Бари, с Корфу, с Афона. Если вас интересует определённая икона, книга или ладан — оставьте предзаказ, и мы поможем его привезти.",
-                "Multe sanctuare ortodoxe și literatură duhovnicească sunt greu de găsit în Moldova. Le aducem din călătoriile de pelerinaj — din Țara Sfântă, din Bari, din Corfu, din Athos. Dacă vă interesează o anumită icoană, carte sau tămâie — lăsați o pre-comandă și vă vom ajuta să o aducem."
-              )}
-            </p>
+        <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-16">
+          <div className="mb-9 md:mb-12 md:grid md:grid-cols-2 md:gap-12 md:items-stretch">
+            <div className="max-w-2xl md:max-w-none md:flex md:flex-col md:justify-center">
+              <p className="overline mb-3">{t("По предзаказу", "La pre-comandă")}</p>
+              <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-5 leading-tight">
+                {t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură duhovnicească")}
+              </h2>
+              <p className="text-foreground/75 leading-relaxed mb-6">
+                {t(
+                  "Многие православные святыни и духовная литература трудно найти в Молдове. Мы привозим их из паломнических поездок — со Святой Земли, из Бари, с Корфу, с Афона. Если вас интересует определённая икона, книга или ладан — оставьте предзаказ, и мы поможем его привезти.",
+                  "Multe sanctuare ortodoxe și literatură duhovnicească sunt greu de găsit în Moldova. Le aducem din călătoriile de pelerinaj — din Țara Sfântă, din Bari, din Corfu, din Athos. Dacă vă interesează o anumită icoană, carte sau tămâie — lăsați o pre-comandă și vă vom ajuta să o aducem."
+                )}
+              </p>
+              <div className="hidden md:block">
+                <Link to="/catalog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
+                  {t("Каталог", "Catalog")} →
+                </Link>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <img
+                src={catalogHeroImg}
+                alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
+                loading="lazy"
+                width={1200}
+                height={1200}
+                className="w-full h-full max-h-[520px] object-cover rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+              />
+            </div>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {catalogTeasers.map((item, i) => (
@@ -427,7 +444,7 @@ function HomePage() {
               </Link>
             ))}
           </div>
-          <div className="mt-9">
+          <div className="mt-9 md:hidden">
             <Link to="/catalog" className="font-serif text-foreground gold-underline hover:text-gold transition-colors">
               {t("Каталог", "Catalog")} →
             </Link>
