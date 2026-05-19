@@ -4,6 +4,7 @@ import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
+import priestImg from "@/assets/orthodox-priest.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
 import jerusalemImg from "@/assets/dest-jerusalem.jpg";
@@ -294,7 +295,7 @@ function HomePage() {
       {/* PRIEST CONVERSATION TEASER */}
       <section className="py-10">
         <Link to="/with-priest" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
-          <div>
+          <div className="order-2 md:order-1">
             <p className="overline mb-3">{t("Беседы", "Conversații")}</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
               {t("Диалог со священником", "Dialog cu preotul")}
@@ -315,13 +316,13 @@ function HomePage() {
               {t("Перейти к беседам", "Treci la conversații")} →
             </span>
           </div>
-          <div>
+          <div className="order-1 md:order-2">
             <img
-              src={aboutPilgrimageImg}
+              src={priestImg}
               alt=""
               loading="lazy"
               width={1024}
-              height={1280}
+              height={1024}
               className="w-full h-auto rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
             />
           </div>
