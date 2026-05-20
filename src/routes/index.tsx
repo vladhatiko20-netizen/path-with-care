@@ -158,7 +158,7 @@ function HomePage() {
       </section>
 
       {/* DIRECTIONS */}
-      <section className="bg-secondary/60 pt-4 pb-10 md:pt-12 md:pb-12">
+      <section className="bg-secondary/60 pt-4 pb-6 md:pt-12 md:pb-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-8 md:mb-10">
             <p className="overline mb-1 md:mb-3">{t("Направления", "Destinații")}</p>
@@ -176,7 +176,7 @@ function HomePage() {
                   to="/destinations"
                   className="group block bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500"
                 >
-                  <div className="aspect-[4/3] overflow-hidden">
+                  <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
                     <img
                       src={d.img}
                       alt={c.title}
@@ -207,7 +207,7 @@ function HomePage() {
       </section>
 
       {/* UPCOMING TRIPS */}
-      <section className="bg-card/60 py-10 md:py-12 border-y border-border/60">
+      <section className="bg-card/60 py-6 md:py-12 border-y border-border/60">
         <div className="max-w-5xl mx-auto px-6">
           <div className="mb-8">
             <p className="overline mb-2">{t("Расписание", "Program")}</p>
@@ -257,16 +257,16 @@ function HomePage() {
       </section>
 
       {/* О ПАЛОМНИЧЕСТВЕ */}
-      <section className="max-w-6xl mx-auto px-6 py-10 md:py-12">
+      <section className="max-w-6xl mx-auto px-6 py-6 md:py-12">
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
+          <div className="max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
             <img
               src={aboutPilgrimageImg}
               alt={t("Иконы и свечи в храме", "Icoane și lumânări")}
               loading="lazy"
               width={1024}
               height={1280}
-              className="w-full h-auto rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+              className="w-full h-full object-cover"
             />
           </div>
           <div>
@@ -293,7 +293,7 @@ function HomePage() {
       </section>
 
       {/* PRIEST CONVERSATION TEASER */}
-      <section className="py-10">
+      <section className="py-6">
         <Link to="/with-priest" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
           <div className="order-2 md:order-1">
             <p className="overline mb-3">{t("Беседы", "Conversații")}</p>
@@ -316,30 +316,30 @@ function HomePage() {
               {t("Перейти к беседам", "Treci la conversații")} →
             </span>
           </div>
-          <div className="order-1 md:order-2">
+          <div className="order-1 md:order-2 max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
             <img
               src={priestImg}
               alt=""
               loading="lazy"
               width={1024}
               height={1024}
-              className="w-full h-auto rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+              className="w-full h-full object-cover"
             />
           </div>
         </Link>
       </section>
 
       {/* BLOG TEASER */}
-      <section className="bg-secondary/50 py-12 md:py-10">
+      <section className="bg-secondary/50 py-6 md:py-10">
         <Link to="/blog" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
-          <div>
+          <div className="max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
             <img
               src="https://images.pexels.com/photos/10618234/pexels-photo-10618234.jpeg"
               alt={t("Истории паломников", "Povești de pelerini")}
               loading="lazy"
               width={1200}
               height={1200}
-              className="w-full aspect-square object-cover rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+              className="w-full h-full object-cover"
             />
           </div>
           <div>
@@ -368,9 +368,9 @@ function HomePage() {
       </section>
 
       {/* ICONS & RELICS */}
-      <section className="bg-card/70 pt-0 pb-16 md:pb-20 border-t border-border/60">
+      <section className="bg-card/70 pt-0 pb-6 md:pb-20 border-t border-border/60">
         <Link to="/catalog" className="block group">
-        <div className="aspect-[16/7] w-full overflow-hidden md:hidden">
+        <div className="aspect-[16/7] max-md:max-h-[250px] w-full overflow-hidden md:hidden">
           <img
             src={catalogHeroImg}
             alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
@@ -420,7 +420,7 @@ function HomePage() {
       </section>
 
       {/* BLESSING */}
-      <section className="py-12 md:py-10">
+      <section className="py-6 md:py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="divider-gold overline mb-7">{t("С молитвой", "Cu rugăciune")}</p>
           <p className="font-serif italic text-2xl md:text-3xl text-foreground/85 leading-relaxed">
@@ -431,7 +431,7 @@ function HomePage() {
       </section>
 
       {/* TRUST BADGES */}
-      <section className="bg-secondary/50 py-10 md:py-12 border-t border-border/60">
+      <section className="bg-secondary/50 py-6 md:py-12 border-t border-border/60">
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid sm:grid-cols-3 gap-5">
             <div className="bg-card border border-gold/30 rounded-sm p-5 text-center">
