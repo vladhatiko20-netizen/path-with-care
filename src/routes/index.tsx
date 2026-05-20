@@ -107,7 +107,7 @@ function HomePage() {
   return (
     <PageShell>
       {/* HERO */}
-      <section className="relative max-md:max-h-[250px] max-md:min-h-0 h-[58vh] md:h-[calc(100vh-75px)] md:min-h-[calc(100vh-75px)] min-h-[480px] flex items-center overflow-hidden">
+      <section className="relative h-[58vh] md:h-[calc(100vh-75px)] md:min-h-[calc(100vh-75px)] min-h-[480px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroImg}
