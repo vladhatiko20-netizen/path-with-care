@@ -11,7 +11,7 @@ import romaniaImg from "@/assets/dest-romania.jpg";
 import ukraineImg from "@/assets/dest-ukraine.jpg";
 import moldovaImg from "@/assets/dest-moldova.jpg";
 
-export const Route = createFileRoute("/destinations")({
+export const Route = createFileRoute("/destinations/")({
   head: () => ({
     meta: [
       { title: "Направления — Паломник" },
