@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
@@ -18,10 +18,10 @@ import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
 
 const PAGE_URL = "https://path-with-care.lovable.app/destinations/bari";
-const TITLE_RU = "Бари — паломничество к мощам Святителя Николая Чудотворца";
-const TITLE_RO = "Bari — pelerinaj la moaștele Sfântului Ierarh Nicolae";
-const DESC_RU = "Паломническая поездка из Кишинёва в итальянский Бари — поклонение мощам Святителя Николая, акафист у крипты, программа на 5–7 дней.";
-const DESC_RO = "Pelerinaj din Chișinău la Bari — închinare la moaștele Sfântului Nicolae, acatist la criptă, program de 5–7 zile.";
+const TITLE_RU = "Бари – паломничество к мощам Святителя Николая Чудотворца";
+const TITLE_RO = "Bari – pelerinaj la moaștele Sfântului Ierarh Nicolae";
+const DESC_RU = "Паломническая поездка из Кишинёва в итальянский Бари – поклонение мощам Святителя Николая, акафист у крипты, программа на 5–7 дней.";
+const DESC_RO = "Pelerinaj din Chișinău la Bari – închinare la moaștele Sfântului Nicolae, acatist la criptă, program de 5–7 zile.";
 
 export const Route = createFileRoute("/destinations/bari")({
   loader: async () => {
@@ -114,9 +114,27 @@ export const Route = createFileRoute("/destinations/bari")({
   component: BariPage,
 });
 
+function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
+  const locale = lang === "ru" ? "ru-RU" : "ro-RO";
+  const s = new Date(start);
+  const e = new Date(end);
+  const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+  const sameYear = s.getFullYear() === e.getFullYear();
+  const monthFmt = new Intl.DateTimeFormat(locale, { month: "long" });
+  const yearFmt = new Intl.DateTimeFormat(locale, { year: "numeric" });
+  if (sameMonth) {
+    return `${s.getDate()}–${e.getDate()} ${monthFmt.format(e)} ${yearFmt.format(e)}`;
+  }
+  if (sameYear) {
+    return `${s.getDate()} ${monthFmt.format(s)} – ${e.getDate()} ${monthFmt.format(e)} ${yearFmt.format(e)}`;
+  }
+  return `${s.toLocaleDateString(locale)} – ${e.toLocaleDateString(locale)}`;
+}
+
 function BariPage() {
   const { destination, pilgrimages } = Route.useLoaderData();
   const { t, lang } = useLang();
+  const [prefill, setPrefill] = useState<string>("");
 
   const title = destination ? (lang === "ru" ? destination.title_ru : destination.title_ro) : t("Бари", "Bari");
   const duration = destination ? (lang === "ru" ? destination.duration_ru : destination.duration_ro) : null;
@@ -127,6 +145,18 @@ function BariPage() {
     const d = (p.destination_ru + " " + p.destination_ro).toLowerCase();
     return p.slug.toLowerCase().includes("bari") || d.includes("бари") || d.includes("bari");
   });
+
+  function selectDate(p: PilgrimageSummary) {
+    const dates = formatDateRange(p.start_date, p.end_date, lang);
+    const msg = lang === "ru"
+      ? `Интересует поездка в Бари – ${dates}`
+      : `Mă interesează pelerinajul la Bari – ${dates}`;
+    setPrefill(msg);
+    if (typeof window !== "undefined") {
+      const el = document.getElementById("lead");
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 
   return (
     <PageShell>
@@ -150,8 +180,14 @@ function BariPage() {
           <h1 className="font-serif text-4xl md:text-6xl text-white font-light leading-tight drop-shadow-lg">{title}</h1>
           <p className="mt-4 font-serif italic text-white/85 text-lg md:text-xl max-w-2xl">
             {t(
-              "«Правило веры и образ кротости, воздержания учителя яви тя стаду твоему».",
-              "„Îndreptător al credinței și chip al blândeții, învățător al înfrânării te-a arătat turmei tale”.",
+              "«Николай Чудотворец – скорый помощник всем, с верою к нему притекающим, в скорбях и нуждах заступник, в болезнях целитель, в опасностях избавитель.»",
+              "„Nicolae Făcătorul de Minuni este un ajutor grabnic pentru toți cei ce aleargă cu credință la el, apărător în necazuri și nevoi, tămăduitor în boli, izbăvitor în primejdii.”",
+            )}
+          </p>
+          <p className="mt-2 font-serif italic text-white/70 text-sm md:text-base">
+            {t(
+              "– Святитель Димитрий Ростовский. Жития святых.",
+              "– Sfântul Dimitrie al Rostovului. Viețile Sfinților.",
             )}
           </p>
         </div>
@@ -162,15 +198,15 @@ function BariPage() {
         <div className="max-w-6xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 font-serif text-center">
           <div>
             <p className="overline mb-1">{t("Длительность", "Durata")}</p>
-            <p className="text-[17px] text-foreground">{duration ? `${duration}${t(" дней", " zile")}` : "—"}</p>
+            <p className="text-[17px] text-foreground">{duration ? `${duration}${t(" дней", " zile")}` : "–"}</p>
           </div>
           <div>
             <p className="overline mb-1">{t("Группа", "Grup")}</p>
-            <p className="text-[17px] text-foreground">{groupSize ?? "—"}</p>
+            <p className="text-[17px] text-foreground">{groupSize ?? "–"}</p>
           </div>
           <div>
             <p className="overline mb-1">{t("Цена", "Preț")}</p>
-            <p className="text-[17px] text-gold">{priceFrom ? `${t("от", "de la")} €${priceFrom}` : "—"}</p>
+            <p className="text-[17px] text-gold">{priceFrom ? `${t("от", "de la")} €${priceFrom}` : "–"}</p>
           </div>
           <div>
             <p className="overline mb-1">{t("Сопровождение", "Însoțire")}</p>
@@ -184,7 +220,7 @@ function BariPage() {
         <h2 className="text-3xl md:text-4xl text-foreground font-light mb-5">{t("О поездке", "Despre pelerinaj")}</h2>
         <p className="text-[17px] md:text-lg text-foreground/85 leading-relaxed">
           {t(
-            "Святитель Николай Чудотворец — один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
+            "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
             "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
           )}
         </p>
@@ -198,7 +234,7 @@ function BariPage() {
             {[
               { img: cryptImg, ru: { t: "Крипта со святыми мощами", d: "Спуск в нижний храм к мраморной гробнице, где почивают мощи Святителя." }, ro: { t: "Cripta cu sfintele moaște", d: "Coborâre la biserica de jos, la mormântul de marmură unde se află moaștele." } },
               { img: interiorImg, ru: { t: "Икона Святителя Николая", d: "Особое моление перед чудотворным образом, акафист и помазание святым миром." }, ro: { t: "Icoana Sfântului Nicolae", d: "Rugăciune deosebită înaintea sfintei icoane, acatist și ungere cu sfântul mir." } },
-              { img: heroImg, ru: { t: "Базилика Святителя", d: "Главное место паломничества — храм, в котором почивают мощи угодника Божия." }, ro: { t: "Bazilica Sfântului", d: "Locul principal de pelerinaj — biserica în care se află moaștele plăcutului lui Dumnezeu." } },
+              { img: heroImg, ru: { t: "Базилика Святителя", d: "Главное место паломничества – храм, в котором почивают мощи угодника Божия." }, ro: { t: "Bazilica Sfântului", d: "Locul principal de pelerinaj – biserica în care se află moaștele plăcutului lui Dumnezeu." } },
             ].map((s, i) => {
               const c = lang === "ru" ? s.ru : s.ro;
               return (
@@ -222,11 +258,11 @@ function BariPage() {
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-6">{t("Программа по дням", "Programul pe zile")}</h2>
         <Accordion type="single" collapsible className="font-serif">
           {[
-            { ru: { t: "День 1 — Прибытие в Бари", d: "Перелёт из Кишинёва в Бари. Встреча в аэропорту, трансфер в гостиницу, размещение, вечерняя молитва." }, ro: { t: "Ziua 1 — Sosirea la Bari", d: "Zbor din Chișinău la Bari. Întâlnire la aeroport, transfer la hotel, cazare, rugăciune de seară." } },
-            { ru: { t: "День 2 — Литургия у мощей", d: "Утренняя Литургия у мощей Святителя Николая, акафист, поклонение, помазание миром." }, ro: { t: "Ziua 2 — Liturghie la moaște", d: "Sfânta Liturghie la moaștele Sfântului Nicolae, acatist, închinare, ungere cu mir." } },
-            { ru: { t: "День 3 — Город Бари", d: "Старый город, церкви Бари, морская набережная, свободное время." }, ro: { t: "Ziua 3 — Orașul Bari", d: "Orașul vechi, bisericile din Bari, faleza mării, timp liber." } },
-            { ru: { t: "День 4–6 — По выбору группы", d: "По договорённости — поездки в Лоретто, Манопелло, Монте-Гаргано." }, ro: { t: "Ziua 4–6 — La alegerea grupului", d: "Posibile excursii la Loreto, Manoppello, Monte Sant'Angelo." } },
-            { ru: { t: "Последний день — Отъезд", d: "Прощальный молебен у мощей, трансфер в аэропорт, перелёт домой." }, ro: { t: "Ultima zi — Plecarea", d: "Tedeum de despărțire la moaște, transfer la aeroport, zbor acasă." } },
+            { ru: { t: "День 1 – Прибытие в Бари", d: "Перелёт из Кишинёва в Бари. Встреча в аэропорту, трансфер в гостиницу, размещение, вечерняя молитва." }, ro: { t: "Ziua 1 – Sosirea la Bari", d: "Zbor din Chișinău la Bari. Întâlnire la aeroport, transfer la hotel, cazare, rugăciune de seară." } },
+            { ru: { t: "День 2 – Литургия у мощей", d: "Утренняя Литургия у мощей Святителя Николая, акафист, поклонение, помазание миром." }, ro: { t: "Ziua 2 – Liturghie la moaște", d: "Sfânta Liturghie la moaștele Sfântului Nicolae, acatist, închinare, ungere cu mir." } },
+            { ru: { t: "День 3 – Город Бари", d: "Старый город, церкви Бари, морская набережная, свободное время." }, ro: { t: "Ziua 3 – Orașul Bari", d: "Orașul vechi, bisericile din Bari, faleza mării, timp liber." } },
+            { ru: { t: "День 4–6 – По выбору группы", d: "По договорённости – поездки в Лоретто, Манопелло, Монте-Гаргано." }, ro: { t: "Ziua 4–6 – La alegerea grupului", d: "Posibile excursii la Loreto, Manoppello, Monte Sant'Angelo." } },
+            { ru: { t: "Последний день – Отъезд", d: "Прощальный молебен у мощей, трансфер в аэропорт, перелёт домой." }, ro: { t: "Ultima zi – Plecarea", d: "Tedeum de despărțire la moaște, transfer la aeroport, zbor acasă." } },
           ].map((d, i) => {
             const c = lang === "ru" ? d.ru : d.ro;
             return (
@@ -279,22 +315,35 @@ function BariPage() {
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-6">{t("Ближайшие даты", "Datele apropiate")}</h2>
         {bariDates.length === 0 ? (
           <p className="font-serif italic text-[17px] text-foreground/70">
-            {t("Даты уточняются. Свяжитесь с нами — подскажем ближайшую поездку.", "Datele se precizează. Contactați-ne — vă vom informa despre cel mai apropiat pelerinaj.")}
+            {t("Даты уточняются. Свяжитесь с нами – подскажем ближайшую поездку.", "Datele se precizează. Contactați-ne – vă vom informa despre cel mai apropiat pelerinaj.")}
           </p>
         ) : (
           <ul className="space-y-3 font-serif">
             {bariDates.map((p: PilgrimageSummary) => (
-              <li key={p.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-card border border-gold/30 rounded-sm px-5 py-4">
+              <li
+                key={p.id}
+                onClick={() => selectDate(p)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectDate(p); } }}
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-card border border-gold/30 rounded-sm px-5 py-4 cursor-pointer hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300"
+              >
                 <div>
                   <p className="text-[17px] text-foreground">{lang === "ru" ? p.title_ru : p.title_ro}</p>
                   <p className="text-sm text-foreground/65">
-                    {new Date(p.start_date).toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO")} — {new Date(p.end_date).toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO")}
+                    {formatDateRange(p.start_date, p.end_date, lang)}
                     {!p.with_priest && <span className="ml-2 italic">({t("без священника", "fără preot")})</span>}
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
                   {p.price_eur && <span className="text-gold text-[17px]">€{p.price_eur}</span>}
-                  <Link to="/calendar" className="text-accent hover:underline text-sm">{t("подробнее", "detalii")}</Link>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); selectDate(p); }}
+                    className="px-5 py-2 bg-accent text-primary-foreground text-[15px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-sm"
+                  >
+                    {t("Хочу поехать", "Vreau să merg")}
+                  </button>
                 </div>
               </li>
             ))}
@@ -307,14 +356,47 @@ function BariPage() {
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-6">{t("Вопросы и ответы", "Întrebări și răspunsuri")}</h2>
           <Accordion type="single" collapsible className="font-serif">
-            {[
-              { ru: { q: "Нужна ли виза?", a: "Бари в Италии — для въезда необходима шенгенская виза. Помогаем с оформлением документов." }, ro: { q: "Este nevoie de viză?", a: "Bari este în Italia — este necesară viză Schengen. Vă ajutăm cu documentele." } },
+            {([
+              {
+                ru: {
+                  q: "Нужна ли виза?",
+                  a: (
+                    <div className="space-y-3">
+                      <p>Зависит от вашего гражданства:</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Граждане Молдовы – виза не нужна (безвизовый режим с ЕС)</li>
+                        <li>Граждане Украины – виза не нужна (безвизовый режим с ЕС)</li>
+                        <li>Граждане Румынии и других стран ЕС – виза не нужна</li>
+                        <li>Граждане России – требуется шенгенская виза</li>
+                        <li>Граждане Беларуси – требуется шенгенская виза</li>
+                      </ul>
+                      <p>Если у вас другое гражданство – свяжитесь с нами, поможем разобраться.</p>
+                    </div>
+                  ),
+                },
+                ro: {
+                  q: "Este nevoie de viză?",
+                  a: (
+                    <div className="space-y-3">
+                      <p>Depinde de cetățenia dumneavoastră:</p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Cetățenii Moldovei – fără viză (regim liberalizat cu UE)</li>
+                        <li>Cetățenii Ucrainei – fără viză (regim liberalizat cu UE)</li>
+                        <li>Cetățenii României și ai altor țări UE – fără viză</li>
+                        <li>Cetățenii Rusiei – necesită viză Schengen</li>
+                        <li>Cetățenii Belarusului – necesită viză Schengen</li>
+                      </ul>
+                      <p>Dacă aveți altă cetățenie – contactați-ne, vă vom ajuta.</p>
+                    </div>
+                  ),
+                },
+              },
               { ru: { q: "Можно ли с детьми?", a: "Да, дети от 7 лет с родителями приветствуются. Программа адаптируется под возраст." }, ro: { q: "Se poate cu copiii?", a: "Da, copiii de la 7 ani sunt bineveniți împreună cu părinții. Programul se adaptează vârstei." } },
               { ru: { q: "Будет ли возможность исповеди и причастия?", a: "Да, в поездке участвует православный священник, проводятся исповедь и Литургия у мощей." }, ro: { q: "Va fi posibilă spovedania și împărtășania?", a: "Da, în pelerinaj participă un preot ortodox, se săvârșesc spovedania și Sfânta Liturghie la moaște." } },
               { ru: { q: "Какое миро от мощей и можно ли его взять?", a: "Из мощей Святителя истекает благоуханное миро. Каждому паломнику передаётся флакончик с миром." }, ro: { q: "Ce este mirul de la moaște și pot lua acasă?", a: "Din moaștele Sfântului izvorăște mir bine mirositor. Fiecărui pelerin i se oferă un flacon cu mir." } },
               { ru: { q: "Какая физическая нагрузка в поездке?", a: "Поездка спокойная: переходы небольшие, много молитвенного времени. Подходит и для пожилых." }, ro: { q: "Cât de obositor este pelerinajul?", a: "Pelerinajul este liniștit: deplasări scurte, mult timp de rugăciune. Potrivit și pentru vârstnici." } },
-              { ru: { q: "Как оплатить поездку?", a: "Бронирование — задаток, окончательный расчёт — за две недели до выезда. Только в офисе." }, ro: { q: "Cum se achită pelerinajul?", a: "Rezervare cu avans, plata finală cu două săptămâni înainte de plecare. Doar la birou." } },
-            ].map((f, i) => {
+              { ru: { q: "Как оплатить поездку?", a: "Бронирование – задаток, окончательный расчёт – за две недели до выезда. Только в офисе." }, ro: { q: "Cum se achită pelerinajul?", a: "Rezervare cu avans, plata finală cu două săptămâni înainte de plecare. Doar la birou." } },
+            ] as Array<{ ru: { q: string; a: ReactNode }; ro: { q: string; a: ReactNode } }>).map((f, i) => {
               const c = lang === "ru" ? f.ru : f.ro;
               return (
                 <AccordionItem key={i} value={`f${i}`} className="border-gold/30">
@@ -328,7 +410,7 @@ function BariPage() {
       </section>
 
       {/* Lead form */}
-      <LeadForm />
+      <LeadForm prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
 
       {/* Contacts */}
       <section className="max-w-4xl mx-auto px-6 py-12 md:py-16 font-serif text-center">
@@ -343,12 +425,18 @@ function BariPage() {
   );
 }
 
-function LeadForm() {
+function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillConsumed: () => void }) {
   const { t } = useLang();
   const submit = useServerFn(createLead);
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+
+  // Apply prefill from external trigger
+  if (prefill && form.message !== prefill) {
+    setForm((f) => ({ ...f, message: prefill }));
+    onPrefillConsumed();
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -376,7 +464,7 @@ function LeadForm() {
   }
 
   return (
-    <section id="lead" className="bg-card border-y border-gold/30 py-12 md:py-16">
+    <section id="lead" className="bg-card border-y border-gold/30 py-12 md:py-16 scroll-mt-24">
       <div className="max-w-2xl mx-auto px-6">
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-3">{t("Оставить заявку", "Lăsați o cerere")}</h2>
         <p className="font-serif italic text-foreground/70 mb-8 text-[17px]">
