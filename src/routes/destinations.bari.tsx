@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { getDestinationBySlug } from "@/lib/destinations.functions";
-import { listPilgrimages } from "@/lib/pilgrimages.functions";
+import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 import { createLead } from "@/lib/leads.functions";
 import {
   Accordion,
@@ -123,7 +123,7 @@ function BariPage() {
   const groupSize = destination ? (lang === "ru" ? destination.group_size_ru : destination.group_size_ro) : null;
   const priceFrom = destination?.price_from ?? null;
 
-  const bariDates = (pilgrimages ?? []).filter((p) => {
+  const bariDates = (pilgrimages ?? []).filter((p: PilgrimageSummary) => {
     const d = (p.destination_ru + " " + p.destination_ro).toLowerCase();
     return p.slug.toLowerCase().includes("bari") || d.includes("бари") || d.includes("bari");
   });
@@ -283,7 +283,7 @@ function BariPage() {
           </p>
         ) : (
           <ul className="space-y-3 font-serif">
-            {bariDates.map((p) => (
+            {bariDates.map((p: PilgrimageSummary) => (
               <li key={p.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 bg-card border border-gold/30 rounded-sm px-5 py-4">
                 <div>
                   <p className="text-[17px] text-foreground">{lang === "ru" ? p.title_ru : p.title_ro}</p>
