@@ -1,41 +1,41 @@
-## План: Раздел «Направления» в админке
+## Две точечные правки
 
-Полностью повторяет архитектуру раздела «Паломничества», подключён к таблице `destinations`.
+### 1. Починить RLS-политики таблицы `destinations`
 
-### 1. Серверные функции — `src/lib/admin.functions.ts`
-Добавить Zod-схему `destinationSchema` и 5 серверных функций (по образцу `adminListPilgrimages` и пр.), с защитой `requireSupabaseAuth`:
-- `adminListDestinations` — список (id, slug, title_ru, title_ro, is_published, price_from), сортировка по `title_ru`.
-- `adminGetDestination({ id })`.
-- `adminSaveDestination(payload)` — insert/update в `destinations`.
-- `adminDeleteDestination({ id })`.
+**Причина:** в миграции вызов `has_role(auth.uid(), 'admin')` без приведения к `app_role` резолвится в чужую перегрузку функции, на которую у роли `authenticated` нет `EXECUTE`. В `blog_posts` и `pilgrimages` используется явный каст `'admin'::app_role` + квалифицированное имя `public.has_role` — нужно привести `destinations` к той же форме.
 
-Поля схемы: `slug` (lowercase, regex `^[a-z0-9-]+$`), `title_ru/ro` (required), `description_ru/ro`, `cover_image`, `duration_ru/ro`, `price_from` (number, nullable), `group_size_ru/ro`, `program_ru/ro` (до 50000 симв.), `is_published`.
+**Миграция (через `supabase--migration`):**
 
-### 2. Сайдбар — `src/routes/_admin.tsx`
-В массив `nav` добавить пункт `{ to: "/admin/destinations", label: "Направления", icon: MapPin }` сразу после «Паломничества». Импорт `MapPin` из `lucide-react`.
+```sql
+DROP POLICY IF EXISTS "Admins can view all destinations"   ON public.destinations;
+DROP POLICY IF EXISTS "Admins can insert destinations"     ON public.destinations;
+DROP POLICY IF EXISTS "Admins can update destinations"     ON public.destinations;
+DROP POLICY IF EXISTS "Admins can delete destinations"     ON public.destinations;
 
-### 3. Маршруты
-Создать три новых файла (TanStack Router подхватит автоматически):
+CREATE POLICY "Admins can view all destinations"
+  ON public.destinations FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'::public.app_role));
 
-- **`src/routes/_admin/admin.destinations.index.tsx`** — таблица: колонки «Название (RU)», «Slug», «Цена от», «Статус», действия «Редактировать»/«Удалить»; кнопка «+ Новое направление» → `/admin/destinations/new`.
-- **`src/routes/_admin/admin.destinations.new.tsx`** — пустая форма с дефолтами.
-- **`src/routes/_admin/admin.destinations.$id.tsx`** — загрузка через `adminGetDestination` и редактирование.
+CREATE POLICY "Admins can insert destinations"
+  ON public.destinations FOR INSERT TO authenticated
+  WITH CHECK (public.has_role(auth.uid(), 'admin'::public.app_role));
 
-### 4. Форма — `src/components/admin/DestinationForm.tsx`
-Три визуальные секции (заголовки `<h2 className="font-serif text-xl">`):
+CREATE POLICY "Admins can update destinations"
+  ON public.destinations FOR UPDATE TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'::public.app_role))
+  WITH CHECK (public.has_role(auth.uid(), 'admin'::public.app_role));
 
-**Основное:** title_ru*, title_ro*, slug*, `ImageUpload folder="destinations"` для cover_image, чекбокс «Опубликовать».
+CREATE POLICY "Admins can delete destinations"
+  ON public.destinations FOR DELETE TO authenticated
+  USING (public.has_role(auth.uid(), 'admin'::public.app_role));
+```
 
-**Параметры поездки:** duration_ru, duration_ro, price_from (number, €), group_size_ru, group_size_ro, description_ru (textarea), description_ro (textarea).
+Политику `"Published destinations are viewable by everyone"` не трогаем — она в порядке.
 
-**Программа по дням:** program_ru (textarea, rows=10), program_ro (textarea, rows=10).
+### 2. Добавить карточку «Направления» на `/admin`
 
-Внизу — «Сохранить» (accent) и «Отмена» (border) → возврат на `/admin/destinations`. Стили — те же классы, что в `PilgrimageForm` (`font-serif`, `border-border`, `bg-accent`).
-
-### 5. Что НЕ делаем
-- Никаких публичных страниц (`/destinations` остаётся как есть).
-- Не трогаем существующие админ-разделы, миграции БД, RLS.
-- FK `pilgrimages.destination_id` — позже, отдельной задачей.
+Файл `src/routes/_admin/admin.index.tsx`: добавить третью карточку — копия существующих, иконка `MapPin` (импорт из `lucide-react`), ссылка `/admin/destinations`, заголовок «Направления», подпись типа «Маршруты, программы и описания поездок.». Стили и классы — те же, что у двух соседних карточек.
 
 ### Проверка
-Открыть `/admin` → «Направления» → создать запись «Бари» (slug `bari`, цена 850, опубликовать) → убедиться, что она появилась в списке и сохраняется при повторном редактировании.
+1. Зайти в `/admin/destinations/new`, заполнить и сохранить «Бари» → запись создаётся, ошибки нет.
+2. На `/admin` видны три карточки в одном стиле.
