@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, useNavigate, Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/use-auth";
-import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X } from "lucide-react";
+import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/_admin")({
   head: () => ({ meta: [{ title: "Админ-панель — Паломник" }, { name: "robots", content: "noindex" }] }),
@@ -45,6 +45,7 @@ function AdminLayout() {
     { to: "/admin", label: "Обзор", icon: LayoutDashboard },
     { to: "/admin/blog", label: "Блог", icon: FileText },
     { to: "/admin/pilgrimages", label: "Паломничества", icon: Calendar },
+    { to: "/admin/destinations", label: "Направления", icon: MapPin },
   ];
 
   const SidebarContent = (

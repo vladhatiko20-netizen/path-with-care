@@ -1,109 +1,41 @@
-# Создание таблицы `destinations`
+## План: Раздел «Направления» в админке
 
-Добавляем одну новую таблицу в существующую базу Lovable Cloud. Существующие таблицы не трогаем. UI/страницы не создаём.
+Полностью повторяет архитектуру раздела «Паломничества», подключён к таблице `destinations`.
 
-## Структура таблицы
+### 1. Серверные функции — `src/lib/admin.functions.ts`
+Добавить Zod-схему `destinationSchema` и 5 серверных функций (по образцу `adminListPilgrimages` и пр.), с защитой `requireSupabaseAuth`:
+- `adminListDestinations` — список (id, slug, title_ru, title_ro, is_published, price_from), сортировка по `title_ru`.
+- `adminGetDestination({ id })`.
+- `adminSaveDestination(payload)` — insert/update в `destinations`.
+- `adminDeleteDestination({ id })`.
 
-| Поле | Тип | Nullable | Default | Примечание |
-|---|---|---|---|---|
-| `id` | uuid | NO | `gen_random_uuid()` | PK |
-| `slug` | text | NO | — | UNIQUE + индекс |
-| `is_published` | boolean | NO | `false` | |
-| `title_ru` | text | NO | — | название направления (RU) |
-| `title_ro` | text | NO | — | название направления (RO) |
-| `description_ru` | text | YES | NULL | короткое описание для карточек |
-| `description_ro` | text | YES | NULL | короткое описание для карточек |
-| `cover_image` | text | YES | NULL | URL главного изображения |
-| `duration_ru` | text | YES | NULL | длительность (RU) |
-| `duration_ro` | text | YES | NULL | длительность (RO) |
-| `price_from` | numeric | YES | NULL | цена от (как `pilgrimages.price_eur`) |
-| `group_size_ru` | text | YES | NULL | размер группы (RU) |
-| `group_size_ro` | text | YES | NULL | размер группы (RO) |
-| `program_ru` | text | YES | NULL | полная программа по дням (RU) |
-| `program_ro` | text | YES | NULL | полная программа по дням (RO) |
-| `created_at` | timestamptz | NO | `now()` | |
-| `updated_at` | timestamptz | NO | `now()` | авто-обновление через триггер |
+Поля схемы: `slug` (lowercase, regex `^[a-z0-9-]+$`), `title_ru/ro` (required), `description_ru/ro`, `cover_image`, `duration_ru/ro`, `price_from` (number, nullable), `group_size_ru/ro`, `program_ru/ro` (до 50000 симв.), `is_published`.
 
-## Безопасность (RLS)
+### 2. Сайдбар — `src/routes/_admin.tsx`
+В массив `nav` добавить пункт `{ to: "/admin/destinations", label: "Направления", icon: MapPin }` сразу после «Паломничества». Импорт `MapPin` из `lucide-react`.
 
-- RLS включён.
-- **Публичное чтение** только опубликованных записей (`is_published = true`) — для всех (роль `public`).
-- **Полный доступ** (SELECT/INSERT/UPDATE/DELETE) для аутентифицированных админов через `has_role(auth.uid(), 'admin')` — как в `blog_posts` и `pilgrimages`.
+### 3. Маршруты
+Создать три новых файла (TanStack Router подхватит автоматически):
 
-## Триггер `updated_at`
+- **`src/routes/_admin/admin.destinations.index.tsx`** — таблица: колонки «Название (RU)», «Slug», «Цена от», «Статус», действия «Редактировать»/«Удалить»; кнопка «+ Новое направление» → `/admin/destinations/new`.
+- **`src/routes/_admin/admin.destinations.new.tsx`** — пустая форма с дефолтами.
+- **`src/routes/_admin/admin.destinations.$id.tsx`** — загрузка через `adminGetDestination` и редактирование.
 
-Используем существующую функцию `public.set_updated_at()` — новую не создаём.
+### 4. Форма — `src/components/admin/DestinationForm.tsx`
+Три визуальные секции (заголовки `<h2 className="font-serif text-xl">`):
 
-## На будущее
+**Основное:** title_ru*, title_ro*, slug*, `ImageUpload folder="destinations"` для cover_image, чекбокс «Опубликовать».
 
-`pilgrimages.destination_id` (FK → `destinations.id`) будет добавлен позже — в эту миграцию не входит.
+**Параметры поездки:** duration_ru, duration_ro, price_from (number, €), group_size_ru, group_size_ro, description_ru (textarea), description_ro (textarea).
 
-## SQL миграции (для предварительного просмотра)
+**Программа по дням:** program_ru (textarea, rows=10), program_ro (textarea, rows=10).
 
-```sql
--- 1. Таблица
-CREATE TABLE public.destinations (
-  id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  slug text NOT NULL UNIQUE,
-  is_published boolean NOT NULL DEFAULT false,
-  title_ru text NOT NULL,
-  title_ro text NOT NULL,
-  description_ru text,
-  description_ro text,
-  cover_image text,
-  duration_ru text,
-  duration_ro text,
-  price_from numeric,
-  group_size_ru text,
-  group_size_ro text,
-  program_ru text,
-  program_ro text,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
+Внизу — «Сохранить» (accent) и «Отмена» (border) → возврат на `/admin/destinations`. Стили — те же классы, что в `PilgrimageForm` (`font-serif`, `border-border`, `bg-accent`).
 
--- 2. Индекс по slug (UNIQUE уже создаёт btree-индекс, поэтому отдельный не нужен)
+### 5. Что НЕ делаем
+- Никаких публичных страниц (`/destinations` остаётся как есть).
+- Не трогаем существующие админ-разделы, миграции БД, RLS.
+- FK `pilgrimages.destination_id` — позже, отдельной задачей.
 
--- 3. RLS
-ALTER TABLE public.destinations ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Published destinations are viewable by everyone"
-  ON public.destinations FOR SELECT
-  TO public
-  USING (is_published = true);
-
-CREATE POLICY "Admins can view all destinations"
-  ON public.destinations FOR SELECT
-  TO authenticated
-  USING (has_role(auth.uid(), 'admin'));
-
-CREATE POLICY "Admins can insert destinations"
-  ON public.destinations FOR INSERT
-  TO authenticated
-  WITH CHECK (has_role(auth.uid(), 'admin'));
-
-CREATE POLICY "Admins can update destinations"
-  ON public.destinations FOR UPDATE
-  TO authenticated
-  USING (has_role(auth.uid(), 'admin'))
-  WITH CHECK (has_role(auth.uid(), 'admin'));
-
-CREATE POLICY "Admins can delete destinations"
-  ON public.destinations FOR DELETE
-  TO authenticated
-  USING (has_role(auth.uid(), 'admin'));
-
--- 4. Триггер updated_at (используем существующую функцию public.set_updated_at)
-CREATE TRIGGER destinations_set_updated_at
-  BEFORE UPDATE ON public.destinations
-  FOR EACH ROW
-  EXECUTE FUNCTION public.set_updated_at();
-```
-
-## Что не делаем
-
-- Не создаём страницы, формы, серверные функции, маршруты.
-- Не меняем `pilgrimages`, `blog_posts`, `user_roles`.
-- Не трогаем `auth`, `storage`, `realtime` схемы.
-
-После твоего подтверждения запускаю миграцию.
+### Проверка
+Открыть `/admin` → «Направления» → создать запись «Бари» (slug `bari`, цена 850, опубликовать) → убедиться, что она появилась в списке и сохраняется при повторном редактировании.
