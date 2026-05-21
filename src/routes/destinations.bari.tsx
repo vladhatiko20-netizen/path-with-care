@@ -13,6 +13,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Clock, Users, Euro, Church,
+  CheckCircle2, Minus,
+  Calendar, HelpCircle,
+  User, Phone, Mail, MessageSquare, Send,
+} from "lucide-react";
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
@@ -161,7 +167,7 @@ function BariPage() {
   return (
     <PageShell>
       {/* Breadcrumbs */}
-      <nav aria-label="breadcrumb" className="max-w-6xl mx-auto px-6 pt-6 text-[15px] font-serif text-foreground/70">
+      <nav aria-label="breadcrumb" className="max-w-6xl mx-auto px-6 pt-6 text-[15px] md:text-base font-serif text-foreground/70">
         <ol className="flex flex-wrap items-center gap-2">
           <li><Link to="/" className="hover:text-accent">{t("Главная", "Acasă")}</Link></li>
           <li aria-hidden="true">→</li>
@@ -196,21 +202,25 @@ function BariPage() {
       {/* Info bar — from database */}
       <section className="bg-card border-y border-gold/30">
         <div className="max-w-6xl mx-auto px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 font-serif text-center">
-          <div>
-            <p className="overline mb-1">{t("Длительность", "Durata")}</p>
-            <p className="text-[17px] text-foreground">{duration ? `${duration}${t(" дней", " zile")}` : "–"}</p>
+          <div className="flex flex-col items-center gap-1">
+            <Clock className="w-[22px] h-[22px] text-gold mb-1" aria-hidden="true" />
+            <p className="overline text-[11px]">{t("Длительность", "Durata")}</p>
+            <p className="text-[18px] md:text-[20px] text-foreground">{duration ? `${duration}${t(" дней", " zile")}` : "–"}</p>
           </div>
-          <div>
-            <p className="overline mb-1">{t("Группа", "Grup")}</p>
-            <p className="text-[17px] text-foreground">{groupSize ?? "–"}</p>
+          <div className="flex flex-col items-center gap-1">
+            <Users className="w-[22px] h-[22px] text-gold mb-1" aria-hidden="true" />
+            <p className="overline text-[11px]">{t("Группа", "Grup")}</p>
+            <p className="text-[18px] md:text-[20px] text-foreground">{groupSize ?? "–"}</p>
           </div>
-          <div>
-            <p className="overline mb-1">{t("Цена", "Preț")}</p>
-            <p className="text-[17px] text-gold">{priceFrom ? `${t("от", "de la")} €${priceFrom}` : "–"}</p>
+          <div className="flex flex-col items-center gap-1">
+            <Euro className="w-[22px] h-[22px] text-gold mb-1" aria-hidden="true" />
+            <p className="overline text-[11px]">{t("Цена", "Preț")}</p>
+            <p className="text-[18px] md:text-[20px] text-gold">{priceFrom ? `${t("от", "de la")} €${priceFrom}` : "–"}</p>
           </div>
-          <div>
-            <p className="overline mb-1">{t("Сопровождение", "Însoțire")}</p>
-            <p className="text-[17px] text-foreground">{t("со священником", "cu preot")}</p>
+          <div className="flex flex-col items-center gap-1">
+            <Church className="w-[22px] h-[22px] text-gold mb-1" aria-hidden="true" />
+            <p className="overline text-[11px]">{t("Сопровождение", "Însoțire")}</p>
+            <p className="text-[18px] md:text-[20px] text-foreground">{t("со священником", "cu preot")}</p>
           </div>
         </div>
       </section>
@@ -218,7 +228,7 @@ function BariPage() {
       {/* Intro */}
       <section className="max-w-3xl mx-auto px-6 py-12 md:py-16 font-serif">
         <h2 className="text-3xl md:text-4xl text-foreground font-light mb-5">{t("О поездке", "Despre pelerinaj")}</h2>
-        <p className="text-[17px] md:text-lg text-foreground/85 leading-relaxed">
+        <p className="text-[17px] md:text-[18px] text-foreground/85 leading-relaxed border-l-4 border-accent/60 pl-5 md:pl-6 py-2">
           {t(
             "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
             "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
@@ -267,8 +277,13 @@ function BariPage() {
             const c = lang === "ru" ? d.ru : d.ro;
             return (
               <AccordionItem key={i} value={`d${i}`} className="border-gold/30">
-                <AccordionTrigger className="text-[17px] md:text-lg text-foreground hover:text-accent">{c.t}</AccordionTrigger>
-                <AccordionContent className="text-[17px] text-foreground/80 leading-relaxed">{c.d}</AccordionContent>
+                <AccordionTrigger className="text-[17px] md:text-[18px] text-foreground hover:text-accent text-left [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-accent">
+                  <span className="flex items-center gap-3">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-accent text-primary-foreground text-sm font-serif shrink-0">{i + 1}</span>
+                    <span>{c.t}</span>
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="text-[16px] md:text-[17px] text-foreground/80 leading-relaxed pl-11">{c.d}</AccordionContent>
               </AccordionItem>
             );
           })}
@@ -280,7 +295,7 @@ function BariPage() {
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 font-serif">
           <div>
             <h2 className="text-2xl md:text-3xl text-foreground font-light mb-4">{t("Что включено", "Ce este inclus")}</h2>
-            <ul className="space-y-2 text-[17px] text-foreground/85 leading-relaxed">
+            <ul className="space-y-3 text-[16px] md:text-[17px] text-foreground/85 leading-relaxed">
               {[
                 t("Авиаперелёт Кишинёв – Бари – Кишинёв", "Zbor Chișinău – Bari – Chișinău"),
                 t("Проживание в гостинице 3*–4* с завтраками", "Cazare la hotel 3*–4* cu mic dejun"),
@@ -290,20 +305,20 @@ function BariPage() {
                 t("Молебны и акафисты у святынь", "Tedeumuri și acatiste la sfintele moaște"),
                 t("Медицинская страховка", "Asigurare medicală"),
               ].map((x, i) => (
-                <li key={i} className="flex gap-2"><span className="text-gold">✦</span><span>{x}</span></li>
+                <li key={i} className="flex gap-3 items-start"><CheckCircle2 className="w-5 h-5 text-olive shrink-0 mt-0.5" aria-hidden="true" /><span>{x}</span></li>
               ))}
             </ul>
           </div>
           <div>
             <h2 className="text-2xl md:text-3xl text-foreground font-light mb-4">{t("Не включено", "Nu este inclus")}</h2>
-            <ul className="space-y-2 text-[17px] text-foreground/85 leading-relaxed">
+            <ul className="space-y-3 text-[16px] md:text-[17px] text-foreground/85 leading-relaxed">
               {[
                 t("Личные расходы", "Cheltuieli personale"),
                 t("Обеды и ужины", "Prânzurile și cinele"),
                 t("Дополнительные экскурсии вне программы", "Excursii suplimentare în afara programului"),
                 t("Чаевые гидам и водителям", "Bacșișurile ghizilor și șoferilor"),
               ].map((x, i) => (
-                <li key={i} className="flex gap-2"><span className="text-foreground/40">·</span><span>{x}</span></li>
+                <li key={i} className="flex gap-3 items-start"><Minus className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" aria-hidden="true" /><span>{x}</span></li>
               ))}
             </ul>
           </div>
@@ -326,21 +341,26 @@ function BariPage() {
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectDate(p); } }}
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-card border border-gold/30 rounded-sm px-5 py-4 cursor-pointer hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card border border-gold/30 rounded-sm px-6 py-5 cursor-pointer hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300"
               >
                 <div>
-                  <p className="text-[17px] text-foreground">{lang === "ru" ? p.title_ru : p.title_ro}</p>
-                  <p className="text-sm text-foreground/65">
+                  <p className="text-[18px] text-foreground">{lang === "ru" ? p.title_ru : p.title_ro}</p>
+                  <p className="text-[16px] text-foreground/65 mt-1">
+                    <Calendar className="w-4 h-4 text-gold inline mr-2 -mt-0.5" aria-hidden="true" />
                     {formatDateRange(p.start_date, p.end_date, lang)}
                     {!p.with_priest && <span className="ml-2 italic">({t("без священника", "fără preot")})</span>}
                   </p>
                 </div>
-                <div className="flex items-center gap-4">
-                  {p.price_eur && <span className="text-gold text-[17px]">€{p.price_eur}</span>}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                  {p.price_eur && (
+                    <span className="text-gold text-[18px] font-medium inline-flex items-center">
+                      <Euro className="w-4 h-4 mr-1" aria-hidden="true" />{p.price_eur}
+                    </span>
+                  )}
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); selectDate(p); }}
-                    className="px-5 py-2 bg-accent text-primary-foreground text-[15px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-sm"
+                    className="w-full sm:w-auto px-5 py-2 bg-accent text-primary-foreground text-[16px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-sm"
                   >
                     {t("Хочу поехать", "Vreau să merg")}
                   </button>
@@ -399,9 +419,14 @@ function BariPage() {
             ] as Array<{ ru: { q: string; a: ReactNode }; ro: { q: string; a: ReactNode } }>).map((f, i) => {
               const c = lang === "ru" ? f.ru : f.ro;
               return (
-                <AccordionItem key={i} value={`f${i}`} className="border-gold/30">
-                  <AccordionTrigger className="text-[17px] md:text-lg text-foreground hover:text-accent text-left">{c.q}</AccordionTrigger>
-                  <AccordionContent className="text-[17px] text-foreground/80 leading-relaxed">{c.a}</AccordionContent>
+                <AccordionItem key={i} value={`f${i}`} className="border-gold/30 py-1">
+                  <AccordionTrigger className="text-[17px] md:text-[18px] text-foreground hover:text-accent text-left [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-accent">
+                    <span className="flex items-start gap-3">
+                      <HelpCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" aria-hidden="true" />
+                      <span>{c.q}</span>
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-[16px] md:text-[17px] text-foreground/80 leading-relaxed pl-8">{c.a}</AccordionContent>
                 </AccordionItem>
               );
             })}
@@ -415,9 +440,16 @@ function BariPage() {
       {/* Contacts */}
       <section className="max-w-4xl mx-auto px-6 py-12 md:py-16 font-serif text-center">
         <h2 className="text-3xl md:text-4xl text-foreground font-light mb-4">{t("Связаться напрямую", "Contact direct")}</h2>
-        <p className="text-[17px] text-foreground/80 mb-2">Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a></p>
-        <p className="text-[17px] text-foreground/80 mb-2">Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a></p>
-        <p className="text-[17px] text-foreground/80">
+        <p className="text-[16px] md:text-[17px] text-foreground/80 mb-3">
+          <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
+          Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a>
+        </p>
+        <p className="text-[16px] md:text-[17px] text-foreground/80 mb-3">
+          <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
+          Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a>
+        </p>
+        <p className="text-[16px] md:text-[17px] text-foreground/80">
+          <Mail className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
           <a href="mailto:pilgrimage@eldoradotur.md" className="text-accent hover:underline">pilgrimage@eldoradotur.md</a>
         </p>
       </section>
@@ -476,12 +508,25 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
           </div>
         ) : (
           <form onSubmit={onSubmit} className="space-y-4 font-serif">
-            <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 bg-background border border-border rounded-sm text-[17px] focus:outline-none focus:border-gold" />
-            <input required maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 bg-background border border-border rounded-sm text-[17px] focus:outline-none focus:border-gold" />
-            <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 bg-background border border-border rounded-sm text-[17px] focus:outline-none focus:border-gold" />
-            <textarea maxLength={2000} rows={5} placeholder={t("Сообщение (необязательно)", "Mesaj (opțional)")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 bg-background border border-border rounded-sm text-[17px] focus:outline-none focus:border-gold resize-none" />
-            <button type="submit" disabled={sending} className="px-7 py-3 bg-accent text-primary-foreground text-[15px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold" />
+            </div>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <input required maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold" />
+            </div>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold" />
+            </div>
+            <div className="relative">
+              <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <textarea maxLength={2000} rows={5} placeholder={t("Сообщение (необязательно)", "Mesaj (opțional)")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold resize-none" />
+            </div>
+            <button type="submit" disabled={sending} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 bg-accent text-primary-foreground text-[17px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
               {sending ? t("Отправка…", "Se trimite…") : t("Отправить заявку", "Trimiteți cererea")}
+              {!sending && <Send className="w-4 h-4" aria-hidden="true" />}
             </button>
           </form>
         )}
