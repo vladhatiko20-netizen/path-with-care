@@ -62,6 +62,66 @@ export type Database = {
         }
         Relationships: []
       }
+      destinations: {
+        Row: {
+          cover_image: string | null
+          created_at: string
+          description_ro: string | null
+          description_ru: string | null
+          duration_ro: string | null
+          duration_ru: string | null
+          group_size_ro: string | null
+          group_size_ru: string | null
+          id: string
+          is_published: boolean
+          price_from: number | null
+          program_ro: string | null
+          program_ru: string | null
+          slug: string
+          title_ro: string
+          title_ru: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image?: string | null
+          created_at?: string
+          description_ro?: string | null
+          description_ru?: string | null
+          duration_ro?: string | null
+          duration_ru?: string | null
+          group_size_ro?: string | null
+          group_size_ru?: string | null
+          id?: string
+          is_published?: boolean
+          price_from?: number | null
+          program_ro?: string | null
+          program_ru?: string | null
+          slug: string
+          title_ro: string
+          title_ru: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image?: string | null
+          created_at?: string
+          description_ro?: string | null
+          description_ru?: string | null
+          duration_ro?: string | null
+          duration_ru?: string | null
+          group_size_ro?: string | null
+          group_size_ru?: string | null
+          id?: string
+          is_published?: boolean
+          price_from?: number | null
+          program_ro?: string | null
+          program_ru?: string | null
+          slug?: string
+          title_ro?: string
+          title_ru?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pilgrimages: {
         Row: {
           cover_image: string | null

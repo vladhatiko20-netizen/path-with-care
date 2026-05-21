@@ -1,39 +1,109 @@
-## Цель
+# Создание таблицы `destinations`
 
-Заменить фоновые миниатюры 7 пунктов мобильного гамбургер-меню на качественные изображения с Unsplash, соответствующие восточно-православной тематике. Пункт «Вопросы священнику» не трогаем. Другие элементы меню и страницы не меняем.
+Добавляем одну новую таблицу в существующую базу Lovable Cloud. Существующие таблицы не трогаем. UI/страницы не создаём.
 
-## Что меняется
+## Структура таблицы
 
-Только файлы-ассеты, которые уже импортируются в `src/components/site/Header.tsx`:
+| Поле | Тип | Nullable | Default | Примечание |
+|---|---|---|---|---|
+| `id` | uuid | NO | `gen_random_uuid()` | PK |
+| `slug` | text | NO | — | UNIQUE + индекс |
+| `is_published` | boolean | NO | `false` | |
+| `title_ru` | text | NO | — | название направления (RU) |
+| `title_ro` | text | NO | — | название направления (RO) |
+| `description_ru` | text | YES | NULL | короткое описание для карточек |
+| `description_ro` | text | YES | NULL | короткое описание для карточек |
+| `cover_image` | text | YES | NULL | URL главного изображения |
+| `duration_ru` | text | YES | NULL | длительность (RU) |
+| `duration_ro` | text | YES | NULL | длительность (RO) |
+| `price_from` | numeric | YES | NULL | цена от (как `pilgrimages.price_eur`) |
+| `group_size_ru` | text | YES | NULL | размер группы (RU) |
+| `group_size_ro` | text | YES | NULL | размер группы (RO) |
+| `program_ru` | text | YES | NULL | полная программа по дням (RU) |
+| `program_ro` | text | YES | NULL | полная программа по дням (RO) |
+| `created_at` | timestamptz | NO | `now()` | |
+| `updated_at` | timestamptz | NO | `now()` | авто-обновление через триггер |
 
-| Пункт меню | Файл | Новый сюжет |
-|---|---|---|
-| Главная | `src/assets/menu-home.jpg` | Интерьер православного храма с иконостасом и тёплым светом свечей |
-| Направления | `src/assets/menu-destinations.jpg` | Православный монастырь (Метеоры / Афон) — общий вид |
-| Календарь поездок | `src/assets/menu-calendar.jpg` | Туристический автобус на фоне монастыря, тёплый свет |
-| Блог | `src/assets/menu-blog.jpg` | Женщина в платке молится/читает в православном храме |
-| Святыни | `src/assets/menu-catalog.jpg` | Крупный план православной иконы со свечами |
-| О нас | `src/assets/menu-about.jpg` | Группа паломников у древней каменной стены православного монастыря |
-| Контакты | `src/assets/menu-contacts.jpg` | Тёплый интерьер офиса / человек за столом в тёплом свете |
-| **Вопросы священнику** | `menu-priest.jpg` | **Не трогаем** |
+## Безопасность (RLS)
 
-## Технические детали
+- RLS включён.
+- **Публичное чтение** только опубликованных записей (`is_published = true`) — для всех (роль `public`).
+- **Полный доступ** (SELECT/INSERT/UPDATE/DELETE) для аутентифицированных админов через `has_role(auth.uid(), 'admin')` — как в `blog_posts` и `pilgrimages`.
 
-- Источник: **Unsplash** (бесплатно, без обязательной атрибуции).
-- Подбор: каждое изображение проверяется глазами на (а) восточно-православную, а не католическую эстетику (нет латинских крестов, статуй, готических храмов), (б) тёплый свет и читаемость в квадрате 60×60.
-- Скачиваем через `curl` прямо в `src/assets/` с тем же именем файла — не нужно править `Header.tsx`, импорты и `routeTree.gen.ts`.
-- Формат JPG, ширина ~800 px (Unsplash параметр `w=800&q=80`) — баланс качества и веса; для миниатюры 60×60 этого с запасом.
-- Старые файлы перезаписываются (Vite подхватит автоматически).
+## Триггер `updated_at`
 
-## Проверка
+Используем существующую функцию `public.set_updated_at()` — новую не создаём.
 
-1. После замены — скриншот мобильного меню (viewport 494px) с открытым гамбургером.
-2. Визуально проверяю все 7 миниатюр: православная эстетика, тёплый тон, читаемость в маленьком квадрате.
-3. Если какая-то картинка плохо читается в 60×60 или соскальзывает в католическую/нейтральную стилистику — переподбираю.
+## На будущее
 
-## Что НЕ меняется
+`pilgrimages.destination_id` (FK → `destinations.id`) будет добавлен позже — в эту миграцию не входит.
 
-- `Header.tsx` и любой другой код.
-- Картинка пункта «Вопросы священнику».
-- Десктопная версия (миниатюры используются только в мобильном меню).
-- Любые другие страницы и секции.
+## SQL миграции (для предварительного просмотра)
+
+```sql
+-- 1. Таблица
+CREATE TABLE public.destinations (
+  id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  slug text NOT NULL UNIQUE,
+  is_published boolean NOT NULL DEFAULT false,
+  title_ru text NOT NULL,
+  title_ro text NOT NULL,
+  description_ru text,
+  description_ro text,
+  cover_image text,
+  duration_ru text,
+  duration_ro text,
+  price_from numeric,
+  group_size_ru text,
+  group_size_ro text,
+  program_ru text,
+  program_ro text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- 2. Индекс по slug (UNIQUE уже создаёт btree-индекс, поэтому отдельный не нужен)
+
+-- 3. RLS
+ALTER TABLE public.destinations ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Published destinations are viewable by everyone"
+  ON public.destinations FOR SELECT
+  TO public
+  USING (is_published = true);
+
+CREATE POLICY "Admins can view all destinations"
+  ON public.destinations FOR SELECT
+  TO authenticated
+  USING (has_role(auth.uid(), 'admin'));
+
+CREATE POLICY "Admins can insert destinations"
+  ON public.destinations FOR INSERT
+  TO authenticated
+  WITH CHECK (has_role(auth.uid(), 'admin'));
+
+CREATE POLICY "Admins can update destinations"
+  ON public.destinations FOR UPDATE
+  TO authenticated
+  USING (has_role(auth.uid(), 'admin'))
+  WITH CHECK (has_role(auth.uid(), 'admin'));
+
+CREATE POLICY "Admins can delete destinations"
+  ON public.destinations FOR DELETE
+  TO authenticated
+  USING (has_role(auth.uid(), 'admin'));
+
+-- 4. Триггер updated_at (используем существующую функцию public.set_updated_at)
+CREATE TRIGGER destinations_set_updated_at
+  BEFORE UPDATE ON public.destinations
+  FOR EACH ROW
+  EXECUTE FUNCTION public.set_updated_at();
+```
+
+## Что не делаем
+
+- Не создаём страницы, формы, серверные функции, маршруты.
+- Не меняем `pilgrimages`, `blog_posts`, `user_roles`.
+- Не трогаем `auth`, `storage`, `realtime` схемы.
+
+После твоего подтверждения запускаю миграцию.
