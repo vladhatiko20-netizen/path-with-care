@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FileText, Calendar } from "lucide-react";
+import { FileText, Calendar, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/admin/")({
   component: Page,
@@ -20,6 +20,11 @@ function Page() {
           <Calendar className="w-6 h-6 text-accent mb-3" />
           <h2 className="font-serif text-xl mb-1">Календарь паломничеств</h2>
           <p className="text-sm text-muted-foreground">Поездки, даты, места и цены.</p>
+        </Link>
+        <Link to="/admin/destinations" className="block p-6 border border-border rounded-sm bg-card hover:border-accent transition-colors">
+          <MapPin className="w-6 h-6 text-accent mb-3" />
+          <h2 className="font-serif text-xl mb-1">Направления</h2>
+          <p className="text-sm text-muted-foreground">Маршруты, программы и описания поездок.</p>
         </Link>
       </div>
     </div>
