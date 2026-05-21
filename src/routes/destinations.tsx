@@ -81,7 +81,11 @@ function Page() {
           {items.map((d) => {
             const c = lang === "ru" ? d.ru : d.ro;
             return (
-              <Link key={d.slug} to="/contacts" className="group block bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500">
+              <Link
+                key={d.slug}
+                to={d.slug === "bari" ? "/destinations/bari" : "/contacts"}
+                className="group block bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500"
+              >
                 <div className="aspect-[4/3] overflow-hidden">
                   <img src={d.img} alt={c.title} loading="lazy" width={800} height={600} className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1200ms]" />
                 </div>
