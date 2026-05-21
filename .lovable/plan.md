@@ -1,18 +1,39 @@
-## Fix: Restore Hero heading visibility on mobile
+## Цель
 
-### Problem
-The previous mobile optimization incorrectly applied `max-md:max-h-[250px] max-md:min-h-0` to the entire Hero `<section>` container, not just the background image. This caps the whole hero at 250px on mobile, causing the heading text to be cropped at the top.
+Заменить фоновые миниатюры 7 пунктов мобильного гамбургер-меню на качественные изображения с Unsplash, соответствующие восточно-православной тематике. Пункт «Вопросы священнику» не трогаем. Другие элементы меню и страницы не меняем.
 
-### Fix
-Remove the two mobile constraint classes from the Hero section in `src/routes/index.tsx`:
+## Что меняется
 
-**Line 110** — change:
-```
-<section className="relative max-md:max-h-[250px] max-md:min-h-0 h-[58vh] ...">
-```
-to:
-```
-<section className="relative h-[58vh] ...">
-```
+Только файлы-ассеты, которые уже импортируются в `src/components/site/Header.tsx`:
 
-This restores the previous mobile behavior where the hero section uses `h-[58vh]` with `min-h-[480px]`, giving the heading adequate vertical space. Desktop (`md:`) styles remain untouched. No other sections or styles are modified.
+| Пункт меню | Файл | Новый сюжет |
+|---|---|---|
+| Главная | `src/assets/menu-home.jpg` | Интерьер православного храма с иконостасом и тёплым светом свечей |
+| Направления | `src/assets/menu-destinations.jpg` | Православный монастырь (Метеоры / Афон) — общий вид |
+| Календарь поездок | `src/assets/menu-calendar.jpg` | Туристический автобус на фоне монастыря, тёплый свет |
+| Блог | `src/assets/menu-blog.jpg` | Женщина в платке молится/читает в православном храме |
+| Святыни | `src/assets/menu-catalog.jpg` | Крупный план православной иконы со свечами |
+| О нас | `src/assets/menu-about.jpg` | Группа паломников у древней каменной стены православного монастыря |
+| Контакты | `src/assets/menu-contacts.jpg` | Тёплый интерьер офиса / человек за столом в тёплом свете |
+| **Вопросы священнику** | `menu-priest.jpg` | **Не трогаем** |
+
+## Технические детали
+
+- Источник: **Unsplash** (бесплатно, без обязательной атрибуции).
+- Подбор: каждое изображение проверяется глазами на (а) восточно-православную, а не католическую эстетику (нет латинских крестов, статуй, готических храмов), (б) тёплый свет и читаемость в квадрате 60×60.
+- Скачиваем через `curl` прямо в `src/assets/` с тем же именем файла — не нужно править `Header.tsx`, импорты и `routeTree.gen.ts`.
+- Формат JPG, ширина ~800 px (Unsplash параметр `w=800&q=80`) — баланс качества и веса; для миниатюры 60×60 этого с запасом.
+- Старые файлы перезаписываются (Vite подхватит автоматически).
+
+## Проверка
+
+1. После замены — скриншот мобильного меню (viewport 494px) с открытым гамбургером.
+2. Визуально проверяю все 7 миниатюр: православная эстетика, тёплый тон, читаемость в маленьком квадрате.
+3. Если какая-то картинка плохо читается в 60×60 или соскальзывает в католическую/нейтральную стилистику — переподбираю.
+
+## Что НЕ меняется
+
+- `Header.tsx` и любой другой код.
+- Картинка пункта «Вопросы священнику».
+- Десктопная версия (миниатюры используются только в мобильном меню).
+- Любые другие страницы и секции.
