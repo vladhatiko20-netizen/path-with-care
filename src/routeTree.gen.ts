@@ -15,7 +15,6 @@ import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as DestinationsRouteImport } from './routes/destinations'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as CalendarRouteImport } from './routes/calendar'
@@ -23,6 +22,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
 import { Route as DestinationsBariRouteImport } from './routes/destinations.bari'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
@@ -66,11 +66,6 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DestinationsRoute = DestinationsRouteImport.update({
-  id: '/destinations',
-  path: '/destinations',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ContactsRoute = ContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
@@ -105,10 +100,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
+  id: '/destinations/',
+  path: '/destinations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DestinationsBariRoute = DestinationsBariRouteImport.update({
-  id: '/bari',
-  path: '/bari',
-  getParentRoute: () => DestinationsRoute,
+  id: '/destinations/bari',
+  path: '/destinations/bari',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog_/$slug',
@@ -178,7 +178,6 @@ export interface FileRoutesByFullPath {
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
-  '/destinations': typeof DestinationsRouteWithChildren
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
@@ -187,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/bari': typeof DestinationsBariRoute
+  '/destinations/': typeof DestinationsIndexRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
@@ -205,7 +205,6 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
-  '/destinations': typeof DestinationsRouteWithChildren
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
@@ -214,6 +213,7 @@ export interface FileRoutesByTo {
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/bari': typeof DestinationsBariRoute
+  '/destinations': typeof DestinationsIndexRoute
   '/admin': typeof AdminAdminIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
@@ -234,7 +234,6 @@ export interface FileRoutesById {
   '/calendar': typeof CalendarRoute
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
-  '/destinations': typeof DestinationsRouteWithChildren
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
@@ -243,6 +242,7 @@ export interface FileRoutesById {
   '/with-priest': typeof WithPriestRoute
   '/blog_/$slug': typeof BlogSlugRoute
   '/destinations/bari': typeof DestinationsBariRoute
+  '/destinations/': typeof DestinationsIndexRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
@@ -263,7 +263,6 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/catalog'
     | '/contacts'
-    | '/destinations'
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
@@ -272,6 +271,7 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog/$slug'
     | '/destinations/bari'
+    | '/destinations/'
     | '/admin/'
     | '/admin/blog/$id'
     | '/admin/blog/new'
@@ -290,7 +290,6 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/catalog'
     | '/contacts'
-    | '/destinations'
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
@@ -299,6 +298,7 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog/$slug'
     | '/destinations/bari'
+    | '/destinations'
     | '/admin'
     | '/admin/blog/$id'
     | '/admin/blog/new'
@@ -318,7 +318,6 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/catalog'
     | '/contacts'
-    | '/destinations'
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
@@ -327,6 +326,7 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog_/$slug'
     | '/destinations/bari'
+    | '/destinations/'
     | '/_admin/admin/'
     | '/_admin/admin/blog/$id'
     | '/_admin/admin/blog/new'
@@ -347,7 +347,6 @@ export interface RootRouteChildren {
   CalendarRoute: typeof CalendarRoute
   CatalogRoute: typeof CatalogRoute
   ContactsRoute: typeof ContactsRoute
-  DestinationsRoute: typeof DestinationsRouteWithChildren
   LoginRoute: typeof LoginRoute
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -355,6 +354,8 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  DestinationsBariRoute: typeof DestinationsBariRoute
+  DestinationsIndexRoute: typeof DestinationsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -399,13 +400,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/destinations': {
-      id: '/destinations'
-      path: '/destinations'
-      fullPath: '/destinations'
-      preLoaderRoute: typeof DestinationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contacts': {
@@ -457,12 +451,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/destinations/': {
+      id: '/destinations/'
+      path: '/destinations'
+      fullPath: '/destinations/'
+      preLoaderRoute: typeof DestinationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/destinations/bari': {
       id: '/destinations/bari'
-      path: '/bari'
+      path: '/destinations/bari'
       fullPath: '/destinations/bari'
       preLoaderRoute: typeof DestinationsBariRouteImport
-      parentRoute: typeof DestinationsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/blog_/$slug': {
       id: '/blog_/$slug'
@@ -572,18 +573,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface DestinationsRouteChildren {
-  DestinationsBariRoute: typeof DestinationsBariRoute
-}
-
-const DestinationsRouteChildren: DestinationsRouteChildren = {
-  DestinationsBariRoute: DestinationsBariRoute,
-}
-
-const DestinationsRouteWithChildren = DestinationsRoute._addFileChildren(
-  DestinationsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -592,7 +581,6 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarRoute: CalendarRoute,
   CatalogRoute: CatalogRoute,
   ContactsRoute: ContactsRoute,
-  DestinationsRoute: DestinationsRouteWithChildren,
   LoginRoute: LoginRoute,
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
@@ -600,7 +588,19 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
   BlogSlugRoute: BlogSlugRoute,
+  DestinationsBariRoute: DestinationsBariRoute,
+  DestinationsIndexRoute: DestinationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
