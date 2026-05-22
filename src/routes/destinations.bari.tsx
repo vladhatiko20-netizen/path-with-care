@@ -483,8 +483,8 @@ function BariPage() {
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card border border-gold/30 rounded-sm px-6 py-5 cursor-pointer hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300"
               >
                 <div>
-                  <p className="text-[18px] text-foreground">{lang === "ru" ? p.title_ru : p.title_ro}</p>
-                  <p className="text-[16px] text-foreground/65 mt-1">
+                  <p className="text-[18px] md:text-[21px] text-foreground">{lang === "ru" ? p.title_ru : p.title_ro}</p>
+                  <p className="text-[16px] md:text-[18px] text-foreground/65 mt-1">
                     <Calendar className="w-4 h-4 text-gold inline mr-2 -mt-0.5" aria-hidden="true" />
                     {formatDateRange(p.start_date, p.end_date, lang)}
                     {!p.with_priest && <span className="ml-2 italic">({t("без священника", "fără preot")})</span>}
@@ -492,14 +492,14 @@ function BariPage() {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                   {p.price_eur && (
-                    <span className="text-gold text-[18px] font-medium inline-flex items-center">
+                    <span className="text-gold text-[18px] md:text-[21px] font-medium inline-flex items-center">
                       <Euro className="w-4 h-4 mr-1" aria-hidden="true" />{p.price_eur}
                     </span>
                   )}
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); selectDate(p); }}
-                    className="w-full sm:w-auto px-5 py-2 bg-accent text-primary-foreground text-[16px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-sm"
+                    className="w-full sm:w-auto px-5 py-2 bg-accent text-primary-foreground text-[16px] md:text-[18px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-sm"
                   >
                     {t("Хочу поехать", "Vreau să merg")}
                   </button>
@@ -559,13 +559,13 @@ function BariPage() {
               const c = lang === "ru" ? f.ru : f.ro;
               return (
                 <AccordionItem key={i} value={`f${i}`} className="border-gold/30 py-1">
-                  <AccordionTrigger className="text-[17px] md:text-[18px] text-foreground hover:text-accent text-left [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-accent">
+                  <AccordionTrigger className="text-[17px] md:text-[20px] text-foreground hover:text-accent text-left [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-accent">
                     <span className="flex items-start gap-3">
                       <HelpCircle className="w-5 h-5 text-accent shrink-0 mt-0.5" aria-hidden="true" />
                       <span>{c.q}</span>
                     </span>
                   </AccordionTrigger>
-                  <AccordionContent className="text-[16px] md:text-[17px] text-foreground/80 leading-relaxed pl-8">{c.a}</AccordionContent>
+                  <AccordionContent className="text-[16px] md:text-[19px] text-foreground/80 leading-relaxed pl-8">{c.a}</AccordionContent>
                 </AccordionItem>
               );
             })}
@@ -579,15 +579,15 @@ function BariPage() {
       {/* Contacts */}
       <section className="max-w-4xl mx-auto px-6 py-12 md:py-16 font-serif text-center">
         <h2 className="text-3xl md:text-4xl text-foreground font-light mb-4">{t("Связаться напрямую", "Contact direct")}</h2>
-        <p className="text-[16px] md:text-[17px] text-foreground/80 mb-3">
+        <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
           <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
           Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a>
         </p>
-        <p className="text-[16px] md:text-[17px] text-foreground/80 mb-3">
+        <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
           <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
           Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a>
         </p>
-        <p className="text-[16px] md:text-[17px] text-foreground/80">
+        <p className="text-[16px] md:text-[20px] text-foreground/80">
           <Mail className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
           <a href="mailto:pilgrimage@eldoradotur.md" className="text-accent hover:underline">pilgrimage@eldoradotur.md</a>
         </p>
