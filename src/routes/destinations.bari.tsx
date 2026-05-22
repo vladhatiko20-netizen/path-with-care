@@ -185,7 +185,7 @@ function BariPage() {
     <PageShell>
       {/* Breadcrumbs */}
       <nav aria-label="breadcrumb" className="max-w-6xl mx-auto px-6 pt-6 text-[15px] md:text-base font-serif text-foreground/70">
-        <ol className="flex flex-wrap items-center gap-2">
+        <ol className="flex flex-wrap items-center justify-center gap-2 min-h-[40px]">
           <li><Link to="/" className="hover:text-accent">{t("Главная", "Acasă")}</Link></li>
           <li aria-hidden="true">→</li>
           <li><Link to="/destinations" className="hover:text-accent">{t("Направления", "Destinații")}</Link></li>
@@ -194,20 +194,19 @@ function BariPage() {
         </ol>
       </nav>
 
-      {/* Hero */}
-      <section className="relative h-[50vh] md:h-[64vh] min-h-[400px] flex items-end overflow-hidden mt-4">
+      {/* Hero — mobile: full-bleed overlay */}
+      <section className="md:hidden relative h-[50vh] min-h-[400px] flex items-end overflow-hidden mt-4">
         <img src={heroImg} alt={t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari")} className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/75" />
-        <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 md:pb-16 w-full">
-          <p className="overline text-white/90 mb-3">{t("ПАЛОМНИЧЕСТВО", "PELERINAJ")}</p>
-          <h1 className="font-serif text-4xl md:text-6xl text-white font-light leading-tight drop-shadow-lg">{title}</h1>
-          <p className="mt-4 font-serif italic text-white/85 text-lg md:text-xl max-w-2xl">
+        <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 w-full">
+          <h1 className="font-serif text-4xl text-white font-light leading-tight drop-shadow-lg">{title}</h1>
+          <p className="mt-4 font-serif italic text-white/85 text-lg max-w-2xl">
             {t(
               "«Николай Чудотворец – скорый помощник всем, с верою к нему притекающим, в скорбях и нуждах заступник, в болезнях целитель, в опасностях избавитель.»",
               "„Nicolae Făcătorul de Minuni este un ajutor grabnic pentru toți cei ce aleargă cu credință la el, apărător în necazuri și nevoi, tămăduitor în boli, izbăvitor în primejdii.”",
             )}
           </p>
-          <p className="mt-2 font-serif italic text-white/70 text-sm md:text-base">
+          <p className="mt-2 font-serif italic text-white/70 text-sm">
             {t(
               "– Святитель Димитрий Ростовский. Жития святых.",
               "– Sfântul Dimitrie al Rostovului. Viețile Sfinților.",
@@ -215,6 +214,78 @@ function BariPage() {
           </p>
         </div>
       </section>
+
+      {/* Hero — desktop: square image + side preview */}
+      <section className="hidden md:block mt-4">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 pl-[5mm] pr-6">
+          <div className="relative aspect-[5/4] overflow-hidden flex items-end rounded-sm">
+            <img src={heroImg} alt={t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari")} className="absolute inset-0 w-full h-full object-cover" width={1200} height={960} />
+            {/* Darker gradient since image is smaller */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/85" />
+            <div className="relative z-10 px-6 pb-6 w-full">
+              <h1 className="font-serif text-3xl lg:text-[2.75rem] text-white font-light leading-tight drop-shadow-lg">{title}</h1>
+              <p className="mt-3 font-serif italic text-white/85 text-sm lg:text-[15px]">
+                {t(
+                  "«Николай Чудотворец – скорый помощник всем, с верою к нему притекающим, в скорбях и нуждах заступник, в болезнях целитель, в опасностях избавитель.»",
+                  "„Nicolae Făcătorul de Minuni este un ajutor grabnic pentru toți cei ce aleargă cu credință la el, apărător în necazuri și nevoi, tămăduitor în boli, izbăvitor în primejdii.”",
+                )}
+              </p>
+              <p className="mt-1 font-serif italic text-white/70 text-xs lg:text-[13px]">
+                {t(
+                  "– Святитель Димитрий Ростовский. Жития святых.",
+                  "– Sfântul Dimitrie al Rostovului. Viețile Sfinților.",
+                )}
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col justify-center font-serif">
+            <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
+            {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
+            <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
+              {t(
+                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы.",
+                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt.",
+              )}
+            </p>
+            <button
+              type="button"
+              onClick={() => setAboutOpen(true)}
+              className="mt-6 self-start inline-flex items-center gap-2 text-accent hover:text-accent/80 font-serif text-[17px] border-b border-accent/40 hover:border-accent pb-0.5 transition-colors"
+            >
+              {t("Читать подробнее →", "Citește mai mult →")}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* About modal — desktop "О поездке" full text */}
+      <Dialog open={aboutOpen} onOpenChange={setAboutOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="font-serif text-2xl md:text-3xl font-light">
+              {t("О поездке", "Despre pelerinaj")}
+            </DialogTitle>
+          </DialogHeader>
+          {/* TODO: replace with full "О поездке" text provided later */}
+          <div className="font-serif text-[17px] leading-relaxed text-foreground/85 space-y-4 max-h-[70vh] overflow-y-auto">
+            <p>
+              {t(
+                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли.",
+                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea.",
+              )}
+            </p>
+            <p>
+              {t(
+                "В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
+                "În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
+              )}
+            </p>
+            <p className="italic text-foreground/60">
+              {t("(Полный текст будет добавлен позже.)", "(Textul complet va fi adăugat ulterior.)")}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Info bar — from database */}
       <section className="bg-card border-y border-gold/30">
