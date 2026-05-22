@@ -313,8 +313,8 @@ function BariPage() {
         </div>
       </section>
 
-      {/* Intro */}
-      <section className="max-w-3xl mx-auto px-6 py-12 md:py-16 font-serif">
+      {/* Intro — mobile only (desktop shows it next to hero image) */}
+      <section className="md:hidden max-w-3xl mx-auto px-6 py-12 font-serif">
         <h2 className="text-3xl md:text-4xl text-foreground font-light mb-5">{t("О поездке", "Despre pelerinaj")}</h2>
         <p className="text-[17px] md:text-[18px] text-foreground/85 leading-relaxed border-l-4 border-accent/60 pl-5 md:pl-6 py-2">
           {t(
