@@ -431,10 +431,10 @@ function BariPage() {
 
       {/* Включено / не включено */}
       <section className="bg-secondary/40 py-12 md:py-16">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 font-serif">
+        <div className="max-w-6xl mx-auto px-6 md:pl-16 lg:pl-24 grid md:grid-cols-2 gap-10 font-serif">
           <div>
-            <h2 className="text-2xl md:text-3xl text-foreground font-light mb-4">{t("Что включено", "Ce este inclus")}</h2>
-            <ul className="space-y-3 text-[16px] md:text-[17px] text-foreground/85 leading-relaxed">
+            <h2 className="inline-block text-2xl md:text-[2.6rem] text-foreground font-light mb-4 border-b-2 border-olive pb-1">{t("Что включено", "Ce este inclus")}</h2>
+            <ul className="space-y-3 text-[16px] md:text-[24px] text-foreground/85 leading-relaxed">
               {[
                 t("Авиаперелёт Кишинёв – Бари – Кишинёв", "Zbor Chișinău – Bari – Chișinău"),
                 t("Проживание в гостинице 3*–4* с завтраками", "Cazare la hotel 3*–4* cu mic dejun"),
@@ -444,20 +444,20 @@ function BariPage() {
                 t("Молебны и акафисты у святынь", "Tedeumuri și acatiste la sfintele moaște"),
                 t("Медицинская страховка", "Asigurare medicală"),
               ].map((x, i) => (
-                <li key={i} className="flex gap-3 items-start"><CheckCircle2 className="w-5 h-5 text-olive shrink-0 mt-0.5" aria-hidden="true" /><span>{x}</span></li>
+                <li key={i} className="flex gap-3 items-start"><CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 text-olive shrink-0 mt-1" aria-hidden="true" /><span>{x}</span></li>
               ))}
             </ul>
           </div>
           <div>
-            <h2 className="text-2xl md:text-3xl text-foreground font-light mb-4">{t("Не включено", "Nu este inclus")}</h2>
-            <ul className="space-y-3 text-[16px] md:text-[17px] text-foreground/85 leading-relaxed">
+            <h2 className="inline-block text-2xl md:text-[2.6rem] text-foreground font-light mb-4 border-b-2 border-[#b53d2e] pb-1">{t("Не включено", "Nu este inclus")}</h2>
+            <ul className="space-y-3 text-[16px] md:text-[24px] text-foreground/85 leading-relaxed">
               {[
                 t("Личные расходы", "Cheltuieli personale"),
                 t("Обеды и ужины", "Prânzurile și cinele"),
                 t("Дополнительные экскурсии вне программы", "Excursii suplimentare în afara programului"),
                 t("Чаевые гидам и водителям", "Bacșișurile ghizilor și șoferilor"),
               ].map((x, i) => (
-                <li key={i} className="flex gap-3 items-start"><Minus className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" aria-hidden="true" /><span>{x}</span></li>
+                <li key={i} className="flex gap-3 items-start"><Minus className="w-5 h-5 md:w-6 md:h-6 text-[#b53d2e] shrink-0 mt-1" aria-hidden="true" /><span>{x}</span></li>
               ))}
             </ul>
           </div>
