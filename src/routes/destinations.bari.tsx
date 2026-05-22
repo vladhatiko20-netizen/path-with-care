@@ -328,28 +328,79 @@ function BariPage() {
       <section className="bg-secondary/40 py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8 text-center">{t("Главные святыни", "Sfintele moaște")}</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {([
               { img: cryptImg, ru: { t: "Крипта со святыми мощами", d: "Спуск в нижний храм к мраморной гробнице, где почивают мощи Святителя." }, ro: { t: "Cripta cu sfintele moaște", d: "Coborâre la biserica de jos, la mormântul de marmură unde se află moaștele." } },
               { img: interiorImg, ru: { t: "Икона Святителя Николая", d: "Особое моление перед чудотворным образом, акафист и помазание святым миром." }, ro: { t: "Icoana Sfântului Nicolae", d: "Rugăciune deosebită înaintea sfintei icoane, acatist și ungere cu sfântul mir." } },
               { img: heroImg, ru: { t: "Базилика Святителя", d: "Главное место паломничества – храм, в котором почивают мощи угодника Божия." }, ro: { t: "Bazilica Sfântului", d: "Locul principal de pelerinaj – biserica în care se află moaștele plăcutului lui Dumnezeu." } },
-            ].map((s, i) => {
+            ]).map((s, i) => {
               const c = lang === "ru" ? s.ru : s.ro;
               return (
-                <article key={i} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <img src={s.img} alt={c.t} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="p-5 font-serif">
-                    <h3 className="text-xl text-foreground mb-2 leading-tight">{c.t}</h3>
-                    <p className="text-[17px] text-foreground/75 leading-relaxed">{c.d}</p>
-                  </div>
-                </article>
+                <div key={i}>
+                  <button
+                    type="button"
+                    onClick={() => handleShrineClick(i)}
+                    aria-expanded={shrineExpand === i}
+                    className="w-full text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300 block"
+                  >
+                    <div className="aspect-[4/3] overflow-hidden">
+                      <img src={s.img} alt={c.t} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="p-5 font-serif">
+                      <h3 className="text-xl text-foreground mb-2 leading-tight">{c.t}</h3>
+                      <p className="text-[17px] text-foreground/75 leading-relaxed">{c.d}</p>
+                    </div>
+                  </button>
+                  {/* Mobile-only inline expansion */}
+                  {shrineExpand === i && (
+                    <div className="md:hidden mt-3 bg-card border border-gold/30 rounded-sm p-5 font-serif text-[17px] text-foreground/85 leading-relaxed animate-fade-in">
+                      {/* TODO: replace with full shrine description provided later */}
+                      <p>{c.d}</p>
+                      <p className="mt-3 italic text-foreground/60">
+                        {t("(Полный текст будет добавлен позже.)", "(Textul complet va fi adăugat ulterior.)")}
+                      </p>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
         </div>
       </section>
+
+      {/* Desktop shrine modal */}
+      <Dialog open={shrineModal !== null} onOpenChange={(o) => !o && setShrineModal(null)}>
+        <DialogContent className="max-w-5xl p-0 overflow-hidden">
+          {shrineModal !== null && (() => {
+            const list = [
+              { img: cryptImg, ru: { t: "Крипта со святыми мощами", d: "Спуск в нижний храм к мраморной гробнице, где почивают мощи Святителя." }, ro: { t: "Cripta cu sfintele moaște", d: "Coborâre la biserica de jos, la mormântul de marmură unde se află moaștele." } },
+              { img: interiorImg, ru: { t: "Икона Святителя Николая", d: "Особое моление перед чудотворным образом, акафист и помазание святым миром." }, ro: { t: "Icoana Sfântului Nicolae", d: "Rugăciune deosebită înaintea sfintei icoane, acatist și ungere cu sfântul mir." } },
+              { img: heroImg, ru: { t: "Базилика Святителя", d: "Главное место паломничества – храм, в котором почивают мощи угодника Божия." }, ro: { t: "Bazilica Sfântului", d: "Locul principal de pelerinaj – biserica în care se află moaștele plăcutului lui Dumnezeu." } },
+            ];
+            const s = list[shrineModal];
+            const c = lang === "ru" ? s.ru : s.ro;
+            return (
+              <div className="grid md:grid-cols-2 max-h-[85vh]">
+                <div className="aspect-square md:aspect-auto overflow-hidden bg-secondary">
+                  <img src={s.img} alt={c.t} className="w-full h-full object-cover" />
+                </div>
+                <div className="p-8 md:p-10 font-serif overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="font-serif text-2xl md:text-3xl font-light text-left mb-4">{c.t}</DialogTitle>
+                  </DialogHeader>
+                  {/* TODO: replace with full shrine description provided later */}
+                  <div className="text-[17px] leading-relaxed text-foreground/85 space-y-4">
+                    <p>{c.d}</p>
+                    <p className="italic text-foreground/60">
+                      {t("(Полный текст будет добавлен позже.)", "(Textul complet va fi adăugat ulterior.)")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </DialogContent>
+      </Dialog>
 
       {/* Программа */}
       <section className="max-w-4xl mx-auto px-6 py-12 md:py-16">
