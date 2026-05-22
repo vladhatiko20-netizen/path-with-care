@@ -14,6 +14,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   Clock, Users, Euro, Church,
   CheckCircle2, Minus,
   Calendar, HelpCircle,
@@ -141,6 +147,17 @@ function BariPage() {
   const { destination, pilgrimages } = Route.useLoaderData();
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const [shrineModal, setShrineModal] = useState<number | null>(null);
+  const [shrineExpand, setShrineExpand] = useState<number | null>(null);
+
+  function handleShrineClick(i: number) {
+    if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
+      setShrineModal(i);
+    } else {
+      setShrineExpand((cur) => (cur === i ? null : i));
+    }
+  }
 
   const title = destination ? (lang === "ru" ? destination.title_ru : destination.title_ro) : t("Бари", "Bari");
   const duration = destination ? (lang === "ru" ? destination.duration_ru : destination.duration_ro) : null;
