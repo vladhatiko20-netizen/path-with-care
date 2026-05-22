@@ -649,21 +649,21 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
           <form onSubmit={onSubmit} className="space-y-4 font-serif">
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
-              <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold" />
+              <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold" />
             </div>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
-              <input required maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold" />
+              <input required maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold" />
             </div>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
-              <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold" />
+              <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold" />
             </div>
             <div className="relative">
               <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
-              <textarea maxLength={2000} rows={5} placeholder={t("Сообщение (необязательно)", "Mesaj (opțional)")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] focus:outline-none focus:border-gold resize-none" />
+              <textarea maxLength={2000} rows={5} placeholder={t("Сообщение (необязательно)", "Mesaj (opțional)")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold resize-none" />
             </div>
-            <button type="submit" disabled={sending} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 bg-accent text-primary-foreground text-[17px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
+            <button type="submit" disabled={sending} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 bg-accent text-primary-foreground text-[17px] md:text-[20px] font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
               {sending ? t("Отправка…", "Se trimite…") : t("Отправить заявку", "Trimiteți cererea")}
               {!sending && <Send className="w-4 h-4" aria-hidden="true" />}
             </button>
