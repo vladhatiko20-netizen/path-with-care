@@ -67,7 +67,7 @@ export function Header() {
         </div>
       </div>
 
-      <div className="pl-3 pr-3 lg:pl-8 lg:pr-0 py-4 flex items-center justify-between gap-4">
+      <div className="pl-3 pr-3 lg:pl-8 lg:pr-0 py-2 flex items-center justify-between gap-4">
         <Link
           to="/"
           className="flex items-center gap-3 group shrink-0"
