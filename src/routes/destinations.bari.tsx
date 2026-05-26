@@ -583,20 +583,35 @@ function BariPage() {
       <LeadForm prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
 
       {/* Contacts */}
-      <section className="max-w-4xl mx-auto px-6 py-12 md:py-16 font-serif text-center">
-        <h2 className="text-3xl md:text-4xl text-foreground font-light mb-4">{t("Связаться напрямую", "Contact direct")}</h2>
-        <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
-          <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
-          Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a>
-        </p>
-        <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
-          <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
-          Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a>
-        </p>
-        <p className="text-[16px] md:text-[20px] text-foreground/80">
-          <Mail className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
-          <a href="mailto:pilgrimage@eldoradotur.md" className="text-accent hover:underline">pilgrimage@eldoradotur.md</a>
-        </p>
+      <section className="bg-background py-12 md:py-16 font-serif">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 md:gap-12 md:items-center">
+          <div className="text-center md:text-left">
+            <h2 className="text-3xl md:text-4xl text-foreground font-light mb-4">{t("Связаться напрямую", "Contact direct")}</h2>
+            <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
+              <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
+              Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a>
+              <span className="ml-2 text-foreground/60">· Viber</span>
+            </p>
+            <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
+              <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
+              Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a>
+              <span className="ml-2 text-foreground/60">· Viber</span>
+            </p>
+            <p className="text-[16px] md:text-[20px] text-foreground/80">
+              <Mail className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
+              <a href="mailto:pilgrimage@eldoradotur.md" className="text-accent hover:underline">pilgrimage@eldoradotur.md</a>
+            </p>
+          </div>
+          {/* TODO: replace with final invitation copy */}
+          <div className="hidden md:block">
+            <p className="font-serif italic text-[20px] lg:text-[22px] text-foreground/85 leading-relaxed border-l-2 border-gold/60 pl-6">
+              {t(
+                "Если хотите обсудить поездку лично — позвоните или напишите нам в Viber. Ответим в рабочие часы.",
+                "Dacă doriți să discutați personal despre pelerinaj — sunați sau scrieți-ne pe Viber. Răspundem în orele de lucru.",
+              )}
+            </p>
+          </div>
+        </div>
       </section>
     </PageShell>
   );
@@ -641,8 +656,9 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
   }
 
   return (
-    <section id="lead" className="bg-card border-y border-gold/30 py-12 md:py-16 scroll-mt-24">
-      <div className="max-w-2xl mx-auto px-6">
+    <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24">
+      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-[1.2fr_1fr] md:gap-12 md:items-start">
+        <div>
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-3">{t("Оставить заявку", "Lăsați o cerere")}</h2>
         <p className="font-serif italic text-foreground/70 mb-8 text-[17px]">
           {t("Свяжемся с вами в ближайший рабочий день.", "Vă vom contacta în prima zi lucrătoare.")}
@@ -675,6 +691,14 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
             </button>
           </form>
         )}
+        </div>
+        {/* Right column — tagline (desktop only) */}
+        <div className="hidden md:flex flex-col items-start justify-center pl-4 lg:pl-8">
+          <p className="font-serif text-3xl lg:text-[2.5rem] text-foreground font-light leading-tight">
+            {t("Свяжемся с вами в течение 24 часов", "Vă contactăm în 24 de ore")}
+          </p>
+          <span aria-hidden="true" className="mt-6 text-gold text-3xl">✦</span>
+        </div>
       </div>
     </section>
   );
