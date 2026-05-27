@@ -641,6 +641,24 @@ function BariPage() {
 
       {/* Lead form */}
       <LeadForm prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
+
+      <Lightbox
+        open={lightbox.open}
+        index={lightbox.index}
+        close={() => setLightbox({ open: false, index: 0 })}
+        slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt }))}
+        plugins={[Thumbnails]}
+        thumbnails={{ position: "bottom", border: 0, borderRadius: 2, gap: 8 }}
+        styles={{
+          container: { backgroundColor: "rgba(20,14,8,0.92)" },
+          thumbnailsContainer: { backgroundColor: "rgba(20,14,8,0.95)" },
+        }}
+        render={{
+          iconClose: () => <X className="w-6 h-6 text-white" />,
+        }}
+        controller={{ closeOnBackdropClick: true }}
+        carousel={{ finite: true }}
+      />
     </PageShell>
   );
 }
