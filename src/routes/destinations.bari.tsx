@@ -247,7 +247,7 @@ function BariPage() {
               key={i}
               type="button"
               onClick={() => openLightbox(i)}
-              className="relative shrink-0 w-[70vw] aspect-[4/3] overflow-hidden rounded-sm ring-1 ring-gold/30 snap-start cursor-zoom-in"
+              className="relative shrink-0 w-[45vw] aspect-square overflow-hidden rounded-sm ring-1 ring-gold/30 snap-start cursor-zoom-in"
               aria-label={t("Открыть фото", "Deschide fotografia")}
             >
               <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover" />
@@ -280,8 +280,8 @@ function BariPage() {
             </div>
           </div>
           <div className="flex flex-col justify-start font-serif">
-            {/* Gallery — desktop 2×2 thumbnails */}
-            <div className="grid grid-cols-2 gap-2 mb-6">
+            {/* Gallery — desktop compact row of small thumbnails */}
+            <div className="grid grid-cols-4 gap-2 mb-6 max-w-[70%]">
               {galleryPhotos.map((p, i) => (
                 <button
                   key={i}
@@ -650,14 +650,15 @@ function BariPage() {
         plugins={[Thumbnails]}
         thumbnails={{ position: "bottom", border: 0, borderRadius: 2, gap: 8 }}
         styles={{
-          container: { backgroundColor: "rgba(20,14,8,0.92)" },
+          container: { backgroundColor: "rgba(20,14,8,0.92)", padding: 0 },
+          slide: { padding: 0 },
           thumbnailsContainer: { backgroundColor: "rgba(20,14,8,0.95)" },
         }}
         render={{
           iconClose: () => <X className="w-6 h-6 text-white" />,
         }}
         controller={{ closeOnBackdropClick: true }}
-        carousel={{ finite: true }}
+        carousel={{ finite: true, padding: 0, spacing: 0, imageFit: "contain" }}
       />
     </PageShell>
   );
