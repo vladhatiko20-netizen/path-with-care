@@ -259,6 +259,7 @@ function BariPage() {
       </section>
 
       {/* Gallery — mobile horizontal scroll strip */}
+      {galleryPhotos.length > 0 && (
       <section className="md:hidden bg-background py-6">
         <div className="flex gap-3 overflow-x-auto px-6 snap-x snap-mandatory scrollbar-none">
           {galleryPhotos.map((p, i) => (
@@ -273,10 +274,13 @@ function BariPage() {
             </button>
           ))}
         </div>
-        <p className="px-6 mt-2 text-[11px] text-foreground/50 font-serif italic">
-          {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
-        </p>
+        {attributionText && (
+          <p className="px-6 mt-2 text-[11px] text-foreground/50 font-serif italic">
+            {attributionText}
+          </p>
+        )}
       </section>
+      )}
 
       {/* Hero — desktop: square image + side preview */}
       <section className="hidden md:block mt-4 bg-background">
