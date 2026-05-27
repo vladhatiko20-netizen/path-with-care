@@ -28,6 +28,14 @@ import {
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
+import gallery1 from "@/assets/bari/gallery-1.jpg";
+import gallery2 from "@/assets/bari/gallery-2.jpg";
+import gallery3 from "@/assets/bari/gallery-3.jpg";
+import gallery4 from "@/assets/bari/gallery-4.jpg";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import { X } from "lucide-react";
 
 const ViberIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -157,6 +165,15 @@ function BariPage() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
+
+  const galleryPhotos = [
+    { src: gallery1, alt: t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari") },
+    { src: gallery2, alt: t("Православный храм", "Biserică ortodoxă") },
+    { src: gallery3, alt: t("Свечи и молитва", "Lumânări și rugăciune") },
+    { src: gallery4, alt: t("Паломники в храме", "Pelerini în biserică") },
+  ];
+  const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
   function handleShrineClick(i: number) {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
@@ -222,6 +239,23 @@ function BariPage() {
         </div>
       </section>
 
+      {/* Gallery — mobile horizontal scroll strip */}
+      <section className="md:hidden bg-background py-6">
+        <div className="flex gap-3 overflow-x-auto px-6 snap-x snap-mandatory scrollbar-none">
+          {galleryPhotos.map((p, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => openLightbox(i)}
+              className="relative shrink-0 w-[70vw] aspect-[4/3] overflow-hidden rounded-sm ring-1 ring-gold/30 snap-start cursor-zoom-in"
+              aria-label={t("Открыть фото", "Deschide fotografia")}
+            >
+              <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Hero — desktop: square image + side preview */}
       <section className="hidden md:block mt-4 bg-background">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 pl-[5mm] pr-6">
@@ -245,7 +279,26 @@ function BariPage() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-center font-serif">
+          <div className="flex flex-col justify-start font-serif">
+            {/* Gallery — desktop 2×2 thumbnails */}
+            <div className="grid grid-cols-2 gap-2 mb-6">
+              {galleryPhotos.map((p, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => openLightbox(i)}
+                  className="relative aspect-square overflow-hidden rounded-sm ring-1 ring-gold/30 hover:ring-gold transition-all duration-200 cursor-zoom-in group"
+                  aria-label={t("Открыть фото", "Deschide fotografia")}
+                >
+                  <img
+                    src={p.src}
+                    alt={p.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                  />
+                </button>
+              ))}
+            </div>
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
             {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
@@ -588,6 +641,24 @@ function BariPage() {
 
       {/* Lead form */}
       <LeadForm prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
+
+      <Lightbox
+        open={lightbox.open}
+        index={lightbox.index}
+        close={() => setLightbox({ open: false, index: 0 })}
+        slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt }))}
+        plugins={[Thumbnails]}
+        thumbnails={{ position: "bottom", border: 0, borderRadius: 2, gap: 8 }}
+        styles={{
+          container: { backgroundColor: "rgba(20,14,8,0.92)" },
+          thumbnailsContainer: { backgroundColor: "rgba(20,14,8,0.95)" },
+        }}
+        render={{
+          iconClose: () => <X className="w-6 h-6 text-white" />,
+        }}
+        controller={{ closeOnBackdropClick: true }}
+        carousel={{ finite: true }}
+      />
     </PageShell>
   );
 }
