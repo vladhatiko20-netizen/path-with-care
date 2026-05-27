@@ -239,6 +239,23 @@ function BariPage() {
         </div>
       </section>
 
+      {/* Gallery — mobile horizontal scroll strip */}
+      <section className="md:hidden bg-background py-6">
+        <div className="flex gap-3 overflow-x-auto px-6 snap-x snap-mandatory scrollbar-none">
+          {galleryPhotos.map((p, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => openLightbox(i)}
+              className="relative shrink-0 w-[70vw] aspect-[4/3] overflow-hidden rounded-sm ring-1 ring-gold/30 snap-start cursor-zoom-in"
+              aria-label={t("Открыть фото", "Deschide fotografia")}
+            >
+              <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* Hero — desktop: square image + side preview */}
       <section className="hidden md:block mt-4 bg-background">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 pl-[5mm] pr-6">
