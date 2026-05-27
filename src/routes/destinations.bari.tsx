@@ -254,6 +254,9 @@ function BariPage() {
             </button>
           ))}
         </div>
+        <p className="px-6 mt-2 text-[11px] text-foreground/50 font-serif italic">
+          {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
+        </p>
       </section>
 
       {/* Hero — desktop: square image + side preview */}
