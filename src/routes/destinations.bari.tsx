@@ -302,6 +302,9 @@ function BariPage() {
                 </button>
               ))}
             </div>
+            <p className="-mt-4 mb-6 text-[11px] text-foreground/50 font-serif italic max-w-[70%]">
+              {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
+            </p>
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
             {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
