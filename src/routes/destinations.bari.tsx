@@ -634,10 +634,7 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
     <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-[1.2fr_1fr] md:gap-12 md:items-start">
         <div>
-        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-3">{t("Оставить заявку", "Lăsați o cerere")}</h2>
-        <p className="font-serif italic text-foreground/70 mb-8 text-[17px]">
-          {t("Свяжемся с вами в ближайший рабочий день.", "Vă vom contacta în prima zi lucrătoare.")}
-        </p>
+        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8">{t("Оставить заявку", "Lăsați o cerere")}</h2>
         {sent ? (
           <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85">
             {t("Спасибо! Ваша заявка получена.", "Mulțumim! Cererea dvs. a fost primită.")}
@@ -666,15 +663,56 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
             </button>
           </form>
         )}
+        {/* Mobile-only contacts (desktop shows them in right column) */}
+        <div className="md:hidden mt-12">
+          <ContactsBlock />
         </div>
-        {/* Right column — tagline (desktop only) */}
-        <div className="hidden md:flex flex-col items-start justify-center pl-4 lg:pl-8">
-          <p className="font-serif text-3xl lg:text-[2.5rem] text-foreground font-light leading-tight">
-            {t("Свяжемся с вами в течение 24 часов", "Vă contactăm în 24 de ore")}
-          </p>
-          <span aria-hidden="true" className="mt-6 text-gold text-3xl">✦</span>
+        </div>
+        {/* Right column — direct contacts (desktop only) */}
+        <div className="hidden md:block pl-4 lg:pl-8">
+          <ContactsBlock />
         </div>
       </div>
     </section>
+  );
+}
+
+function ContactsBlock() {
+  const { t } = useLang();
+  return (
+    <div className="font-serif">
+      <h3 className="text-3xl md:text-4xl text-foreground font-light mb-8">
+        {t("Связаться напрямую", "Contactați-ne direct")}
+      </h3>
+      {[
+        { name: t("Анна", "Anna"), tel: "+37368778676", display: "+373 68 77 86 76", viber: "%2B37368778676" },
+        { name: t("Наталья", "Natalia"), tel: "+37368787599", display: "+373 68 78 75 99", viber: "%2B37368787599" },
+      ].map((p) => (
+        <div key={p.tel} className="mb-6">
+          <a href={`tel:${p.tel}`} className="flex items-center text-[18px] md:text-[20px] text-foreground hover:text-accent">
+            <Phone className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
+            {p.name}
+          </a>
+          <a href={`tel:${p.tel}`} className="block text-[18px] md:text-[20px] text-accent hover:underline mt-1 pl-[26px]">
+            {p.display}
+          </a>
+          <a
+            href={`viber://chat?number=${p.viber}`}
+            className="inline-flex items-center text-[16px] mt-1 pl-[26px] hover:underline"
+            style={{ color: "#7360F2" }}
+          >
+            <ViberIcon className="w-[18px] h-[18px] mr-2" />
+            Viber
+          </a>
+        </div>
+      ))}
+      <a
+        href="mailto:pilgrimage@eldoradotur.md"
+        className="inline-flex items-center text-[18px] md:text-[20px] text-accent hover:underline"
+      >
+        <Mail className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
+        pilgrimage@eldoradotur.md
+      </a>
+    </div>
   );
 }
