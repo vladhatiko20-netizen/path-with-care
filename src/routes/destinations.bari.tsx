@@ -157,7 +157,7 @@ function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
 }
 
 function BariPage() {
-  const { destination, pilgrimages } = Route.useLoaderData();
+  const { destination, pilgrimages, gallery } = Route.useLoaderData();
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -165,12 +165,33 @@ function BariPage() {
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
 
-  const galleryPhotos = [
-    { src: gallery1, alt: t("Базилика Святителя Николая в Бари — внешний вид", "Bazilica Sfântului Nicolae din Bari — exterior") },
-    { src: gallery2, alt: t("Крипта базилики, где почивают мощи святителя Николая", "Cripta bazilicii, unde se află moaștele Sfântului Nicolae") },
-    { src: gallery3, alt: t("Серебряный алтарь над мощами святителя Николая (1684)", "Altarul de argint deasupra moaștelor Sfântului Nicolae (1684)") },
-    { src: gallery4, alt: t("Византийская икона святителя Николая в крипте базилики", "Icoană bizantină a Sfântului Nicolae în cripta bazilicii") },
-  ];
+  const galleryPhotos = ((gallery ?? []) as PublicGalleryImage[]).map((g) => ({
+    src: g.image_url,
+    alt: (lang === "ru" ? g.alt_ru : g.alt_ro) ?? g.alt_ru ?? g.alt_ro ?? "",
+    author: g.author,
+    license: g.license,
+    source_url: g.source_url,
+  }));
+
+  // Build attribution caption automatically from gallery items that have
+  // an author or license. If none, no caption is rendered.
+  const attributionParts = Array.from(
+    new Set(
+      galleryPhotos
+        .map((p) => {
+          const a = (p.author ?? "").trim();
+          const l = (p.license ?? "").trim();
+          if (!a && !l) return "";
+          if (a && l) return `${a} — ${l}`;
+          return a || l;
+        })
+        .filter(Boolean),
+    ),
+  );
+  const attributionText = attributionParts.length
+    ? t(`Фото: ${attributionParts.join("; ")}`, `Foto: ${attributionParts.join("; ")}`)
+    : null;
+
   const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
   function handleShrineClick(i: number) {
