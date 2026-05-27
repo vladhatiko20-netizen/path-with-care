@@ -168,10 +168,10 @@ function BariPage() {
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
 
   const galleryPhotos = [
-    { src: gallery1, alt: t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari") },
-    { src: gallery2, alt: t("Православный храм", "Biserică ortodoxă") },
-    { src: gallery3, alt: t("Свечи и молитва", "Lumânări și rugăciune") },
-    { src: gallery4, alt: t("Паломники в храме", "Pelerini în biserică") },
+    { src: gallery1, alt: t("Базилика Святителя Николая в Бари — внешний вид", "Bazilica Sfântului Nicolae din Bari — exterior") },
+    { src: gallery2, alt: t("Крипта базилики, где почивают мощи святителя Николая", "Cripta bazilicii, unde se află moaștele Sfântului Nicolae") },
+    { src: gallery3, alt: t("Серебряный алтарь над мощами святителя Николая (1684)", "Altarul de argint deasupra moaștelor Sfântului Nicolae (1684)") },
+    { src: gallery4, alt: t("Византийская икона святителя Николая в крипте базилики", "Icoană bizantină a Sfântului Nicolae în cripta bazilicii") },
   ];
   const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
@@ -254,6 +254,9 @@ function BariPage() {
             </button>
           ))}
         </div>
+        <p className="px-6 mt-2 text-[11px] text-foreground/50 font-serif italic">
+          {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
+        </p>
       </section>
 
       {/* Hero — desktop: square image + side preview */}
@@ -299,6 +302,9 @@ function BariPage() {
                 </button>
               ))}
             </div>
+            <p className="-mt-4 mb-6 text-[11px] text-foreground/50 font-serif italic max-w-[70%]">
+              {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
+            </p>
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
             {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
