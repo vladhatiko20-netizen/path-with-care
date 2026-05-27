@@ -49,11 +49,12 @@ const DESC_RO = "Pelerinaj din Chișinău la Bari – închinare la moaștele Sf
 
 export const Route = createFileRoute("/destinations/bari")({
   loader: async () => {
-    const [destination, pilgrimages] = await Promise.all([
+    const [destination, pilgrimages, gallery] = await Promise.all([
       getDestinationBySlug({ data: { slug: "bari" } }),
       listPilgrimages(),
+      listGalleryByDestinationSlug({ data: { slug: "bari" } }),
     ]);
-    return { destination, pilgrimages };
+    return { destination, pilgrimages, gallery };
   },
   head: ({ loaderData }) => {
     const price = loaderData?.destination?.price_from ?? 750;
