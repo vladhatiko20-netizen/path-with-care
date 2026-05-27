@@ -693,29 +693,29 @@ function ContactsBlock({ desktop = false }: { desktop?: boolean }) {
   if (desktop) {
     return (
       <div className="font-serif">
-        <h3 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8">
+        <h3 className="font-serif md:text-2xl text-muted-foreground font-light mb-6">
           {t("Вариант 2: Связаться напрямую", "Varianta 2: Contactați-ne direct")}
         </h3>
         <div className="space-y-4">
           {people.map((p) => (
             <div
               key={p.tel}
-              role="link"
-              tabIndex={0}
-              onClick={() => { window.location.href = `tel:${p.tel}`; }}
-              onKeyDown={(e) => { if (e.key === "Enter") window.location.href = `tel:${p.tel}`; }}
-              className="group flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors cursor-pointer text-[18px]"
+              className="flex items-center w-full bg-card rounded-sm border border-border/40 border-l-2 border-l-gold text-[18px] overflow-hidden"
             >
-              <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
-                <Phone className="w-4 h-4 text-accent" aria-hidden="true" />
-              </span>
-              <span className="text-foreground">{p.name}</span>
-              <span className="mx-3 text-muted-foreground">·</span>
-              <span className="text-accent">{p.display}</span>
+              <a
+                href={`tel:${p.tel}`}
+                className="flex items-center flex-1 py-3 pl-4 pr-2 hover:bg-gold/5 transition-colors"
+              >
+                <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
+                  <Phone className="w-4 h-4 text-accent" aria-hidden="true" />
+                </span>
+                <span className="text-foreground">{p.name}</span>
+                <span className="mx-3 text-muted-foreground">·</span>
+                <span className="text-accent">{p.display}</span>
+              </a>
               <a
                 href={`viber://chat?number=${p.viber}`}
-                onClick={(e) => e.stopPropagation()}
-                className="ml-auto inline-flex items-center px-2.5 py-1 rounded-sm text-[14px] hover:opacity-80"
+                className="mr-3 inline-flex items-center px-2.5 py-1 rounded-sm text-[14px] hover:opacity-80 shrink-0"
                 style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
                 aria-label={`Viber ${p.name}`}
               >
