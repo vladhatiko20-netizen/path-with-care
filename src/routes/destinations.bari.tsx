@@ -165,6 +165,15 @@ function BariPage() {
   const [aboutOpen, setAboutOpen] = useState(false);
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
+
+  const galleryPhotos = [
+    { src: gallery1, alt: t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari") },
+    { src: gallery2, alt: t("Православный храм", "Biserică ortodoxă") },
+    { src: gallery3, alt: t("Свечи и молитва", "Lumânări și rugăciune") },
+    { src: gallery4, alt: t("Паломники в храме", "Pelerini în biserică") },
+  ];
+  const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
   function handleShrineClick(i: number) {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
