@@ -28,6 +28,14 @@ import {
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
+import gallery1 from "@/assets/bari/gallery-1.jpg";
+import gallery2 from "@/assets/bari/gallery-2.jpg";
+import gallery3 from "@/assets/bari/gallery-3.jpg";
+import gallery4 from "@/assets/bari/gallery-4.jpg";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import { X } from "lucide-react";
 
 const ViberIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
