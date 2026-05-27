@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { getDestinationBySlug } from "@/lib/destinations.functions";
+import { listGalleryByDestinationSlug, type PublicGalleryImage } from "@/lib/destinations.functions";
 import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 import { createLead } from "@/lib/leads.functions";
 import {
@@ -28,10 +29,6 @@ import {
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
-import gallery1 from "@/assets/bari/gallery-1.jpg";
-import gallery2 from "@/assets/bari/gallery-2.jpg";
-import gallery3 from "@/assets/bari/gallery-3.jpg";
-import gallery4 from "@/assets/bari/gallery-4.jpg";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
