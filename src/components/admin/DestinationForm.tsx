@@ -3,6 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { adminSaveDestination } from "@/lib/admin.functions";
 import { ImageUpload } from "./ImageUpload";
+import { GalleryManager } from "./GalleryManager";
 
 type Initial = {
   id?: string;
@@ -124,6 +125,11 @@ export function DestinationForm({ initial }: { initial: Initial }) {
           <label className="block text-sm font-serif mb-1">Программа (RO)</label>
           <textarea className={cls} rows={10} value={form.program_ro ?? ""} onChange={(e) => set("program_ro", e.target.value || null)} maxLength={50000} />
         </div>
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Фотогалерея</h2>
+        <GalleryManager destinationSlug={form.slug} />
       </section>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
