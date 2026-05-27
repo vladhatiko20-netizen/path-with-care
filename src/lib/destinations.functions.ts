@@ -32,3 +32,29 @@ export const getDestinationBySlug = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return (row as PublicDestination | null) ?? null;
   });
+
+export type PublicGalleryImage = {
+  id: string;
+  image_url: string;
+  alt_ru: string | null;
+  alt_ro: string | null;
+  author: string | null;
+  license: string | null;
+  source_url: string | null;
+  sort_order: number;
+};
+
+export const listGalleryByDestinationSlug = createServerFn({ method: "GET" })
+  .inputValidator((i: unknown) =>
+    z.object({ slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/) }).parse(i),
+  )
+  .handler(async ({ data }): Promise<PublicGalleryImage[]> => {
+    const { data: rows, error } = await supabaseAdmin
+      .from("destination_gallery_images")
+      .select("id, image_url, alt_ru, alt_ro, author, license, source_url, sort_order")
+      .eq("destination_slug", data.slug)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return (rows as PublicGalleryImage[] | null) ?? [];
+  });

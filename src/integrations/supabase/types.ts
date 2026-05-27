@@ -62,6 +62,48 @@ export type Database = {
         }
         Relationships: []
       }
+      destination_gallery_images: {
+        Row: {
+          alt_ro: string | null
+          alt_ru: string | null
+          author: string | null
+          created_at: string
+          destination_slug: string
+          id: string
+          image_url: string
+          license: string | null
+          sort_order: number
+          source_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          alt_ro?: string | null
+          alt_ru?: string | null
+          author?: string | null
+          created_at?: string
+          destination_slug: string
+          id?: string
+          image_url: string
+          license?: string | null
+          sort_order?: number
+          source_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          alt_ro?: string | null
+          alt_ru?: string | null
+          author?: string | null
+          created_at?: string
+          destination_slug?: string
+          id?: string
+          image_url?: string
+          license?: string | null
+          sort_order?: number
+          source_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       destinations: {
         Row: {
           cover_image: string | null

@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { getDestinationBySlug } from "@/lib/destinations.functions";
+import { listGalleryByDestinationSlug, type PublicGalleryImage } from "@/lib/destinations.functions";
 import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 import { createLead } from "@/lib/leads.functions";
 import {
@@ -28,10 +29,6 @@ import {
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
-import gallery1 from "@/assets/bari/gallery-1.jpg";
-import gallery2 from "@/assets/bari/gallery-2.jpg";
-import gallery3 from "@/assets/bari/gallery-3.jpg";
-import gallery4 from "@/assets/bari/gallery-4.jpg";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
@@ -52,11 +49,12 @@ const DESC_RO = "Pelerinaj din Chișinău la Bari – închinare la moaștele Sf
 
 export const Route = createFileRoute("/destinations/bari")({
   loader: async () => {
-    const [destination, pilgrimages] = await Promise.all([
+    const [destination, pilgrimages, gallery] = await Promise.all([
       getDestinationBySlug({ data: { slug: "bari" } }),
       listPilgrimages(),
+      listGalleryByDestinationSlug({ data: { slug: "bari" } }),
     ]);
-    return { destination, pilgrimages };
+    return { destination, pilgrimages, gallery };
   },
   head: ({ loaderData }) => {
     const price = loaderData?.destination?.price_from ?? 750;
@@ -159,7 +157,7 @@ function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
 }
 
 function BariPage() {
-  const { destination, pilgrimages } = Route.useLoaderData();
+  const { destination, pilgrimages, gallery } = Route.useLoaderData();
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -167,12 +165,33 @@ function BariPage() {
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
 
-  const galleryPhotos = [
-    { src: gallery1, alt: t("Базилика Святителя Николая в Бари — внешний вид", "Bazilica Sfântului Nicolae din Bari — exterior") },
-    { src: gallery2, alt: t("Крипта базилики, где почивают мощи святителя Николая", "Cripta bazilicii, unde se află moaștele Sfântului Nicolae") },
-    { src: gallery3, alt: t("Серебряный алтарь над мощами святителя Николая (1684)", "Altarul de argint deasupra moaștelor Sfântului Nicolae (1684)") },
-    { src: gallery4, alt: t("Византийская икона святителя Николая в крипте базилики", "Icoană bizantină a Sfântului Nicolae în cripta bazilicii") },
-  ];
+  const galleryPhotos = ((gallery ?? []) as PublicGalleryImage[]).map((g) => ({
+    src: g.image_url,
+    alt: (lang === "ru" ? g.alt_ru : g.alt_ro) ?? g.alt_ru ?? g.alt_ro ?? "",
+    author: g.author,
+    license: g.license,
+    source_url: g.source_url,
+  }));
+
+  // Build attribution caption automatically from gallery items that have
+  // an author or license. If none, no caption is rendered.
+  const attributionParts = Array.from(
+    new Set(
+      galleryPhotos
+        .map((p) => {
+          const a = (p.author ?? "").trim();
+          const l = (p.license ?? "").trim();
+          if (!a && !l) return "";
+          if (a && l) return `${a} — ${l}`;
+          return a || l;
+        })
+        .filter(Boolean),
+    ),
+  );
+  const attributionText = attributionParts.length
+    ? t(`Фото: ${attributionParts.join("; ")}`, `Foto: ${attributionParts.join("; ")}`)
+    : null;
+
   const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
   function handleShrineClick(i: number) {
@@ -240,6 +259,7 @@ function BariPage() {
       </section>
 
       {/* Gallery — mobile horizontal scroll strip */}
+      {galleryPhotos.length > 0 && (
       <section className="md:hidden bg-background py-6">
         <div className="flex gap-3 overflow-x-auto px-6 snap-x snap-mandatory scrollbar-none">
           {galleryPhotos.map((p, i) => (
@@ -254,10 +274,13 @@ function BariPage() {
             </button>
           ))}
         </div>
-        <p className="px-6 mt-2 text-[11px] text-foreground/50 font-serif italic">
-          {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
-        </p>
+        {attributionText && (
+          <p className="px-6 mt-2 text-[11px] text-foreground/50 font-serif italic">
+            {attributionText}
+          </p>
+        )}
       </section>
+      )}
 
       {/* Hero — desktop: square image + side preview */}
       <section className="hidden md:block mt-4 bg-background">
@@ -284,6 +307,7 @@ function BariPage() {
           </div>
           <div className="flex flex-col justify-start font-serif">
             {/* Gallery — desktop compact row of small thumbnails */}
+            {galleryPhotos.length > 0 && (
             <div className="grid grid-cols-4 gap-2 mb-6 max-w-[70%]">
               {galleryPhotos.map((p, i) => (
                 <button
@@ -302,9 +326,12 @@ function BariPage() {
                 </button>
               ))}
             </div>
-            <p className="-mt-4 mb-6 text-[11px] text-foreground/50 font-serif italic max-w-[70%]">
-              {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
-            </p>
+            )}
+            {attributionText && (
+              <p className="-mt-4 mb-6 text-[11px] text-foreground/50 font-serif italic max-w-[70%]">
+                {attributionText}
+              </p>
+            )}
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
             {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">

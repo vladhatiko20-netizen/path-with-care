@@ -195,6 +195,96 @@ export const adminDeleteDestination = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ===== Destination gallery =====
+
+const gallerySchema = z.object({
+  id: z.string().uuid().optional(),
+  destination_slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/),
+  image_url: z.string().min(1).max(1000),
+  alt_ru: z.string().max(500).nullable().optional(),
+  alt_ro: z.string().max(500).nullable().optional(),
+  author: z.string().max(200).nullable().optional(),
+  license: z.string().max(200).nullable().optional(),
+  source_url: z.string().max(1000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(10000).optional(),
+});
+
+export const adminListGallery = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({ destination_slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/) }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("destination_gallery_images")
+      .select("*")
+      .eq("destination_slug", data.destination_slug)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminSaveGalleryImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => gallerySchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("destination_gallery_images").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    // For new rows, set sort_order to max + 1 if not provided
+    let sort_order = payload.sort_order;
+    if (sort_order === undefined) {
+      const { data: maxRow } = await context.supabase
+        .from("destination_gallery_images")
+        .select("sort_order")
+        .eq("destination_slug", payload.destination_slug)
+        .order("sort_order", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      sort_order = ((maxRow?.sort_order as number | undefined) ?? 0) + 1;
+    }
+    const { data: row, error } = await context.supabase
+      .from("destination_gallery_images").insert({ ...payload, sort_order }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteGalleryImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destination_gallery_images").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminReorderGallery = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({
+      items: z.array(z.object({
+        id: z.string().uuid(),
+        sort_order: z.number().int().min(0).max(10000),
+      })).min(1).max(200),
+    }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    for (const it of data.items) {
+      const { error } = await context.supabase
+        .from("destination_gallery_images")
+        .update({ sort_order: it.sort_order })
+        .eq("id", it.id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
 // ===== Leads =====
 
 const leadsListInput = z.object({
