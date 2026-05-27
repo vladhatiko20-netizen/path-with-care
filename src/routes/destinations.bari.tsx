@@ -307,6 +307,7 @@ function BariPage() {
           </div>
           <div className="flex flex-col justify-start font-serif">
             {/* Gallery — desktop compact row of small thumbnails */}
+            {galleryPhotos.length > 0 && (
             <div className="grid grid-cols-4 gap-2 mb-6 max-w-[70%]">
               {galleryPhotos.map((p, i) => (
                 <button
@@ -325,9 +326,12 @@ function BariPage() {
                 </button>
               ))}
             </div>
-            <p className="-mt-4 mb-6 text-[11px] text-foreground/50 font-serif italic max-w-[70%]">
-              {t("Фото: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY", "Foto: Wikimedia Commons (Qoan, Enric, Sailko) — CC BY-SA / CC BY")}
-            </p>
+            )}
+            {attributionText && (
+              <p className="-mt-4 mb-6 text-[11px] text-foreground/50 font-serif italic max-w-[70%]">
+                {attributionText}
+              </p>
+            )}
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
             {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
