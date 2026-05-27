@@ -262,7 +262,26 @@ function BariPage() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-center font-serif">
+          <div className="flex flex-col justify-start font-serif">
+            {/* Gallery — desktop 2×2 thumbnails */}
+            <div className="grid grid-cols-2 gap-2 mb-6">
+              {galleryPhotos.map((p, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => openLightbox(i)}
+                  className="relative aspect-square overflow-hidden rounded-sm ring-1 ring-gold/30 hover:ring-gold transition-all duration-200 cursor-zoom-in group"
+                  aria-label={t("Открыть фото", "Deschide fotografia")}
+                >
+                  <img
+                    src={p.src}
+                    alt={p.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                  />
+                </button>
+              ))}
+            </div>
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
             {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
