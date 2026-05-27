@@ -168,10 +168,10 @@ function BariPage() {
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
 
   const galleryPhotos = [
-    { src: gallery1, alt: t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari") },
-    { src: gallery2, alt: t("Православный храм", "Biserică ortodoxă") },
-    { src: gallery3, alt: t("Свечи и молитва", "Lumânări și rugăciune") },
-    { src: gallery4, alt: t("Паломники в храме", "Pelerini în biserică") },
+    { src: gallery1, alt: t("Базилика Святителя Николая в Бари — внешний вид", "Bazilica Sfântului Nicolae din Bari — exterior") },
+    { src: gallery2, alt: t("Крипта базилики, где почивают мощи святителя Николая", "Cripta bazilicii, unde se află moaștele Sfântului Nicolae") },
+    { src: gallery3, alt: t("Серебряный алтарь над мощами святителя Николая (1684)", "Altarul de argint deasupra moaștelor Sfântului Nicolae (1684)") },
+    { src: gallery4, alt: t("Византийская икона святителя Николая в крипте базилики", "Icoană bizantină a Sfântului Nicolae în cripta bazilicii") },
   ];
   const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
