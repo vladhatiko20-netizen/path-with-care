@@ -29,6 +29,13 @@ import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
 import interiorImg from "@/assets/bari-interior.jpg";
 
+const ViberIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1a8 8 0 0 1-8 8h-1l-4 3v-3.2A8 8 0 0 1 3 12v-1Z" />
+    <path d="M9 9.5c0-.6.4-1 1-1h.6c.4 0 .8.3.9.7l.4 1.4c.1.4 0 .8-.3 1l-.6.5a6 6 0 0 0 2.9 2.9l.5-.6c.2-.3.6-.4 1-.3l1.4.4c.4.1.7.5.7.9v.6c0 .6-.4 1-1 1A7.5 7.5 0 0 1 9 9.5Z" />
+  </svg>
+);
+
 const PAGE_URL = "https://path-with-care.lovable.app/destinations/bari";
 const TITLE_RU = "Бари – паломничество к мощам Святителя Николая Чудотворца";
 const TITLE_RO = "Bari – pelerinaj la moaștele Sfântului Ierarh Nicolae";
@@ -581,38 +588,6 @@ function BariPage() {
 
       {/* Lead form */}
       <LeadForm prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
-
-      {/* Contacts */}
-      <section className="bg-background py-12 md:py-16 font-serif">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 md:gap-12 md:items-center">
-          <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl text-foreground font-light mb-4">{t("Связаться напрямую", "Contact direct")}</h2>
-            <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
-              <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
-              Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a>
-              <span className="ml-2 text-foreground/60">· Viber</span>
-            </p>
-            <p className="text-[16px] md:text-[20px] text-foreground/80 mb-3">
-              <Phone className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
-              Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a>
-              <span className="ml-2 text-foreground/60">· Viber</span>
-            </p>
-            <p className="text-[16px] md:text-[20px] text-foreground/80">
-              <Mail className="w-[18px] h-[18px] text-accent inline mr-2 -mt-0.5" aria-hidden="true" />
-              <a href="mailto:pilgrimage@eldoradotur.md" className="text-accent hover:underline">pilgrimage@eldoradotur.md</a>
-            </p>
-          </div>
-          {/* TODO: replace with final invitation copy */}
-          <div className="hidden md:block">
-            <p className="font-serif italic text-[20px] lg:text-[22px] text-foreground/85 leading-relaxed border-l-2 border-gold/60 pl-6">
-              {t(
-                "Если хотите обсудить поездку лично — позвоните или напишите нам в Viber. Ответим в рабочие часы.",
-                "Dacă doriți să discutați personal despre pelerinaj — sunați sau scrieți-ne pe Viber. Răspundem în orele de lucru.",
-              )}
-            </p>
-          </div>
-        </div>
-      </section>
     </PageShell>
   );
 }
@@ -659,10 +634,7 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
     <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-[1.2fr_1fr] md:gap-12 md:items-start">
         <div>
-        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-3">{t("Оставить заявку", "Lăsați o cerere")}</h2>
-        <p className="font-serif italic text-foreground/70 mb-8 text-[17px]">
-          {t("Свяжемся с вами в ближайший рабочий день.", "Vă vom contacta în prima zi lucrătoare.")}
-        </p>
+        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8">{t("Оставить заявку", "Lăsați o cerere")}</h2>
         {sent ? (
           <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85">
             {t("Спасибо! Ваша заявка получена.", "Mulțumim! Cererea dvs. a fost primită.")}
@@ -691,15 +663,56 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
             </button>
           </form>
         )}
+        {/* Mobile-only contacts (desktop shows them in right column) */}
+        <div className="md:hidden mt-12">
+          <ContactsBlock />
         </div>
-        {/* Right column — tagline (desktop only) */}
-        <div className="hidden md:flex flex-col items-start justify-center pl-4 lg:pl-8">
-          <p className="font-serif text-3xl lg:text-[2.5rem] text-foreground font-light leading-tight">
-            {t("Свяжемся с вами в течение 24 часов", "Vă contactăm în 24 de ore")}
-          </p>
-          <span aria-hidden="true" className="mt-6 text-gold text-3xl">✦</span>
+        </div>
+        {/* Right column — direct contacts (desktop only) */}
+        <div className="hidden md:block pl-4 lg:pl-8">
+          <ContactsBlock />
         </div>
       </div>
     </section>
+  );
+}
+
+function ContactsBlock() {
+  const { t } = useLang();
+  return (
+    <div className="font-serif">
+      <h3 className="text-3xl md:text-4xl text-foreground font-light mb-8">
+        {t("Связаться напрямую", "Contactați-ne direct")}
+      </h3>
+      {[
+        { name: t("Анна", "Anna"), tel: "+37368778676", display: "+373 68 77 86 76", viber: "%2B37368778676" },
+        { name: t("Наталья", "Natalia"), tel: "+37368787599", display: "+373 68 78 75 99", viber: "%2B37368787599" },
+      ].map((p) => (
+        <div key={p.tel} className="mb-6">
+          <a href={`tel:${p.tel}`} className="flex items-center text-[18px] md:text-[20px] text-foreground hover:text-accent">
+            <Phone className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
+            {p.name}
+          </a>
+          <a href={`tel:${p.tel}`} className="block text-[18px] md:text-[20px] text-accent hover:underline mt-1 pl-[26px]">
+            {p.display}
+          </a>
+          <a
+            href={`viber://chat?number=${p.viber}`}
+            className="inline-flex items-center text-[16px] mt-1 pl-[26px] hover:underline"
+            style={{ color: "#7360F2" }}
+          >
+            <ViberIcon className="w-[18px] h-[18px] mr-2" />
+            Viber
+          </a>
+        </div>
+      ))}
+      <a
+        href="mailto:pilgrimage@eldoradotur.md"
+        className="inline-flex items-center text-[18px] md:text-[20px] text-accent hover:underline"
+      >
+        <Mail className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
+        pilgrimage@eldoradotur.md
+      </a>
+    </div>
   );
 }
