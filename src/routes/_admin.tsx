@@ -1,7 +1,10 @@
 import { createFileRoute, Outlet, useNavigate, Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/use-auth";
-import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin } from "lucide-react";
+import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox } from "lucide-react";
+import { adminCountUnreadLeads } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin")({
   head: () => ({ meta: [{ title: "Админ-панель — Паломник" }, { name: "robots", content: "noindex" }] }),
@@ -13,6 +16,15 @@ function AdminLayout() {
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const countUnread = useServerFn(adminCountUnreadLeads);
+  const { data: unread } = useQuery({
+    queryKey: ["admin-leads-unread-count"],
+    queryFn: () => countUnread(),
+    enabled: !!session && isAdmin,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
+  const unreadCount = unread?.count ?? 0;
 
   useEffect(() => {
     setMobileOpen(false);
@@ -41,8 +53,9 @@ function AdminLayout() {
     );
   }
 
-  const nav = [
+  const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; badge?: number }> = [
     { to: "/admin", label: "Обзор", icon: LayoutDashboard },
+    { to: "/admin/leads", label: "Заявки", icon: Inbox, badge: unreadCount },
     { to: "/admin/blog", label: "Блог", icon: FileText },
     { to: "/admin/pilgrimages", label: "Паломничества", icon: Calendar },
     { to: "/admin/destinations", label: "Направления", icon: MapPin },
@@ -74,7 +87,16 @@ function AdminLayout() {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-2 px-3 py-2 rounded-sm text-sm font-serif transition-colors ${active ? "bg-accent text-primary-foreground" : "text-foreground hover:bg-secondary"}`}
             >
-              <Icon className="w-4 h-4" /> {item.label}
+              <Icon className="w-4 h-4" />
+              <span className="flex-1">{item.label}</span>
+              {item.badge && item.badge > 0 ? (
+                <span
+                  className={`min-w-[1.25rem] h-5 px-1.5 inline-flex items-center justify-center rounded-full text-[11px] font-sans font-medium ${active ? "bg-primary-foreground/20 text-primary-foreground" : "bg-gold text-foreground"}`}
+                  aria-label={`${item.badge} непрочитанных`}
+                >
+                  {item.badge > 99 ? "99+" : item.badge}
+                </span>
+              ) : null}
             </Link>
           );
         })}

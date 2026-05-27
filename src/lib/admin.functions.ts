@@ -194,3 +194,101 @@ export const adminDeleteDestination = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// ===== Leads =====
+
+const leadsListInput = z.object({
+  search: z.string().trim().max(200).optional().default(""),
+  status: z.enum(["all", "new", "read"]).optional().default("all"),
+  source: z.string().trim().max(50).regex(/^[a-z0-9_\-]+$/).optional(),
+  period: z.enum(["all", "week", "month"]).optional().default("all"),
+});
+
+export const adminListLeads = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => leadsListInput.parse(i ?? {}))
+  .handler(async ({ data, context }) => {
+    let q = context.supabase
+      .from("leads")
+      .select("id, name, phone, email, message, source, is_read, read_at, created_at")
+      .order("created_at", { ascending: false })
+      .limit(500);
+
+    if (data.status === "new") q = q.eq("is_read", false);
+    if (data.status === "read") q = q.eq("is_read", true);
+    if (data.source) q = q.eq("source", data.source);
+    if (data.period !== "all") {
+      const days = data.period === "week" ? 7 : 30;
+      const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+      q = q.gte("created_at", since);
+    }
+    if (data.search) {
+      const s = data.search.replace(/[%,]/g, " ").trim();
+      if (s) {
+        const like = `%${s}%`;
+        q = q.or(
+          `name.ilike.${like},phone.ilike.${like},email.ilike.${like},message.ilike.${like}`
+        );
+      }
+    }
+
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminGetLead = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("leads").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminMarkLeadRead = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({
+    id: z.string().uuid(),
+    is_read: z.boolean(),
+  }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("leads")
+      .update({ is_read: data.is_read, read_at: data.is_read ? new Date().toISOString() : null })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminMarkAllLeadsRead = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { error } = await context.supabase
+      .from("leads")
+      .update({ is_read: true, read_at: new Date().toISOString() })
+      .eq("is_read", false);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminDeleteLead = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("leads").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminCountUnreadLeads = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { count, error } = await context.supabase
+      .from("leads")
+      .select("id", { count: "exact", head: true })
+      .eq("is_read", false);
+    if (error) throw new Error(error.message);
+    return { count: count ?? 0 };
+  });
