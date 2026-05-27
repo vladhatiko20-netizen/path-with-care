@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "yet-another-react-lightbox/styles.css";
 
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,400&display=swap');
 
@@ -156,4 +157,8 @@
     background: var(--color-gold);
     opacity: 0.6;
   }
+}
+
+.yarl__thumbnails_thumbnail_active {
+  border-color: oklch(0.72 0.085 80) !important;
 }
