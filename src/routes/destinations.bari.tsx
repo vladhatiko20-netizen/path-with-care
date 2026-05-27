@@ -631,16 +631,16 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
   }
 
   return (
-    <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24">
+    <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24 border-t border-gold/30">
       <div className="hidden md:block max-w-6xl mx-auto px-6 mb-10">
-        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light text-center">
+        <h2 className="font-serif text-3xl md:text-5xl text-foreground font-light text-center">
           {t("Принять участие в паломничестве", "Participați la pelerinaj")}
         </h2>
       </div>
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-[1.2fr_1fr] md:gap-12 md:items-start">
         <div>
         <h2 className="md:hidden font-serif text-3xl text-foreground font-light mb-8">{t("Оставить заявку", "Lăsați o cerere")}</h2>
-        <h2 className="hidden md:block font-serif text-3xl md:text-4xl text-foreground font-light mb-8">{t("Вариант 1: Оставить заявку", "Varianta 1: Lăsați o cerere")}</h2>
+        <h2 className="hidden md:block font-serif md:text-2xl text-muted-foreground font-light mb-6">{t("Вариант 1: Оставить заявку", "Varianta 1: Lăsați o cerere")}</h2>
         {sent ? (
           <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85">
             {t("Спасибо! Ваша заявка получена.", "Mulțumim! Cererea dvs. a fost primită.")}

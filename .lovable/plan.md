@@ -1,116 +1,42 @@
-# План: визуальные улучшения страницы /destinations/bari
+Все правки — только в `src/routes/destinations.bari.tsx`. Мобильный вид не меняется.
 
-Все правки только в `src/routes/destinations.bari.tsx`. Без логики, БД, роутинга. Иконки — `lucide-react` (уже используется в проекте). Цвета — только существующие токены (`text-accent`, `text-gold`, `text-foreground`, `text-muted-foreground`, `bg-secondary`, `bg-card`, `bg-accent/5`).
+## 1. Иерархия заголовков (desktop)
 
-## 1. Breadcrumbs (строка 164)
+- «Принять участие в паломничестве» (стр. 636): `md:text-4xl` → `md:text-5xl`. Остаётся главным.
+- «Вариант 1: Оставить заявку» (стр. 643, `hidden md:block`): `md:text-4xl` → `md:text-2xl`, добавить `text-muted-foreground`, `mb-8` → `mb-6`.
+- «Вариант 2: Связаться напрямую» (стр. 696–697, desktop-ветка `ContactsBlock`): то же — `md:text-2xl text-muted-foreground mb-6`.
 
-Класс `text-[15px]` → `text-[15px] md:text-base` (15px моб., 16px десктоп). Остальное без изменений.
+Мобильный `<h2 class="md:hidden ...">` (стр. 642) и мобильная ветка `ContactsBlock` не трогаются.
 
-## 2. Info bar (строки 196–216)
+## 2. Gold-разделитель между FAQ и блоком «Принять участие»
 
-Импорт: добавить `Clock, Users, Euro, Church` из `lucide-react`.
+В `<section id="lead">` (стр. 634) к существующим классам `bg-secondary py-12 md:py-16 scroll-mt-24` добавить `border-t border-gold/30`. Тонкая золотая линия сверху, без изменения фона и spacing.
 
-В каждом из 4 блоков:
-- Обернуть в `flex flex-col items-center gap-1`.
-- Перед label добавить иконку 22px цвета `text-gold`.
-- Label: `overline` → `overline text-[11px]`.
-- Значение: `text-[17px]` → `text-[18px] md:text-[20px]`.
+## 3. Семантика Viber-ссылки + ручная проверка
 
-## 3. «Что включено / не включено» (строки 278–311)
+Текущая логика (desktop): строка — `<div role="link" onClick=tel:...>`, внутри `<a href="viber://...">` с `e.stopPropagation()`. Логически направления разные, но семантика хромает (правый клик / скринридеры).
 
-Импорт: `CheckCircle2, Minus`.
+Переписать внешний контейнер строки контакта на нативный `<a href="tel:${p.tel}">` с теми же визуальными классами (`flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors text-[18px]`). Вложенный Viber-`<a>` остаётся, `onClick={(e) => e.stopPropagation()}` сохраняется — браузеры корректно обрабатывают вложенные `<a>` в плане кликов, но валидатор HTML ругается. Чтобы и валидно, и просто:
 
-- Заголовки оставить.
-- `ul` className: `space-y-2 text-[17px]` → `space-y-3 text-[16px] md:text-[17px]`.
-- «Включено» (стр. 293): `<span className="text-gold">✦</span>` → `<CheckCircle2 className="w-5 h-5 text-olive shrink-0 mt-0.5" />` (olive — наш существующий зелёный токен).
-- «Не включено» (стр. 306): `<span className="text-foreground/40">·</span>` → `<Minus className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />`.
-- `li` className: `flex gap-2` → `flex gap-3 items-start`.
-
-## 4. «Программа по дням» (строки 256–276)
-
-Использую вариант с нумерованным кружком в accent (надёжнее, чем глиф креста).
-
-- Перед `c.t` в `AccordionTrigger` рендерить:
+- Внешний `<a href="tel:...">` без вложенных интерактивов внутри.
+- Viber выносится как **соседний** элемент сразу после `</a>`, обёрнутый в общий flex-контейнер. То есть структура:
   ```
-  <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-accent text-primary-foreground text-sm font-serif shrink-0 mr-3">{i+1}</span>
+  <div className="flex items-center bg-card rounded-sm border ... border-l-gold">
+    <a href="tel:..." className="flex items-center flex-1 py-3 pl-4 pr-2 hover:bg-gold/5">
+      [icon] [name] · [number]
+    </a>
+    <a href="viber://..." className="ml-auto mr-3 inline-flex items-center px-2.5 py-1 rounded-sm">
+      [Viber pill]
+    </a>
+  </div>
   ```
-- `AccordionTrigger` className: `text-[17px] md:text-lg` → `text-[17px] md:text-[18px] text-left` + добавить wrapper `<div className="flex items-center">` вокруг кружка и текста.
-- `AccordionContent` className: `text-[17px]` → `text-[16px] md:text-[17px]` + `pl-11` чтобы выровнять с текстом (под кружком).
-- Стрелка accordion: трогать осторожно — компонент в `src/components/ui/accordion.tsx`. Не меняем глобально, добавляем `[&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-accent` прямо на `AccordionTrigger`.
+- Никаких `role="link"`, `tabIndex`, `onClick`, `onKeyDown`, `stopPropagation` — всё нативное.
+- Hover применяется только к телефонной части, чтобы Viber не «загорался» при ховере по номеру.
 
-## 5. «О поездке» (строки 218–227)
+Email-ссылка (стр. 727–735) уже корректный `<a>`, оставляем как есть, только убедиться что классы соответствуют новой обёрточной структуре (там нет Viber, можно оставить одинарный `<a>`).
 
-- Section className: `max-w-3xl mx-auto px-6 py-12 md:py-16 font-serif`.
-- Параграф (стр. 221): добавить `border-l-4 border-accent/60 pl-5 md:pl-6 py-2`, размер `text-[17px] md:text-[18px]`.
-- Оставить заголовок выше параграфа без border.
-
-## 6. «Ближайшие даты» (строки 313–352)
-
-Импорт: `Calendar, Euro`.
-
-- Карточка (стр. 329): `px-5 py-4` → `px-6 py-5`, gap-3 → gap-4.
-- Название (стр. 332): `text-[17px]` → `text-[18px]`.
-- Даты (стр. 333): `text-sm` → `text-[16px]`, перед текстом дат добавить `<Calendar className="w-4 h-4 text-gold inline mr-2 -mt-0.5" />`.
-- Цена (стр. 339): `text-[17px]` → `text-[18px] font-medium`, перед суммой `<Euro className="w-4 h-4 inline -mt-0.5" />` (заменяя символ `€`).
-- Кнопка (стр. 340–346): добавить классы `w-full sm:w-auto` для full-width на мобильном, размер `text-[15px]` → `text-[16px]`.
-- Блок справа: `flex items-center gap-4` → `flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto`.
-
-## 7. FAQ (строки 354–410)
-
-Импорт: `HelpCircle` (надёжнее православного креста — нет глифа в lucide).
-
-- `AccordionItem` className: добавить `py-1` для большего вертикального padding.
-- `AccordionTrigger` (стр. 403): `text-[17px] md:text-lg` → `text-[17px] md:text-[18px] text-left`, добавить иконку перед `c.q`:
-  ```
-  <HelpCircle className="w-5 h-5 text-accent shrink-0 mr-3" />
-  ```
-  через обёртку `<span className="flex items-start gap-0">`.
-- `AccordionContent` (стр. 404): `text-[17px]` → `text-[16px] md:text-[17px]`.
-
-## 8. Форма «Оставить заявку» (строки 466–490)
-
-Импорт: `User, Phone, Mail, MessageSquare, Send`.
-
-Перевести inputs в обёртки с иконкой-префиксом:
-```
-<div className="relative">
-  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-  <input ... className="w-full pl-11 pr-4 py-3 ... text-[16px]" />
-</div>
-```
-
-- Имя → `User`
-- Телефон → `Phone`
-- Email → `Mail`
-- Сообщение (textarea) → `MessageSquare` (icon в `top-3 left-3`, без `-translate-y-1/2`), `pl-11`.
-- Все размеры шрифта: `text-[17px]` → `text-[16px]` (уже 17, но 16 безопаснее для iOS — фактически оставить 17 тоже подходит, ставим `text-base` = 16px).
-- Кнопка submit (стр. 483): `text-[15px]` → `text-[17px]`, добавить `w-full sm:w-auto`, иконку `<Send className="w-4 h-4 inline ml-2" />` после текста.
-
-## 9. «Связаться напрямую» (строки 415–423)
-
-Импорт: `Phone, Mail`.
-
-- `p` элементы (стр. 418–422): `text-[17px]` → `text-[16px] md:text-[17px]`, добавить `mb-3` (увеличить spacing).
-- Перед каждой ссылкой добавить иконку 18px цвета `text-accent`:
-  - Анна, Наталья → `<Phone className="w-[18px] h-[18px] inline mr-2 -mt-0.5" />`
-  - Email → `<Mail className="w-[18px] h-[18px] inline mr-2 -mt-0.5" />`
-- Wrapper выравнивания: оставить `text-center`, иконки inline.
-
-## Сводный список импортов lucide-react (один блок наверху файла)
-
-```ts
-import {
-  Clock, Users, Euro, Church,
-  CheckCircle2, Minus,
-  Calendar, HelpCircle,
-  User, Phone, Mail, MessageSquare, Send,
-} from "lucide-react";
-```
+После правки прошу проверить руками на телефоне: тап по имени/номеру → набор номера; тап по пилюле Viber → открытие Viber.
 
 ## Что НЕ трогаем
 
-- Логику `selectDate`, `LeadForm`, prefill.
-- Серверные функции, БД, миграции, роутинг.
-- `accordion.tsx` и другие shared-компоненты.
-- Hero, секцию «Главные святыни», метатеги, JSON-LD.
-- Десктоп/мобайл — все правки универсальные, не зависят от breakpoint'ов сверх указанных размеров.
+Мобильная вёрстка, форма, серверная логика, остальные секции страницы, `useLang`, маршрутизация.
