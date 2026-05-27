@@ -631,16 +631,16 @@ function LeadForm({ prefill, onPrefillConsumed }: { prefill: string; onPrefillCo
   }
 
   return (
-    <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24">
+    <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24 border-t border-gold/30">
       <div className="hidden md:block max-w-6xl mx-auto px-6 mb-10">
-        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light text-center">
+        <h2 className="font-serif text-3xl md:text-5xl text-foreground font-light text-center">
           {t("Принять участие в паломничестве", "Participați la pelerinaj")}
         </h2>
       </div>
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-[1.2fr_1fr] md:gap-12 md:items-start">
         <div>
         <h2 className="md:hidden font-serif text-3xl text-foreground font-light mb-8">{t("Оставить заявку", "Lăsați o cerere")}</h2>
-        <h2 className="hidden md:block font-serif text-3xl md:text-4xl text-foreground font-light mb-8">{t("Вариант 1: Оставить заявку", "Varianta 1: Lăsați o cerere")}</h2>
+        <h2 className="hidden md:block font-serif md:text-2xl text-muted-foreground font-light mb-6">{t("Вариант 1: Оставить заявку", "Varianta 1: Lăsați o cerere")}</h2>
         {sent ? (
           <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85">
             {t("Спасибо! Ваша заявка получена.", "Mulțumim! Cererea dvs. a fost primită.")}
@@ -693,29 +693,29 @@ function ContactsBlock({ desktop = false }: { desktop?: boolean }) {
   if (desktop) {
     return (
       <div className="font-serif">
-        <h3 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8">
+        <h3 className="font-serif md:text-2xl text-muted-foreground font-light mb-6">
           {t("Вариант 2: Связаться напрямую", "Varianta 2: Contactați-ne direct")}
         </h3>
         <div className="space-y-4">
           {people.map((p) => (
             <div
               key={p.tel}
-              role="link"
-              tabIndex={0}
-              onClick={() => { window.location.href = `tel:${p.tel}`; }}
-              onKeyDown={(e) => { if (e.key === "Enter") window.location.href = `tel:${p.tel}`; }}
-              className="group flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors cursor-pointer text-[18px]"
+              className="flex items-center w-full bg-card rounded-sm border border-border/40 border-l-2 border-l-gold text-[18px] overflow-hidden"
             >
-              <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
-                <Phone className="w-4 h-4 text-accent" aria-hidden="true" />
-              </span>
-              <span className="text-foreground">{p.name}</span>
-              <span className="mx-3 text-muted-foreground">·</span>
-              <span className="text-accent">{p.display}</span>
+              <a
+                href={`tel:${p.tel}`}
+                className="flex items-center flex-1 py-3 pl-4 pr-2 hover:bg-gold/5 transition-colors"
+              >
+                <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
+                  <Phone className="w-4 h-4 text-accent" aria-hidden="true" />
+                </span>
+                <span className="text-foreground">{p.name}</span>
+                <span className="mx-3 text-muted-foreground">·</span>
+                <span className="text-accent">{p.display}</span>
+              </a>
               <a
                 href={`viber://chat?number=${p.viber}`}
-                onClick={(e) => e.stopPropagation()}
-                className="ml-auto inline-flex items-center px-2.5 py-1 rounded-sm text-[14px] hover:opacity-80"
+                className="mr-3 inline-flex items-center px-2.5 py-1 rounded-sm text-[14px] hover:opacity-80 shrink-0"
                 style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
                 aria-label={`Viber ${p.name}`}
               >
