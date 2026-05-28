@@ -25,6 +25,7 @@ import {
   CheckCircle2, Minus,
   Calendar, HelpCircle,
   User, Phone, Mail, MessageSquare, Send,
+  ChevronDown,
 } from "lucide-react";
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
@@ -160,7 +161,6 @@ function BariPage() {
   const { destination, pilgrimages, gallery } = Route.useLoaderData();
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
-  const [aboutOpen, setAboutOpen] = useState(false);
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
@@ -198,7 +198,16 @@ function BariPage() {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
       setShrineModal(i);
     } else {
-      setShrineExpand((cur) => (cur === i ? null : i));
+      setShrineExpand((cur) => {
+        const next = cur === i ? null : i;
+        if (next !== null && typeof window !== "undefined") {
+          requestAnimationFrame(() => {
+            const el = document.getElementById(`shrine-card-${i}`);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+        return next;
+      });
     }
   }
 
