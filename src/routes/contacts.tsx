@@ -25,7 +25,7 @@ export const Route = createFileRoute("/contacts")({
           name: "Паломник",
           image: "https://path-with-care.lovable.app",
           telephone: ["+37368778676", "+37368787599"],
-          email: "pilgrimage@eldoradotur.md",
+          email: "palomnik.moldova@gmail.com",
           address: {
             "@type": "PostalAddress",
             streetAddress: "бд. Дачия 20, оф. 81",
@@ -80,7 +80,7 @@ function Page() {
             </div>
             <div>
               <p className="overline mb-2">Email</p>
-              <a href="mailto:pilgrimage@eldoradotur.md" className="text-lg text-accent hover:underline">pilgrimage@eldoradotur.md</a>
+              <a href="mailto:palomnik.moldova@gmail.com" className="text-lg text-accent hover:underline">palomnik.moldova@gmail.com</a>
             </div>
             <div>
               <p className="overline mb-2">{t("Часы работы", "Program")}</p>

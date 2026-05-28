@@ -26,8 +26,8 @@ export function Footer() {
               — {t("Анна", "Anna")}
             </p>
             <p>
-              <a href="mailto:pilgrimage@eldoradotur.md" className="hover:text-gold transition-colors">
-                pilgrimage@eldoradotur.md
+              <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">
+                palomnik.moldova@gmail.com
               </a>
             </p>
           </div>
