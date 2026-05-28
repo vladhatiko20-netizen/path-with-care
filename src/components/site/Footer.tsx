@@ -4,7 +4,7 @@ import { useLang } from "@/lib/i18n";
 export function Footer() {
   const { t } = useLang();
   return (
-    <footer className="bg-secondary mt-24 border-t border-border">
+    <footer className="bg-secondary border-t border-border">
       <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-12">
         <div>
           <div className="flex items-center gap-2 mb-2">
