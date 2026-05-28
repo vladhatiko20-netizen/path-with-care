@@ -293,8 +293,8 @@ function BariPage() {
 
       {/* Hero — desktop: square image + side preview */}
       <section className="hidden md:block mt-4 bg-background">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 pl-[5mm] pr-6">
-          <div className="relative aspect-[5/4] overflow-hidden flex items-end rounded-sm">
+        <div className="max-w-6xl mx-auto pl-[5mm] pr-6">
+          <div className="md:float-left md:w-[calc(50%-1rem)] md:mr-8 md:mb-6 relative aspect-[5/4] overflow-hidden flex items-end rounded-sm">
             <img src={heroImg} alt={t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari")} className="absolute inset-0 w-full h-full object-cover" width={1200} height={960} />
             {/* Darker gradient since image is smaller */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/85" />
@@ -314,7 +314,7 @@ function BariPage() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-start font-serif">
+          <div className="font-serif">
             {/* Gallery — desktop compact row of small thumbnails */}
             {galleryPhotos.length > 0 && (
             <div className="grid grid-cols-4 gap-2 mb-6 max-w-[70%]">
@@ -349,6 +349,7 @@ function BariPage() {
               )}
             </p>
           </div>
+          <div className="clear-both" />
         </div>
       </section>
 
