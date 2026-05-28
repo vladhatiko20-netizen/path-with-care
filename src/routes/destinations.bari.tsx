@@ -405,7 +405,7 @@ function BariPage() {
             ]).map((s, i) => {
               const c = lang === "ru" ? s.ru : s.ro;
               return (
-                <div key={i}>
+                <div key={i} id={`shrine-card-${i}`}>
                   <button
                     type="button"
                     onClick={() => handleShrineClick(i)}
@@ -416,7 +416,13 @@ function BariPage() {
                       <img src={s.img} alt={c.t} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
                     </div>
                     <div className="p-5 font-serif">
-                      <h3 className="text-xl text-foreground mb-2 leading-tight">{c.t}</h3>
+                      <h3 className="text-xl text-foreground mb-2 leading-tight flex items-center justify-between gap-2">
+                        <span>{c.t}</span>
+                        <ChevronDown
+                          className={`md:hidden w-5 h-5 text-accent shrink-0 transition-transform duration-200 ${shrineExpand === i ? "rotate-180" : ""}`}
+                          aria-hidden="true"
+                        />
+                      </h3>
                       <p className="text-[17px] text-foreground/75 leading-relaxed">{c.d}</p>
                     </div>
                   </button>
@@ -439,7 +445,7 @@ function BariPage() {
 
       {/* Desktop shrine modal */}
       <Dialog open={shrineModal !== null} onOpenChange={(o) => !o && setShrineModal(null)}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden">
+        <DialogContent className="max-w-[90vw] w-[90vw] p-0 overflow-hidden">
           {shrineModal !== null && (() => {
             const list = [
               { img: cryptImg, ru: { t: "Крипта со святыми мощами", d: "Спуск в нижний храм к мраморной гробнице, где почивают мощи Святителя." }, ro: { t: "Cripta cu sfintele moaște", d: "Coborâre la biserica de jos, la mormântul de marmură unde se află moaștele." } },
@@ -449,7 +455,7 @@ function BariPage() {
             const s = list[shrineModal];
             const c = lang === "ru" ? s.ru : s.ro;
             return (
-              <div className="grid md:grid-cols-2 max-h-[85vh]">
+              <div className="grid md:grid-cols-2 max-h-[90vh]">
                 <div className="aspect-square md:aspect-auto overflow-hidden bg-secondary">
                   <img src={s.img} alt={c.t} className="w-full h-full object-cover" />
                 </div>
