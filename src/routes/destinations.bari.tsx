@@ -342,52 +342,15 @@ function BariPage() {
               </p>
             )}
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
-            {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
               {t(
-                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы.",
-                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt.",
+                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
+                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
               )}
             </p>
-            <button
-              type="button"
-              onClick={() => setAboutOpen(true)}
-              className="mt-6 self-start inline-flex items-center gap-2 text-accent hover:text-accent/80 font-serif text-[17px] border-b border-accent/40 hover:border-accent pb-0.5 transition-colors"
-            >
-              {t("Читать подробнее →", "Citește mai mult →")}
-            </button>
           </div>
         </div>
       </section>
-
-      {/* About modal — desktop "О поездке" full text */}
-      <Dialog open={aboutOpen} onOpenChange={setAboutOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-2xl md:text-3xl font-light">
-              {t("О поездке", "Despre pelerinaj")}
-            </DialogTitle>
-          </DialogHeader>
-          {/* TODO: replace with full "О поездке" text provided later */}
-          <div className="font-serif text-[17px] leading-relaxed text-foreground/85 space-y-4 max-h-[70vh] overflow-y-auto">
-            <p>
-              {t(
-                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли.",
-                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea.",
-              )}
-            </p>
-            <p>
-              {t(
-                "В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
-                "În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
-              )}
-            </p>
-            <p className="italic text-foreground/60">
-              {t("(Полный текст будет добавлен позже.)", "(Textul complet va fi adăugat ulterior.)")}
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Info bar — from database */}
       <section className="bg-card border-y border-gold/30">
