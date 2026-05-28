@@ -99,8 +99,8 @@ function Page() {
           <a href="tel:+37368778676" className="inline-flex items-center px-6 py-2.5 bg-accent text-primary-foreground hover:bg-accent/90 transition-colors rounded-sm text-sm tracking-wide">
             +373 68 77 86 76
           </a>
-          <a href="mailto:pilgrimage@eldoradotur.md" className="inline-flex items-center px-6 py-2.5 border border-gold text-foreground hover:bg-secondary transition-colors rounded-sm text-sm tracking-wide">
-            pilgrimage@eldoradotur.md
+          <a href="mailto:palomnik.moldova@gmail.com" className="inline-flex items-center px-6 py-2.5 border border-gold text-foreground hover:bg-secondary transition-colors rounded-sm text-sm tracking-wide">
+            palomnik.moldova@gmail.com
           </a>
         </div>
       </section>
@@ -223,7 +223,7 @@ function Page() {
           <p className="mt-3">
             <a href="tel:+37368778676" className="hover:text-gold transition-colors">+373 68 77 86 76</a>
             <span className="mx-2 text-border">·</span>
-            <a href="mailto:pilgrimage@eldoradotur.md" className="hover:text-gold transition-colors">pilgrimage@eldoradotur.md</a>
+            <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">palomnik.moldova@gmail.com</a>
           </p>
           <p className="mt-4 text-xs text-muted-foreground">
             <Link to="/contacts" className="hover:text-foreground gold-underline">{t("Связаться с нами", "Contactați-ne")}</Link>

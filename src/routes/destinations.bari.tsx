@@ -88,7 +88,7 @@ export const Route = createFileRoute("/destinations/bari")({
               name: "Паломник",
               url: "https://path-with-care.lovable.app",
               telephone: "+37368778676",
-              email: "pilgrimage@eldoradotur.md",
+              email: "palomnik.moldova@gmail.com",
             },
             offers: {
               "@type": "Offer",
@@ -830,13 +830,13 @@ function ContactsBlock({ desktop = false }: { desktop?: boolean }) {
             </div>
           ))}
           <a
-            href="mailto:pilgrimage@eldoradotur.md"
+            href="mailto:palomnik.moldova@gmail.com"
             className="flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors text-[18px]"
           >
             <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
               <Mail className="w-4 h-4 text-accent" aria-hidden="true" />
             </span>
-            <span className="text-accent">pilgrimage@eldoradotur.md</span>
+            <span className="text-accent">palomnik.moldova@gmail.com</span>
           </a>
         </div>
       </div>
@@ -868,11 +868,11 @@ function ContactsBlock({ desktop = false }: { desktop?: boolean }) {
         </div>
       ))}
       <a
-        href="mailto:pilgrimage@eldoradotur.md"
+        href="mailto:palomnik.moldova@gmail.com"
         className="inline-flex items-center text-[18px] md:text-[20px] text-accent hover:underline"
       >
         <Mail className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
-        pilgrimage@eldoradotur.md
+        palomnik.moldova@gmail.com
       </a>
     </div>
   );
