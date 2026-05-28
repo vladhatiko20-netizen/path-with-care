@@ -227,7 +227,7 @@ function BariPage() {
   return (
     <PageShell>
       {/* Breadcrumbs */}
-      <nav aria-label="breadcrumb" className="max-w-6xl mx-auto px-6 pt-6 text-[15px] md:text-base font-serif text-foreground/70">
+      <nav aria-label="breadcrumb" className="max-w-6xl mx-auto px-6 pt-2 text-[15px] md:text-base font-serif text-foreground/70">
         <ol className="flex flex-wrap items-center justify-center gap-2 min-h-[40px]">
           <li><Link to="/" className="hover:text-accent">{t("Главная", "Acasă")}</Link></li>
           <li aria-hidden="true">→</li>
@@ -409,8 +409,9 @@ function BariPage() {
       {/* Intro — mobile only (desktop shows it next to hero image) */}
       <section className="md:hidden bg-background font-serif">
         <div className="max-w-3xl mx-auto px-6 py-12">
+        <span className="block text-accent text-xl mb-2" aria-hidden="true">✦</span>
         <h2 className="text-3xl md:text-4xl text-foreground font-light mb-5">{t("О поездке", "Despre pelerinaj")}</h2>
-        <p className="text-[17px] md:text-[18px] text-foreground/85 leading-relaxed border-l-4 border-accent/60 pl-5 md:pl-6 py-2">
+        <p className="text-[17px] md:text-[18px] text-foreground/85 leading-relaxed">
           {t(
             "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
             "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
