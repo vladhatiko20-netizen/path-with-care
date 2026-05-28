@@ -25,6 +25,7 @@ import {
   CheckCircle2, Minus,
   Calendar, HelpCircle,
   User, Phone, Mail, MessageSquare, Send,
+  ChevronDown,
 } from "lucide-react";
 import heroImg from "@/assets/dest-bari.jpg";
 import cryptImg from "@/assets/bari-crypt.jpg";
@@ -160,7 +161,6 @@ function BariPage() {
   const { destination, pilgrimages, gallery } = Route.useLoaderData();
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
-  const [aboutOpen, setAboutOpen] = useState(false);
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
@@ -198,7 +198,16 @@ function BariPage() {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
       setShrineModal(i);
     } else {
-      setShrineExpand((cur) => (cur === i ? null : i));
+      setShrineExpand((cur) => {
+        const next = cur === i ? null : i;
+        if (next !== null && typeof window !== "undefined") {
+          requestAnimationFrame(() => {
+            const el = document.getElementById(`shrine-card-${i}`);
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+        return next;
+      });
     }
   }
 
@@ -284,8 +293,8 @@ function BariPage() {
 
       {/* Hero — desktop: square image + side preview */}
       <section className="hidden md:block mt-4 bg-background">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8 pl-[5mm] pr-6">
-          <div className="relative aspect-[5/4] overflow-hidden flex items-end rounded-sm">
+        <div className="max-w-6xl mx-auto pl-[5mm] pr-6">
+          <div className="md:float-left md:w-[calc(50%-1rem)] md:mr-8 md:mb-6 relative aspect-[5/4] overflow-hidden flex items-end rounded-sm">
             <img src={heroImg} alt={t("Базилика Святителя Николая в Бари", "Bazilica Sfântului Nicolae din Bari")} className="absolute inset-0 w-full h-full object-cover" width={1200} height={960} />
             {/* Darker gradient since image is smaller */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/85" />
@@ -305,7 +314,7 @@ function BariPage() {
               </p>
             </div>
           </div>
-          <div className="flex flex-col justify-start font-serif">
+          <div className="font-serif">
             {/* Gallery — desktop compact row of small thumbnails */}
             {galleryPhotos.length > 0 && (
             <div className="grid grid-cols-4 gap-2 mb-6 max-w-[70%]">
@@ -333,52 +342,16 @@ function BariPage() {
               </p>
             )}
             <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
-            {/* TODO: replace with real preview text (first 3–4 sentences of "О поездке") */}
             <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed">
               {t(
-                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы.",
-                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt.",
+                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли. В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
+                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea. În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
               )}
             </p>
-            <button
-              type="button"
-              onClick={() => setAboutOpen(true)}
-              className="mt-6 self-start inline-flex items-center gap-2 text-accent hover:text-accent/80 font-serif text-[17px] border-b border-accent/40 hover:border-accent pb-0.5 transition-colors"
-            >
-              {t("Читать подробнее →", "Citește mai mult →")}
-            </button>
           </div>
+          <div className="clear-both" />
         </div>
       </section>
-
-      {/* About modal — desktop "О поездке" full text */}
-      <Dialog open={aboutOpen} onOpenChange={setAboutOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="font-serif text-2xl md:text-3xl font-light">
-              {t("О поездке", "Despre pelerinaj")}
-            </DialogTitle>
-          </DialogHeader>
-          {/* TODO: replace with full "О поездке" text provided later */}
-          <div className="font-serif text-[17px] leading-relaxed text-foreground/85 space-y-4 max-h-[70vh] overflow-y-auto">
-            <p>
-              {t(
-                "Святитель Николай Чудотворец – один из самых почитаемых святых православного мира. Его мощи покоятся в Бари с 1087 года, и сюда стекаются паломники со всех концов земли.",
-                "Sfântul Ierarh Nicolae este unul dintre cei mai cinstiți sfinți ai lumii ortodoxe. Moaștele sale se află în Bari din anul 1087, iar aici vin pelerini din toată lumea.",
-              )}
-            </p>
-            <p>
-              {t(
-                "В нашей поездке вы пройдёте к мощам, услышите акафист, помолитесь у гробницы и увезёте с собою благодатное миро, истекающее от мощей.",
-                "În pelerinajul nostru veți coborî la moaște, veți asculta acatistul, vă veți ruga la mormânt și veți lua cu voi sfântul mir care izvorăște de la moaște.",
-              )}
-            </p>
-            <p className="italic text-foreground/60">
-              {t("(Полный текст будет добавлен позже.)", "(Textul complet va fi adăugat ulterior.)")}
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* Info bar — from database */}
       <section className="bg-card border-y border-gold/30">
@@ -432,7 +405,7 @@ function BariPage() {
             ]).map((s, i) => {
               const c = lang === "ru" ? s.ru : s.ro;
               return (
-                <div key={i}>
+                <div key={i} id={`shrine-card-${i}`}>
                   <button
                     type="button"
                     onClick={() => handleShrineClick(i)}
@@ -443,7 +416,13 @@ function BariPage() {
                       <img src={s.img} alt={c.t} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
                     </div>
                     <div className="p-5 font-serif">
-                      <h3 className="text-xl text-foreground mb-2 leading-tight">{c.t}</h3>
+                      <h3 className="text-xl text-foreground mb-2 leading-tight flex items-center justify-between gap-2">
+                        <span>{c.t}</span>
+                        <ChevronDown
+                          className={`md:hidden w-5 h-5 text-accent shrink-0 transition-transform duration-200 ${shrineExpand === i ? "rotate-180" : ""}`}
+                          aria-hidden="true"
+                        />
+                      </h3>
                       <p className="text-[17px] text-foreground/75 leading-relaxed">{c.d}</p>
                     </div>
                   </button>
@@ -466,7 +445,7 @@ function BariPage() {
 
       {/* Desktop shrine modal */}
       <Dialog open={shrineModal !== null} onOpenChange={(o) => !o && setShrineModal(null)}>
-        <DialogContent className="max-w-5xl p-0 overflow-hidden">
+        <DialogContent className="max-w-[90vw] w-[90vw] p-0 overflow-hidden">
           {shrineModal !== null && (() => {
             const list = [
               { img: cryptImg, ru: { t: "Крипта со святыми мощами", d: "Спуск в нижний храм к мраморной гробнице, где почивают мощи Святителя." }, ro: { t: "Cripta cu sfintele moaște", d: "Coborâre la biserica de jos, la mormântul de marmură unde se află moaștele." } },
@@ -476,7 +455,7 @@ function BariPage() {
             const s = list[shrineModal];
             const c = lang === "ru" ? s.ru : s.ro;
             return (
-              <div className="grid md:grid-cols-2 max-h-[85vh]">
+              <div className="grid md:grid-cols-2 max-h-[90vh]">
                 <div className="aspect-square md:aspect-auto overflow-hidden bg-secondary">
                   <img src={s.img} alt={c.t} className="w-full h-full object-cover" />
                 </div>
