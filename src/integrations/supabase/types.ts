@@ -262,6 +262,8 @@ export type Database = {
       }
       destinations: {
         Row: {
+          accompaniment_ro: string | null
+          accompaniment_ru: string | null
           cover_image: string | null
           created_at: string
           description_ro: string | null
@@ -294,6 +296,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          accompaniment_ro?: string | null
+          accompaniment_ru?: string | null
           cover_image?: string | null
           created_at?: string
           description_ro?: string | null
@@ -326,6 +330,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          accompaniment_ro?: string | null
+          accompaniment_ru?: string | null
           cover_image?: string | null
           created_at?: string
           description_ro?: string | null
