@@ -143,6 +143,7 @@ function DestinationPage() {
   const notice = pickL(destination.notice_ru, destination.notice_ro);
   const priceFrom = destination.price_from;
   const heroImg = destination.cover_image;
+  const accompaniment = pickL(destination.accompaniment_ru, destination.accompaniment_ro) || t("со священником", "cu preot");
 
   const galleryPhotos = ((gallery ?? []) as PublicGalleryImage[]).map((g) => ({
     src: g.image_url,
@@ -330,7 +331,7 @@ function DestinationPage() {
             <div className="flex flex-col items-center gap-1">
               <Church className="w-[22px] h-[22px] text-gold mb-1" aria-hidden="true" />
               <p className="overline text-[11px]">{t("Сопровождение", "Însoțire")}</p>
-              <p className="text-[18px] md:text-[20px] text-foreground">{t("со священником", "cu preot")}</p>
+              <p className="text-[18px] md:text-[20px] text-foreground">{accompaniment}</p>
             </div>
           </div>
         </section>
