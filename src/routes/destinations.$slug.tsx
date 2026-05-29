@@ -569,7 +569,7 @@ function DestinationPage() {
       )}
 
       {/* Lead form */}
-      <LeadSection slug={slug} prefill={prefill} />
+      <LeadForm slug={slug} prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
 
       {/* Lightbox */}
       {galleryPhotos.length > 0 && (
@@ -585,22 +585,31 @@ function DestinationPage() {
   );
 }
 
-function LeadSection({ slug, prefill }: { slug: string; prefill: string }) {
+const ViberIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 11a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v1a8 8 0 0 1-8 8h-1l-4 3v-3.2A8 8 0 0 1 3 12v-1Z" />
+    <path d="M9 9.5c0-.6.4-1 1-1h.6c.4 0 .8.3.9.7l.4 1.4c.1.4 0 .8-.3 1l-.6.5a6 6 0 0 0 2.9 2.9l.5-.6c.2-.3.6-.4 1-.3l1.4.4c.4.1.7.5.7.9v.6c0 .6-.4 1-1 1A7.5 7.5 0 0 1 9 9.5Z" />
+  </svg>
+);
+
+function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill: string; onPrefillConsumed: () => void }) {
   const { t } = useLang();
   const submit = useServerFn(createLead);
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  useEffect(() => {
-    if (prefill && !sent) setForm((f) => ({ ...f, message: prefill }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prefill]);
+  // Apply prefill from external trigger
+  if (prefill && form.message !== prefill) {
+    setForm((f) => ({ ...f, message: prefill }));
+    onPrefillConsumed();
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.name.trim()) {
-      toast.error(t("Укажите имя", "Indicați numele"));
+    if (sending) return;
+    if (form.name.trim().length < 1) {
+      toast.error(t("Введите имя", "Introduceți numele"));
       return;
     }
     if (!/^[+\d\s()\-]{5,30}$/.test(form.phone.trim())) {
@@ -623,12 +632,17 @@ function LeadSection({ slug, prefill }: { slug: string; prefill: string }) {
 
   return (
     <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24 border-t border-gold/30">
-      <div className="max-w-3xl mx-auto px-6">
-        <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8 text-center">
-          {t("Оставить заявку", "Lăsați o cerere")}
+      <div className="hidden md:block max-w-6xl mx-auto px-6 mb-10">
+        <h2 className="font-serif text-3xl md:text-5xl text-foreground font-light text-center">
+          {t("Принять участие в паломничестве", "Participați la pelerinaj")}
         </h2>
+      </div>
+      <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-[1.2fr_1fr] md:gap-12 md:items-start">
+        <div>
+        <h2 className="md:hidden font-serif text-3xl text-foreground font-light mb-8">{t("Оставить заявку", "Lăsați o cerere")}</h2>
+        <h2 className="hidden md:block font-serif md:text-2xl text-muted-foreground font-light mb-6">{t("Вариант 1: Оставить заявку", "Varianta 1: Lăsați o cerere")}</h2>
         {sent ? (
-          <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85 text-center">
+          <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85">
             {t("Спасибо! Ваша заявка получена.", "Mulțumim! Cererea dvs. a fost primită.")}
           </div>
         ) : (
@@ -655,7 +669,106 @@ function LeadSection({ slug, prefill }: { slug: string; prefill: string }) {
             </button>
           </form>
         )}
+        {/* Mobile-only contacts (desktop shows them in right column) */}
+        <div className="md:hidden mt-12">
+          <ContactsBlock desktop={false} />
+        </div>
+        </div>
+        {/* Right column — direct contacts (desktop only) */}
+        <div className="hidden md:block pl-4 lg:pl-8">
+          <ContactsBlock desktop={true} />
+        </div>
       </div>
     </section>
+  );
+}
+
+function ContactsBlock({ desktop = false }: { desktop?: boolean }) {
+  const { t } = useLang();
+  const people = [
+    { name: t("Анна", "Anna"), tel: "+37368778676", display: "+373 68 77 86 76", viber: "%2B37368778676" },
+    { name: t("Наталья", "Natalia"), tel: "+37368787599", display: "+373 68 78 75 99", viber: "%2B37368787599" },
+  ];
+
+  if (desktop) {
+    return (
+      <div className="font-serif">
+        <h3 className="font-serif md:text-2xl text-muted-foreground font-light mb-6">
+          {t("Вариант 2: Связаться напрямую", "Varianta 2: Contactați-ne direct")}
+        </h3>
+        <div className="space-y-4">
+          {people.map((p) => (
+            <div
+              key={p.tel}
+              className="flex items-center w-full bg-card rounded-sm border border-border/40 border-l-2 border-l-gold text-[18px] overflow-hidden"
+            >
+              <a
+                href={`tel:${p.tel}`}
+                className="flex items-center flex-1 py-3 pl-4 pr-2 hover:bg-gold/5 transition-colors"
+              >
+                <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
+                  <Phone className="w-4 h-4 text-accent" aria-hidden="true" />
+                </span>
+                <span className="text-foreground">{p.name}</span>
+                <span className="mx-3 text-muted-foreground">·</span>
+                <span className="text-accent">{p.display}</span>
+              </a>
+              <a
+                href={`viber://chat?number=${p.viber}`}
+                className="mr-3 inline-flex items-center px-2.5 py-1 rounded-sm text-[14px] hover:opacity-80 shrink-0"
+                style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
+                aria-label={`Viber ${p.name}`}
+              >
+                <ViberIcon className="w-[14px] h-[14px] mr-1.5" />
+                Viber
+              </a>
+            </div>
+          ))}
+          <a
+            href="mailto:palomnik.moldova@gmail.com"
+            className="flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors text-[18px]"
+          >
+            <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
+              <Mail className="w-4 h-4 text-accent" aria-hidden="true" />
+            </span>
+            <span className="text-accent">palomnik.moldova@gmail.com</span>
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="font-serif">
+      <h3 className="text-3xl md:text-4xl text-foreground font-light mb-8">
+        {t("Связаться напрямую", "Contactați-ne direct")}
+      </h3>
+      {people.map((p) => (
+        <div key={p.tel} className="mb-6">
+          <a href={`tel:${p.tel}`} className="flex items-center text-[18px] md:text-[20px] text-foreground hover:text-accent">
+            <Phone className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
+            {p.name}
+          </a>
+          <a href={`tel:${p.tel}`} className="block text-[18px] md:text-[20px] text-accent hover:underline mt-1 pl-[26px]">
+            {p.display}
+          </a>
+          <a
+            href={`viber://chat?number=${p.viber}`}
+            className="inline-flex items-center text-[16px] mt-1 pl-[26px] hover:underline"
+            style={{ color: "#7360F2" }}
+          >
+            <ViberIcon className="w-[18px] h-[18px] mr-2" />
+            Viber
+          </a>
+        </div>
+      ))}
+      <a
+        href="mailto:palomnik.moldova@gmail.com"
+        className="inline-flex items-center text-[18px] md:text-[20px] text-accent hover:underline"
+      >
+        <Mail className="w-[18px] h-[18px] text-accent mr-2" aria-hidden="true" />
+        palomnik.moldova@gmail.com
+      </a>
+    </div>
   );
 }
