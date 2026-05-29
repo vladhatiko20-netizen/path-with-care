@@ -151,17 +151,14 @@ export function ShrinesManager({ destinationSlug }: { destinationSlug: string })
       ) : (
         <div className="space-y-4">
           {rows.map((row, idx) => (
-            <div key={row.id} className="border border-border rounded-sm p-4 space-y-3">
-              <div className="flex gap-4">
-                <div className="w-40 flex-shrink-0">
-                  <ImageUpload
-                    value={row.image_url}
-                    onChange={(url) => update(row.id, { image_url: url })}
-                    folder={`destinations/${destinationSlug}/shrines`}
-                    label="Фото"
-                  />
-                </div>
-                <div className="flex-1 grid sm:grid-cols-2 gap-3">
+            <div key={row.id} className="border border-border rounded-sm p-4 space-y-4">
+              <ImageUpload
+                value={row.image_url}
+                onChange={(url) => update(row.id, { image_url: url })}
+                folder={`destinations/${destinationSlug}/shrines`}
+                label="Фото"
+              />
+              <div className="grid sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-serif mb-1">Название (RU) *</label>
                     <input className={cls} value={row.title_ru} onChange={(e) => update(row.id, { title_ru: e.target.value })} maxLength={500} />
@@ -186,7 +183,6 @@ export function ShrinesManager({ destinationSlug }: { destinationSlug: string })
                     <label className="block text-xs font-serif mb-1">Полный текст (RO)</label>
                     <textarea className={cls} rows={5} value={row.full_ro ?? ""} onChange={(e) => update(row.id, { full_ro: e.target.value || null })} maxLength={20000} />
                   </div>
-                </div>
               </div>
               <div className="flex gap-2 flex-wrap">
                 <button type="button" disabled={busyId === row.id} onClick={() => handleSave(row)} className="px-3 py-1 bg-accent text-primary-foreground rounded-sm text-sm font-serif disabled:opacity-50">Сохранить</button>
