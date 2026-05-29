@@ -61,6 +61,8 @@ const destSchema = z.object({
   seo_description_ru: z.string().max(500).nullable().optional(),
   seo_description_ro: z.string().max(500).nullable().optional(),
   og_image: z.string().max(500).nullable().optional(),
+  accompaniment_ru: z.string().max(255).nullable().optional(),
+  accompaniment_ro: z.string().max(255).nullable().optional(),
   is_published: z.boolean(),
 });
 

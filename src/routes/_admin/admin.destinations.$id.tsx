@@ -52,6 +52,8 @@ function Page() {
         seo_description_ru: data.seo_description_ru,
         seo_description_ro: data.seo_description_ro,
         og_image: data.og_image,
+        accompaniment_ru: data.accompaniment_ru,
+        accompaniment_ro: data.accompaniment_ro,
         is_published: data.is_published,
       }} />
     </div>

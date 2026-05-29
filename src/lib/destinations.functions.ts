@@ -29,6 +29,8 @@ export type PublicDestination = {
   seo_description_ru: string | null;
   seo_description_ro: string | null;
   og_image: string | null;
+  accompaniment_ru: string | null;
+  accompaniment_ro: string | null;
 };
 
 export const getDestinationBySlug = createServerFn({ method: "GET" })
@@ -38,7 +40,7 @@ export const getDestinationBySlug = createServerFn({ method: "GET" })
   .handler(async ({ data }): Promise<PublicDestination | null> => {
     const { data: row, error } = await supabaseAdmin
       .from("destinations")
-      .select("slug, title_ru, title_ro, description_ru, description_ro, duration_ru, duration_ro, group_size_ru, group_size_ro, price_from, program_ru, program_ro, cover_image, hero_quote_ru, hero_quote_ro, hero_quote_author_ru, hero_quote_author_ro, intro_ru, intro_ro, notice_ru, notice_ro, seo_title_ru, seo_title_ro, seo_description_ru, seo_description_ro, og_image")
+      .select("slug, title_ru, title_ro, description_ru, description_ro, duration_ru, duration_ro, group_size_ru, group_size_ro, price_from, program_ru, program_ro, cover_image, hero_quote_ru, hero_quote_ro, hero_quote_author_ru, hero_quote_author_ro, intro_ru, intro_ro, notice_ru, notice_ro, seo_title_ru, seo_title_ro, seo_description_ru, seo_description_ro, og_image, accompaniment_ru, accompaniment_ro")
       .eq("slug", data.slug)
       .eq("is_published", true)
       .maybeSingle();

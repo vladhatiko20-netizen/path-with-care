@@ -26,6 +26,8 @@ function Page() {
         seo_title_ru: null, seo_title_ro: null,
         seo_description_ru: null, seo_description_ro: null,
         og_image: null,
+        accompaniment_ru: null,
+        accompaniment_ro: null,
         is_published: false,
       }} />
     </div>
