@@ -48,6 +48,19 @@ const destSchema = z.object({
   group_size_ro: z.string().max(255).nullable().optional(),
   program_ru: z.string().max(50000).nullable().optional(),
   program_ro: z.string().max(50000).nullable().optional(),
+  hero_quote_ru: z.string().max(2000).nullable().optional(),
+  hero_quote_ro: z.string().max(2000).nullable().optional(),
+  hero_quote_author_ru: z.string().max(255).nullable().optional(),
+  hero_quote_author_ro: z.string().max(255).nullable().optional(),
+  intro_ru: z.string().max(10000).nullable().optional(),
+  intro_ro: z.string().max(10000).nullable().optional(),
+  notice_ru: z.string().max(5000).nullable().optional(),
+  notice_ro: z.string().max(5000).nullable().optional(),
+  seo_title_ru: z.string().max(255).nullable().optional(),
+  seo_title_ro: z.string().max(255).nullable().optional(),
+  seo_description_ru: z.string().max(500).nullable().optional(),
+  seo_description_ro: z.string().max(500).nullable().optional(),
+  og_image: z.string().max(500).nullable().optional(),
   is_published: z.boolean(),
 });
 
@@ -381,4 +394,302 @@ export const adminCountUnreadLeads = createServerFn({ method: "GET" })
       .eq("is_read", false);
     if (error) throw new Error(error.message);
     return { count: count ?? 0 };
+  });
+
+// ============================================================
+// Destination child tables: shrines, program days, inclusions, faq
+// ============================================================
+
+const slugField = z.string().min(1).max(100).regex(/^[a-z0-9-]+$/);
+const slugInput = z.object({ destination_slug: slugField });
+const idInput = z.object({ id: z.string().uuid() });
+const reorderInput = z.object({
+  items: z.array(z.object({
+    id: z.string().uuid(),
+    sort_order: z.number().int().min(0).max(10000),
+  })).min(1).max(500),
+});
+
+async function nextSortOrder(
+  supabase: any,
+  table: string,
+  destination_slug: string,
+): Promise<number> {
+  const { data: maxRow } = await supabase
+    .from(table)
+    .select("sort_order")
+    .eq("destination_slug", destination_slug)
+    .order("sort_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return ((maxRow?.sort_order as number | undefined) ?? 0) + 1;
+}
+
+// ----- Shrines -----
+
+const shrineSchema = z.object({
+  id: z.string().uuid().optional(),
+  destination_slug: slugField,
+  image_url: z.string().max(1000).nullable().optional(),
+  title_ru: z.string().min(1).max(500),
+  title_ro: z.string().min(1).max(500),
+  short_ru: z.string().max(2000).nullable().optional(),
+  short_ro: z.string().max(2000).nullable().optional(),
+  full_ru: z.string().max(20000).nullable().optional(),
+  full_ro: z.string().max(20000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(10000).optional(),
+});
+
+export const adminListShrines = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => slugInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("destination_shrines").select("*")
+      .eq("destination_slug", data.destination_slug)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminSaveShrine = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => shrineSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("destination_shrines").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const sort_order = payload.sort_order ??
+      await nextSortOrder(context.supabase, "destination_shrines", payload.destination_slug);
+    const { data: row, error } = await context.supabase
+      .from("destination_shrines").insert({ ...payload, sort_order }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteShrine = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => idInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destination_shrines").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminReorderShrines = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => reorderInput.parse(i))
+  .handler(async ({ data, context }) => {
+    for (const it of data.items) {
+      const { error } = await context.supabase
+        .from("destination_shrines").update({ sort_order: it.sort_order }).eq("id", it.id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+// ----- Program days -----
+
+const programDaySchema = z.object({
+  id: z.string().uuid().optional(),
+  destination_slug: slugField,
+  day_label_ru: z.string().max(100).nullable().optional(),
+  day_label_ro: z.string().max(100).nullable().optional(),
+  title_ru: z.string().min(1).max(500),
+  title_ro: z.string().min(1).max(500),
+  description_ru: z.string().max(20000).nullable().optional(),
+  description_ro: z.string().max(20000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(10000).optional(),
+});
+
+export const adminListProgramDays = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => slugInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("destination_program_days").select("*")
+      .eq("destination_slug", data.destination_slug)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminSaveProgramDay = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => programDaySchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("destination_program_days").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const sort_order = payload.sort_order ??
+      await nextSortOrder(context.supabase, "destination_program_days", payload.destination_slug);
+    const { data: row, error } = await context.supabase
+      .from("destination_program_days").insert({ ...payload, sort_order }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteProgramDay = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => idInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destination_program_days").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminReorderProgramDays = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => reorderInput.parse(i))
+  .handler(async ({ data, context }) => {
+    for (const it of data.items) {
+      const { error } = await context.supabase
+        .from("destination_program_days").update({ sort_order: it.sort_order }).eq("id", it.id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+// ----- Inclusions / Exclusions -----
+
+const inclusionSchema = z.object({
+  id: z.string().uuid().optional(),
+  destination_slug: slugField,
+  kind: z.enum(["included", "excluded"]),
+  text_ru: z.string().min(1).max(1000),
+  text_ro: z.string().min(1).max(1000),
+  sort_order: z.number().int().min(0).max(10000).optional(),
+});
+
+export const adminListInclusions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => slugInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("destination_inclusions").select("*")
+      .eq("destination_slug", data.destination_slug)
+      .order("kind", { ascending: true })
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminSaveInclusion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => inclusionSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("destination_inclusions").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const sort_order = payload.sort_order ??
+      await nextSortOrder(context.supabase, "destination_inclusions", payload.destination_slug);
+    const { data: row, error } = await context.supabase
+      .from("destination_inclusions").insert({ ...payload, sort_order }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteInclusion = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => idInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destination_inclusions").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminReorderInclusions = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => reorderInput.parse(i))
+  .handler(async ({ data, context }) => {
+    for (const it of data.items) {
+      const { error } = await context.supabase
+        .from("destination_inclusions").update({ sort_order: it.sort_order }).eq("id", it.id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
+  });
+
+// ----- FAQ -----
+
+const faqSchema = z.object({
+  id: z.string().uuid().optional(),
+  destination_slug: slugField,
+  question_ru: z.string().min(1).max(1000),
+  question_ro: z.string().min(1).max(1000),
+  answer_ru: z.string().max(10000).nullable().optional(),
+  answer_ro: z.string().max(10000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(10000).optional(),
+});
+
+export const adminListFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => slugInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("destination_faq").select("*")
+      .eq("destination_slug", data.destination_slug)
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const adminSaveFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => faqSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("destination_faq").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const sort_order = payload.sort_order ??
+      await nextSortOrder(context.supabase, "destination_faq", payload.destination_slug);
+    const { data: row, error } = await context.supabase
+      .from("destination_faq").insert({ ...payload, sort_order }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => idInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destination_faq").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminReorderFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => reorderInput.parse(i))
+  .handler(async ({ data, context }) => {
+    for (const it of data.items) {
+      const { error } = await context.supabase
+        .from("destination_faq").update({ sort_order: it.sort_order }).eq("id", it.id);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true };
   });
