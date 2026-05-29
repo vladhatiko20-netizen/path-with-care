@@ -62,6 +62,42 @@ export type Database = {
         }
         Relationships: []
       }
+      destination_faq: {
+        Row: {
+          answer_ro: string | null
+          answer_ru: string | null
+          created_at: string
+          destination_slug: string
+          id: string
+          question_ro: string
+          question_ru: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer_ro?: string | null
+          answer_ru?: string | null
+          created_at?: string
+          destination_slug: string
+          id?: string
+          question_ro: string
+          question_ru: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer_ro?: string | null
+          answer_ru?: string | null
+          created_at?: string
+          destination_slug?: string
+          id?: string
+          question_ro?: string
+          question_ru?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       destination_gallery_images: {
         Row: {
           alt_ro: string | null
@@ -104,6 +140,126 @@ export type Database = {
         }
         Relationships: []
       }
+      destination_inclusions: {
+        Row: {
+          created_at: string
+          destination_slug: string
+          id: string
+          kind: string
+          sort_order: number
+          text_ro: string
+          text_ru: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination_slug: string
+          id?: string
+          kind: string
+          sort_order?: number
+          text_ro: string
+          text_ru: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination_slug?: string
+          id?: string
+          kind?: string
+          sort_order?: number
+          text_ro?: string
+          text_ru?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      destination_program_days: {
+        Row: {
+          created_at: string
+          day_label_ro: string | null
+          day_label_ru: string | null
+          description_ro: string | null
+          description_ru: string | null
+          destination_slug: string
+          id: string
+          sort_order: number
+          title_ro: string
+          title_ru: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          day_label_ro?: string | null
+          day_label_ru?: string | null
+          description_ro?: string | null
+          description_ru?: string | null
+          destination_slug: string
+          id?: string
+          sort_order?: number
+          title_ro: string
+          title_ru: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          day_label_ro?: string | null
+          day_label_ru?: string | null
+          description_ro?: string | null
+          description_ru?: string | null
+          destination_slug?: string
+          id?: string
+          sort_order?: number
+          title_ro?: string
+          title_ru?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      destination_shrines: {
+        Row: {
+          created_at: string
+          destination_slug: string
+          full_ro: string | null
+          full_ru: string | null
+          id: string
+          image_url: string | null
+          short_ro: string | null
+          short_ru: string | null
+          sort_order: number
+          title_ro: string
+          title_ru: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          destination_slug: string
+          full_ro?: string | null
+          full_ru?: string | null
+          id?: string
+          image_url?: string | null
+          short_ro?: string | null
+          short_ru?: string | null
+          sort_order?: number
+          title_ro: string
+          title_ru: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          destination_slug?: string
+          full_ro?: string | null
+          full_ru?: string | null
+          id?: string
+          image_url?: string | null
+          short_ro?: string | null
+          short_ru?: string | null
+          sort_order?: number
+          title_ro?: string
+          title_ru?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       destinations: {
         Row: {
           cover_image: string | null
@@ -114,11 +270,24 @@ export type Database = {
           duration_ru: string | null
           group_size_ro: string | null
           group_size_ru: string | null
+          hero_quote_author_ro: string | null
+          hero_quote_author_ru: string | null
+          hero_quote_ro: string | null
+          hero_quote_ru: string | null
           id: string
+          intro_ro: string | null
+          intro_ru: string | null
           is_published: boolean
+          notice_ro: string | null
+          notice_ru: string | null
+          og_image: string | null
           price_from: number | null
           program_ro: string | null
           program_ru: string | null
+          seo_description_ro: string | null
+          seo_description_ru: string | null
+          seo_title_ro: string | null
+          seo_title_ru: string | null
           slug: string
           title_ro: string
           title_ru: string
@@ -133,11 +302,24 @@ export type Database = {
           duration_ru?: string | null
           group_size_ro?: string | null
           group_size_ru?: string | null
+          hero_quote_author_ro?: string | null
+          hero_quote_author_ru?: string | null
+          hero_quote_ro?: string | null
+          hero_quote_ru?: string | null
           id?: string
+          intro_ro?: string | null
+          intro_ru?: string | null
           is_published?: boolean
+          notice_ro?: string | null
+          notice_ru?: string | null
+          og_image?: string | null
           price_from?: number | null
           program_ro?: string | null
           program_ru?: string | null
+          seo_description_ro?: string | null
+          seo_description_ru?: string | null
+          seo_title_ro?: string | null
+          seo_title_ru?: string | null
           slug: string
           title_ro: string
           title_ru: string
@@ -152,11 +334,24 @@ export type Database = {
           duration_ru?: string | null
           group_size_ro?: string | null
           group_size_ru?: string | null
+          hero_quote_author_ro?: string | null
+          hero_quote_author_ru?: string | null
+          hero_quote_ro?: string | null
+          hero_quote_ru?: string | null
           id?: string
+          intro_ro?: string | null
+          intro_ru?: string | null
           is_published?: boolean
+          notice_ro?: string | null
+          notice_ru?: string | null
+          og_image?: string | null
           price_from?: number | null
           program_ro?: string | null
           program_ru?: string | null
+          seo_description_ro?: string | null
+          seo_description_ru?: string | null
+          seo_title_ro?: string | null
+          seo_title_ru?: string | null
           slug?: string
           title_ro?: string
           title_ru?: string
