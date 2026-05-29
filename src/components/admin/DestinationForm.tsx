@@ -4,6 +4,10 @@ import { useServerFn } from "@tanstack/react-start";
 import { adminSaveDestination } from "@/lib/admin.functions";
 import { ImageUpload } from "./ImageUpload";
 import { GalleryManager } from "./GalleryManager";
+import { ShrinesManager } from "./ShrinesManager";
+import { ProgramDaysManager } from "./ProgramDaysManager";
+import { InclusionsManager } from "./InclusionsManager";
+import { FaqManager } from "./FaqManager";
 
 type Initial = {
   id?: string;
@@ -20,6 +24,19 @@ type Initial = {
   group_size_ro: string | null;
   program_ru: string | null;
   program_ro: string | null;
+  hero_quote_ru: string | null;
+  hero_quote_ro: string | null;
+  hero_quote_author_ru: string | null;
+  hero_quote_author_ro: string | null;
+  intro_ru: string | null;
+  intro_ro: string | null;
+  notice_ru: string | null;
+  notice_ro: string | null;
+  seo_title_ru: string | null;
+  seo_title_ro: string | null;
+  seo_description_ru: string | null;
+  seo_description_ro: string | null;
+  og_image: string | null;
   is_published: boolean;
 };
 
@@ -116,20 +133,105 @@ export function DestinationForm({ initial }: { initial: Initial }) {
       </section>
 
       <section className="space-y-5">
-        <h2 className="font-serif text-xl border-b border-border pb-2">Программа по дням</h2>
+        <h2 className="font-serif text-xl border-b border-border pb-2">Цитата в шапке (Hero)</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-serif mb-1">Цитата (RU)</label>
+            <textarea className={cls} rows={3} value={form.hero_quote_ru ?? ""} onChange={(e) => set("hero_quote_ru", e.target.value || null)} maxLength={2000} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Цитата (RO)</label>
+            <textarea className={cls} rows={3} value={form.hero_quote_ro ?? ""} onChange={(e) => set("hero_quote_ro", e.target.value || null)} maxLength={2000} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Автор цитаты (RU)</label>
+            <input className={cls} value={form.hero_quote_author_ru ?? ""} onChange={(e) => set("hero_quote_author_ru", e.target.value || null)} maxLength={255} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Автор цитаты (RO)</label>
+            <input className={cls} value={form.hero_quote_author_ro ?? ""} onChange={(e) => set("hero_quote_author_ro", e.target.value || null)} maxLength={255} />
+          </div>
+        </div>
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Вступление</h2>
         <div>
-          <label className="block text-sm font-serif mb-1">Программа (RU)</label>
-          <textarea className={cls} rows={10} value={form.program_ru ?? ""} onChange={(e) => set("program_ru", e.target.value || null)} maxLength={50000} />
+          <label className="block text-sm font-serif mb-1">Вступительный текст (RU)</label>
+          <textarea className={cls} rows={6} value={form.intro_ru ?? ""} onChange={(e) => set("intro_ru", e.target.value || null)} maxLength={10000} />
         </div>
         <div>
-          <label className="block text-sm font-serif mb-1">Программа (RO)</label>
-          <textarea className={cls} rows={10} value={form.program_ro ?? ""} onChange={(e) => set("program_ro", e.target.value || null)} maxLength={50000} />
+          <label className="block text-sm font-serif mb-1">Вступительный текст (RO)</label>
+          <textarea className={cls} rows={6} value={form.intro_ro ?? ""} onChange={(e) => set("intro_ro", e.target.value || null)} maxLength={10000} />
+        </div>
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Святыни</h2>
+        <ShrinesManager destinationSlug={form.slug} />
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Программа по дням</h2>
+        <ProgramDaysManager destinationSlug={form.slug} />
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Включено / Не включено</h2>
+        <InclusionsManager destinationSlug={form.slug} />
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Часто задаваемые вопросы</h2>
+        <FaqManager destinationSlug={form.slug} />
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">Важное примечание</h2>
+        <div>
+          <label className="block text-sm font-serif mb-1">Текст примечания (RU)</label>
+          <textarea className={cls} rows={3} value={form.notice_ru ?? ""} onChange={(e) => set("notice_ru", e.target.value || null)} maxLength={5000} placeholder="Например: О программе и порядке посещения святынь" />
+        </div>
+        <div>
+          <label className="block text-sm font-serif mb-1">Текст примечания (RO)</label>
+          <textarea className={cls} rows={3} value={form.notice_ro ?? ""} onChange={(e) => set("notice_ro", e.target.value || null)} maxLength={5000} />
         </div>
       </section>
 
       <section className="space-y-5">
         <h2 className="font-serif text-xl border-b border-border pb-2">Фотогалерея</h2>
         <GalleryManager destinationSlug={form.slug} />
+      </section>
+
+      <section className="space-y-5">
+        <h2 className="font-serif text-xl border-b border-border pb-2">SEO</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO заголовок (RU)</label>
+            <input className={cls} value={form.seo_title_ru ?? ""} onChange={(e) => set("seo_title_ru", e.target.value || null)} maxLength={255} placeholder="До 60 символов" />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO заголовок (RO)</label>
+            <input className={cls} value={form.seo_title_ro ?? ""} onChange={(e) => set("seo_title_ro", e.target.value || null)} maxLength={255} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO описание (RU)</label>
+            <textarea className={cls} rows={3} value={form.seo_description_ru ?? ""} onChange={(e) => set("seo_description_ru", e.target.value || null)} maxLength={500} placeholder="До 160 символов" />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO описание (RO)</label>
+            <textarea className={cls} rows={3} value={form.seo_description_ro ?? ""} onChange={(e) => set("seo_description_ro", e.target.value || null)} maxLength={500} />
+          </div>
+        </div>
+        <ImageUpload
+          value={form.og_image}
+          onChange={(url) => set("og_image", url)}
+          folder={`destinations/${form.slug || "shared"}/og`}
+          label="Картинка для соцсетей (OG image)"
+        />
+        <p className="text-xs text-muted-foreground">
+          Если поля не заполнены — будут использованы основное название, краткое описание и главное фото.
+        </p>
       </section>
 
       {error && <p className="text-sm text-destructive">{error}</p>}

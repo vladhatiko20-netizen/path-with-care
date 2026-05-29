@@ -19,6 +19,13 @@ function Page() {
         price_from: null,
         group_size_ru: null, group_size_ro: null,
         program_ru: null, program_ro: null,
+        hero_quote_ru: null, hero_quote_ro: null,
+        hero_quote_author_ru: null, hero_quote_author_ro: null,
+        intro_ru: null, intro_ro: null,
+        notice_ru: null, notice_ro: null,
+        seo_title_ru: null, seo_title_ro: null,
+        seo_description_ru: null, seo_description_ro: null,
+        og_image: null,
         is_published: false,
       }} />
     </div>
