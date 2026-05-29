@@ -37,6 +37,8 @@ type Initial = {
   seo_description_ru: string | null;
   seo_description_ro: string | null;
   og_image: string | null;
+  accompaniment_ru: string | null;
+  accompaniment_ro: string | null;
   is_published: boolean;
 };
 
@@ -121,6 +123,17 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             <label className="block text-sm font-serif mb-1">Размер группы (RO)</label>
             <input className={cls} value={form.group_size_ro ?? ""} onChange={(e) => set("group_size_ro", e.target.value || null)} maxLength={255} />
           </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Сопровождение (RU)</label>
+            <input className={cls} value={form.accompaniment_ru ?? ""} onChange={(e) => set("accompaniment_ru", e.target.value || null)} maxLength={255} placeholder="со священником" />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Сопровождение (RO)</label>
+            <input className={cls} value={form.accompaniment_ro ?? ""} onChange={(e) => set("accompaniment_ro", e.target.value || null)} maxLength={255} placeholder="cu preot" />
+          </div>
+          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">
+            По умолчанию — со священником. Заполните, только если поездка отличается.
+          </p>
         </div>
         <div>
           <label className="block text-sm font-serif mb-1">Краткое описание (RU)</label>
