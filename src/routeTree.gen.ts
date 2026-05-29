@@ -24,6 +24,7 @@ import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
 import { Route as DestinationsBariRouteImport } from './routes/destinations.bari'
+import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as AdminAdminPilgrimagesIndexRouteImport } from './routes/_admin/admin.pilgrimages.index'
@@ -112,6 +113,11 @@ const DestinationsBariRoute = DestinationsBariRouteImport.update({
   path: '/destinations/bari',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
+  id: '/destinations/$slug',
+  path: '/destinations/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog_/$slug',
   path: '/blog/$slug',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
   '/destinations/bari': typeof DestinationsBariRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/admin/': typeof AdminAdminIndexRoute
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
   '/destinations/bari': typeof DestinationsBariRoute
   '/destinations': typeof DestinationsIndexRoute
   '/admin': typeof AdminAdminIndexRoute
@@ -257,6 +265,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog_/$slug': typeof BlogSlugRoute
+  '/destinations/$slug': typeof DestinationsSlugRoute
   '/destinations/bari': typeof DestinationsBariRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
@@ -288,6 +297,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
+    | '/destinations/$slug'
     | '/destinations/bari'
     | '/destinations/'
     | '/admin/'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
+    | '/destinations/$slug'
     | '/destinations/bari'
     | '/destinations'
     | '/admin'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog_/$slug'
+    | '/destinations/$slug'
     | '/destinations/bari'
     | '/destinations/'
     | '/_admin/admin/'
@@ -378,6 +390,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  DestinationsSlugRoute: typeof DestinationsSlugRoute
   DestinationsBariRoute: typeof DestinationsBariRoute
   DestinationsIndexRoute: typeof DestinationsIndexRoute
 }
@@ -487,6 +500,13 @@ declare module '@tanstack/react-router' {
       path: '/destinations/bari'
       fullPath: '/destinations/bari'
       preLoaderRoute: typeof DestinationsBariRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/destinations/$slug': {
+      id: '/destinations/$slug'
+      path: '/destinations/$slug'
+      fullPath: '/destinations/$slug'
+      preLoaderRoute: typeof DestinationsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog_/$slug': {
@@ -630,6 +650,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
   BlogSlugRoute: BlogSlugRoute,
+  DestinationsSlugRoute: DestinationsSlugRoute,
   DestinationsBariRoute: DestinationsBariRoute,
   DestinationsIndexRoute: DestinationsIndexRoute,
 }

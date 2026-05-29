@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter, notFound } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
@@ -591,11 +591,10 @@ function LeadSection({ slug, prefill }: { slug: string; prefill: string }) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
-  // Sync prefill into the message field when it changes
-  if (prefill && !form.message && !sent) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    setForm((f) => ({ ...f, message: prefill }));
-  }
+  useEffect(() => {
+    if (prefill && !sent) setForm((f) => ({ ...f, message: prefill }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefill]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
