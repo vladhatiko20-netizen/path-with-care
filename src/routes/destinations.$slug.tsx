@@ -184,10 +184,11 @@ function DestinationPage() {
     } else {
       setShrineExpand((cur) => {
         const next = cur === i ? null : i;
-        if (next !== null && typeof window !== "undefined") {
+        if (typeof window !== "undefined") {
+          const targetId = next !== null ? `shrine-expand-${next}` : `shrine-card-${i}`;
           requestAnimationFrame(() => {
-            const el = document.getElementById(`shrine-expand-${next}`);
-            el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            const el = document.getElementById(targetId);
+            el?.scrollIntoView({ behavior: "smooth", block: next !== null ? "nearest" : "start" });
           });
         }
         return next;
