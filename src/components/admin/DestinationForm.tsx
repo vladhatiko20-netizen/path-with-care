@@ -39,6 +39,8 @@ type Initial = {
   og_image: string | null;
   accompaniment_ru: string | null;
   accompaniment_ro: string | null;
+  short_title_ru: string | null;
+  short_title_ro: string | null;
   is_published: boolean;
 };
 
@@ -86,6 +88,15 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             <label className="block text-sm font-serif mb-1">URL (slug) *</label>
             <input className={cls} value={form.slug} onChange={(e) => set("slug", e.target.value.toLowerCase())} required pattern="[a-z0-9\-]+" maxLength={255} />
           </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Короткое название (для крошек, RU)</label>
+            <input className={cls} value={form.short_title_ru ?? ""} onChange={(e) => set("short_title_ru", e.target.value || null)} maxLength={120} placeholder="Бари" />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Короткое название (для крошек, RO)</label>
+            <input className={cls} value={form.short_title_ro ?? ""} onChange={(e) => set("short_title_ro", e.target.value || null)} maxLength={120} placeholder="Bari" />
+          </div>
+          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">Используется только в хлебных крошках. Если пусто — берётся первое слово полного названия.</p>
         </div>
         <ImageUpload
           value={form.cover_image}
