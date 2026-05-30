@@ -176,10 +176,12 @@ function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {destinations.map((d) => {
               const c = lang === "ru" ? d.ru : d.ro;
+              const isPublished = publishedSlugs.has(d.slug);
               return (
                 <Link
                   key={d.slug}
-                  to={d.slug === "bari" ? "/destinations/bari" : "/destinations"}
+                  to={isPublished ? "/destinations/$slug" : "/destinations"}
+                  params={isPublished ? { slug: d.slug } : undefined}
                   className="group block bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500"
                 >
                   <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
