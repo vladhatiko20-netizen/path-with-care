@@ -603,8 +603,9 @@ function DestinationPage() {
           open={lightbox.open}
           index={lightbox.index}
           close={() => setLightbox({ open: false, index: 0 })}
-          slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt }))}
-          plugins={[Thumbnails]}
+          slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
+          plugins={[Thumbnails, Captions]}
+          captions={{ descriptionTextAlign: "center", showToggle: false }}
         />
       )}
     </PageShell>
