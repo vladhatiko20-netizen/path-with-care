@@ -54,6 +54,8 @@ function Page() {
         og_image: data.og_image,
         accompaniment_ru: data.accompaniment_ru,
         accompaniment_ro: data.accompaniment_ro,
+        short_title_ru: data.short_title_ru,
+        short_title_ro: data.short_title_ro,
         is_published: data.is_published,
       }} />
     </div>
