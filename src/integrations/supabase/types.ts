@@ -290,6 +290,8 @@ export type Database = {
           seo_description_ru: string | null
           seo_title_ro: string | null
           seo_title_ru: string | null
+          short_title_ro: string | null
+          short_title_ru: string | null
           slug: string
           title_ro: string
           title_ru: string
@@ -324,6 +326,8 @@ export type Database = {
           seo_description_ru?: string | null
           seo_title_ro?: string | null
           seo_title_ru?: string | null
+          short_title_ro?: string | null
+          short_title_ru?: string | null
           slug: string
           title_ro: string
           title_ru: string
@@ -358,6 +362,8 @@ export type Database = {
           seo_description_ru?: string | null
           seo_title_ro?: string | null
           seo_title_ru?: string | null
+          short_title_ro?: string | null
+          short_title_ru?: string | null
           slug?: string
           title_ro?: string
           title_ru?: string

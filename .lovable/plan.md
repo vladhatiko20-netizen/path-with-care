@@ -1,27 +1,67 @@
-## Решение: оставляем float
+All changes live in the universal template (`src/routes/destinations.$slug.tsx`) and its data layer. `destinations.bari.tsx` stays untouched.
 
-Совет «использовать grid вместо float» технически грамотный в общем случае, но **не подходит под ваше требование**. Вы просили, чтобы текст «О поездке» начинался справа от фото, а после превышения высоты картинки — продолжался **на всю ширину под фото**. Это поведение называется «text wrap-around», и в CSS его умеет **только** float (либо его наследник `shape-outside`, который тоже работает поверх float).
+## 1. Short breadcrumb title
 
-Grid и flex принципиально не поддерживают огибание — они режут пространство на прямоугольные ячейки. Вариант «оставить grid и убрать кнопку» даст другую картинку: правая колонка вытянется вниз, а слева под фото останется пустота — это не то, о чём мы договаривались.
+Add optional `short_title_ru` / `short_title_ro` to `destinations`.
 
-### Где совет прав, а где нет
+- **Migration**: `ALTER TABLE public.destinations ADD COLUMN short_title_ru text, ADD COLUMN short_title_ro text;` (nullable, no GRANT/RLS change needed).
+- **Server functions** (`src/lib/destinations.functions.ts`): add the two columns to `PublicDestination` and `getDestinationBySlug` select.
+- **Admin schema** (`src/lib/admin.functions.ts`): add to `destSchema` as `z.string().max(120).nullable().optional()`.
+- **Admin form** (`src/components/admin/DestinationForm.tsx`): add a RU/RO pair under the main title fields, label "Короткое название (для крошек)", helper text "Если пусто — используется первое слово полного названия. Пример: «Бари»."
+- **Both admin routes**: include `short_title_ru` / `short_title_ro` in form initial values (null for new).
+- **Universal route**: compute
+  ```ts
+  const shortTitle =
+    pickL(destination.short_title_ru, destination.short_title_ro) ||
+    (pickL(destination.title_ru, destination.title_ro) || "").split(/\s|[-–—]/)[0];
+  ```
+  Replace `{title}` in the breadcrumb `<li>` only with `{shortTitle}`. H1 / hero / SEO untouched.
 
-- ✅ **Float устарел как механизм раскладки страницы** — для колонок/сеток сейчас используют flex/grid. Согласен полностью.
-- ❌ **Float НЕ устарел для обтекания текстом картинки внутри блока** — это его исходное предназначение, спецификация его специально для этого сохраняет. Tailwind держит `float-left` / `float-right` / `clear-both` как штатные утилиты ровно по этой причине.
-- ❌ **«Конфликты с flex/grid соседями»** возникают, когда float ставят рядом с grid-контейнером на одном уровне. У нас float живёт **внутри** одной секции hero, рядом с ним по DOM-уровню grid нет — конфликт невозможен.
+## 2. Lightbox bottom captions
 
-### Что делаем
+The DB column is `alt_ru`/`alt_ro` (admin already labels them "Подпись"). No DB change.
 
-1. **Реализацию через float оставляем как есть** (`md:float-left md:w-[calc(50%-1rem)] md:mr-8 md:mb-6` на контейнере фото + `clear-both` после текста).
-2. **Проверяю на всякий случай**, что ниже по странице (галерея, блок святынь, форма) нет элементов, которые «зацепил» бы float — то есть что `clear-both` отрабатывает и нижние секции рисуются от левого края, без сдвига.
-3. **Если найду визуальную проблему** — починю точечно (обычно достаточно убедиться, что `clear-both` стоит до начала следующей секции, а не внутри грид-обёртки).
+In `destinations.$slug.tsx`:
+- Extend `galleryPhotos` slide objects with `description: pickL(g.alt_ru, g.alt_ro) ?? ""`.
+- Install + register the `Captions` plugin from `yet-another-react-lightbox`:
+  ```ts
+  import Captions from "yet-another-react-lightbox/plugins/captions";
+  import "yet-another-react-lightbox/plugins/captions.css";
+  ```
+  Pass `plugins={[Thumbnails, Captions]}` and `captions={{ descriptionTextAlign: "center", showToggle: false }}`. Captions plugin defaults render at the bottom; empty descriptions render nothing.
+- The package is already installed (used for Thumbnails). No `bun add` needed.
 
-Никаких других изменений на странице не делаю — кнопку «Читать подробнее» уже убрали, модалка святыни и аккордеон мобильный трогать не нужно.
+## 3. "О поездке" inline ✦
 
-### Файлы
+- **Mobile block** (the standalone `<span>✦</span>` above the H2, lines ~340-349): remove the separate `<span>` and the section's `py-12`; inline the diamond inside the `<h2>`:
+  ```tsx
+  <h2 className="text-3xl text-foreground font-light mb-5">
+    <span className="text-accent mr-2" aria-hidden="true">✦</span>
+    {t("О поездке", "Despre pelerinaj")}
+  </h2>
+  ```
+  Reduce the section padding (`py-12` → `pt-6 pb-12`) to remove the empty gap above.
+- **Desktop block** (line ~303): same inline ✦ prefix for visual consistency across breakpoints.
 
-- `src/routes/destinations.bari.tsx` — только проверка, правки лишь если найду баг с clearfix.
+## 4. Mobile shrine UX
 
-### Если в будущем захочется отказаться от float
+In the shrines section (lines ~352-397):
 
-Альтернатива есть, но она дороже: разбить текст на два React-узла (`textBeforeBreak` + `textAfterBreak`), первый положить в правую колонку grid, второй — в полноширинный блок ниже. Минус: точку разрыва придётся подбирать вручную, и при изменении шрифта/языка она будет «плыть». Float делает это автоматически. Поэтому пока — float.
+- **Smooth-scroll on expand**: in `handleShrineClick`, when entering expanded state on mobile, defer with `requestAnimationFrame` and scroll the expanded panel into view:
+  ```ts
+  requestAnimationFrame(() => {
+    const el = document.getElementById(`shrine-expand-${i}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  ```
+  Give the expanded `<div>` `id={`shrine-expand-${i}`}`.
+- **Tap-anywhere-to-collapse**: make the expanded panel a `<button type="button">` (or div with role=button + keydown) that calls `setShrineExpand(null)` on click. Keep its current styling. Add `cursor-pointer` and an `aria-label={t("Свернуть", "Restrânge")}`.
+- The existing chevron on the trigger continues to flip via `aria-expanded`.
+
+## Order of execution
+
+1. Run migration (Step 1 — needs approval before code).
+2. Batch edit: `destinations.functions.ts`, `admin.functions.ts`, `DestinationForm.tsx`, both admin destination routes, `destinations.$slug.tsx`.
+3. Verify build is clean. Bari route untouched.
+
+No publish.

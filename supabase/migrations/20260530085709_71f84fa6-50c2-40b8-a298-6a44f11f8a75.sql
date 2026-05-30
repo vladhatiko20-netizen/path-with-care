@@ -1,0 +1,1 @@
+ALTER TABLE public.destinations ADD COLUMN short_title_ru text, ADD COLUMN short_title_ro text;
