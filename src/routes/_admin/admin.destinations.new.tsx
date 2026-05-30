@@ -28,6 +28,8 @@ function Page() {
         og_image: null,
         accompaniment_ru: null,
         accompaniment_ro: null,
+        short_title_ru: null,
+        short_title_ro: null,
         is_published: false,
       }} />
     </div>
