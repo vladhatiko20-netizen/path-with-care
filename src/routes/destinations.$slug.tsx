@@ -581,7 +581,10 @@ function DestinationPage() {
               {faqList.map((q, i) => (
                 <AccordionItem key={q.id} value={`q${i}`} className="border-gold/30">
                   <AccordionTrigger className="text-[16px] md:text-[19px] text-foreground hover:text-accent text-left [&>svg]:w-5 [&>svg]:h-5 [&>svg]:text-accent">
-                    {pickL(q.question_ru, q.question_ro)}
+                    <span className="inline-flex items-center gap-2">
+                      <HelpCircle className="!w-4 !h-4 text-accent shrink-0" aria-hidden="true" />
+                      {pickL(q.question_ru, q.question_ro)}
+                    </span>
                   </AccordionTrigger>
                   {(q.answer_ru || q.answer_ro) && (
                     <AccordionContent className="text-[15px] md:text-[18px] text-foreground/80 leading-relaxed whitespace-pre-line">
