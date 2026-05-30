@@ -16,6 +16,7 @@ import romaniaImg from "@/assets/dest-romania.jpg";
 import ukraineImg from "@/assets/dest-ukraine.jpg";
 import moldovaImg from "@/assets/dest-moldova.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
+import { listPublicDestinations } from "@/lib/destinations.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
