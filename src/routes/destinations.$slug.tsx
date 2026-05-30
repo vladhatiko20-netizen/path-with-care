@@ -404,9 +404,15 @@ function DestinationPage() {
                       </div>
                     </button>
                     {shrineExpand === i && (
-                      <div className="md:hidden mt-3 bg-card border border-gold/30 rounded-sm p-5 font-serif text-[17px] text-foreground/85 leading-relaxed animate-fade-in whitespace-pre-line">
+                      <button
+                        type="button"
+                        id={`shrine-expand-${i}`}
+                        onClick={() => setShrineExpand(null)}
+                        aria-label={t("Свернуть", "Restrânge")}
+                        className="md:hidden mt-3 w-full text-left bg-card border border-gold/30 rounded-sm p-5 font-serif text-[17px] text-foreground/85 leading-relaxed animate-fade-in whitespace-pre-line cursor-pointer hover:border-gold transition-colors"
+                      >
                         {pickL(s.full_ru, s.full_ro) || sshort}
-                      </div>
+                      </button>
                     )}
                   </div>
                 );
