@@ -23,7 +23,6 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
-import { Route as DestinationsBariRouteImport } from './routes/destinations.bari'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
@@ -106,11 +105,6 @@ const IndexRoute = IndexRouteImport.update({
 const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
   id: '/destinations/',
   path: '/destinations/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DestinationsBariRoute = DestinationsBariRouteImport.update({
-  id: '/destinations/bari',
-  path: '/destinations/bari',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
@@ -204,7 +198,6 @@ export interface FileRoutesByFullPath {
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/destinations/bari': typeof DestinationsBariRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/admin/': typeof AdminAdminIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
@@ -234,7 +227,6 @@ export interface FileRoutesByTo {
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/destinations/bari': typeof DestinationsBariRoute
   '/destinations': typeof DestinationsIndexRoute
   '/admin': typeof AdminAdminIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
@@ -266,7 +258,6 @@ export interface FileRoutesById {
   '/with-priest': typeof WithPriestRoute
   '/blog_/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
-  '/destinations/bari': typeof DestinationsBariRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
@@ -298,7 +289,6 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog/$slug'
     | '/destinations/$slug'
-    | '/destinations/bari'
     | '/destinations/'
     | '/admin/'
     | '/admin/blog/$id'
@@ -328,7 +318,6 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog/$slug'
     | '/destinations/$slug'
-    | '/destinations/bari'
     | '/destinations'
     | '/admin'
     | '/admin/blog/$id'
@@ -359,7 +348,6 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog_/$slug'
     | '/destinations/$slug'
-    | '/destinations/bari'
     | '/destinations/'
     | '/_admin/admin/'
     | '/_admin/admin/blog/$id'
@@ -391,7 +379,6 @@ export interface RootRouteChildren {
   WithPriestRoute: typeof WithPriestRoute
   BlogSlugRoute: typeof BlogSlugRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
-  DestinationsBariRoute: typeof DestinationsBariRoute
   DestinationsIndexRoute: typeof DestinationsIndexRoute
 }
 
@@ -493,13 +480,6 @@ declare module '@tanstack/react-router' {
       path: '/destinations'
       fullPath: '/destinations/'
       preLoaderRoute: typeof DestinationsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/destinations/bari': {
-      id: '/destinations/bari'
-      path: '/destinations/bari'
-      fullPath: '/destinations/bari'
-      preLoaderRoute: typeof DestinationsBariRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/destinations/$slug': {
@@ -651,9 +631,18 @@ const rootRouteChildren: RootRouteChildren = {
   WithPriestRoute: WithPriestRoute,
   BlogSlugRoute: BlogSlugRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
-  DestinationsBariRoute: DestinationsBariRoute,
   DestinationsIndexRoute: DestinationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
