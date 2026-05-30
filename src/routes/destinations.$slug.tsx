@@ -41,6 +41,8 @@ import {
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/plugins/captions.css";
 
 const SITE = "https://path-with-care.lovable.app";
 
@@ -135,6 +137,9 @@ function DestinationPage() {
   const pickL = <R, O>(ru: R, ro: O): R | O => (lang === "ru" ? ru : ro);
 
   const title = pickL(destination.title_ru, destination.title_ro);
+  const shortTitle =
+    pickL(destination.short_title_ru, destination.short_title_ro) ||
+    (pickL(destination.title_ru, destination.title_ro) || "").split(/[\s\-–—]+/)[0];
   const intro = pickL(destination.intro_ru, destination.intro_ro) || pickL(destination.description_ru, destination.description_ro);
   const heroQuote = pickL(destination.hero_quote_ru, destination.hero_quote_ro);
   const heroQuoteAuthor = pickL(destination.hero_quote_author_ru, destination.hero_quote_author_ro);
@@ -148,6 +153,7 @@ function DestinationPage() {
   const galleryPhotos = ((gallery ?? []) as PublicGalleryImage[]).map((g) => ({
     src: g.image_url,
     alt: (lang === "ru" ? g.alt_ru : g.alt_ro) ?? g.alt_ru ?? g.alt_ro ?? "",
+    description: ((lang === "ru" ? g.alt_ru : g.alt_ro) ?? "") || "",
     author: g.author,
     license: g.license,
   }));
@@ -176,7 +182,16 @@ function DestinationPage() {
     if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
       setShrineModal(i);
     } else {
-      setShrineExpand((cur) => (cur === i ? null : i));
+      setShrineExpand((cur) => {
+        const next = cur === i ? null : i;
+        if (next !== null && typeof window !== "undefined") {
+          requestAnimationFrame(() => {
+            const el = document.getElementById(`shrine-expand-${next}`);
+            el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          });
+        }
+        return next;
+      });
     }
   }
 
