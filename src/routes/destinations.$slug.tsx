@@ -228,7 +228,7 @@ function DestinationPage() {
           <li aria-hidden="true">→</li>
           <li><Link to="/destinations" className="hover:text-accent">{t("Направления", "Destinații")}</Link></li>
           <li aria-hidden="true">→</li>
-          <li className="text-foreground">{title}</li>
+          <li className="text-foreground">{shortTitle}</li>
         </ol>
       </nav>
 
@@ -315,7 +315,10 @@ function DestinationPage() {
             )}
             {intro && (
               <>
-                <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">{t("О поездке", "Despre pelerinaj")}</h2>
+                <h2 className="text-3xl lg:text-4xl text-foreground font-light mb-4">
+                  <span className="text-accent mr-2" aria-hidden="true">✦</span>
+                  {t("О поездке", "Despre pelerinaj")}
+                </h2>
                 <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed whitespace-pre-line">{intro}</p>
               </>
             )}
@@ -355,9 +358,11 @@ function DestinationPage() {
       {/* Intro — mobile only */}
       {intro && (
         <section className="md:hidden bg-background font-serif">
-          <div className="max-w-3xl mx-auto px-6 py-12">
-            <span className="block text-accent text-xl mb-2" aria-hidden="true">✦</span>
-            <h2 className="text-3xl text-foreground font-light mb-5">{t("О поездке", "Despre pelerinaj")}</h2>
+          <div className="max-w-3xl mx-auto px-6 pt-6 pb-12">
+            <h2 className="text-3xl text-foreground font-light mb-5">
+              <span className="text-accent mr-2" aria-hidden="true">✦</span>
+              {t("О поездке", "Despre pelerinaj")}
+            </h2>
             <p className="text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line">{intro}</p>
           </div>
         </section>
