@@ -50,6 +50,33 @@ export const getDestinationBySlug = createServerFn({ method: "GET" })
     return (row as PublicDestination | null) ?? null;
   });
 
+export type PublicDestinationListItem = {
+  slug: string;
+  title_ru: string;
+  title_ro: string;
+  description_ru: string | null;
+  description_ro: string | null;
+  intro_ru: string | null;
+  intro_ro: string | null;
+  duration_ru: string | null;
+  duration_ro: string | null;
+  price_from: number | null;
+  cover_image: string | null;
+  notice_ru: string | null;
+  notice_ro: string | null;
+};
+
+export const listPublicDestinations = createServerFn({ method: "GET" })
+  .handler(async (): Promise<PublicDestinationListItem[]> => {
+    const { data, error } = await supabaseAdmin
+      .from("destinations")
+      .select("slug, title_ru, title_ro, description_ru, description_ro, intro_ru, intro_ro, duration_ru, duration_ro, price_from, cover_image, notice_ru, notice_ro")
+      .eq("is_published", true)
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return (data as PublicDestinationListItem[] | null) ?? [];
+  });
+
 export type PublicGalleryImage = {
   id: string;
   image_url: string;
