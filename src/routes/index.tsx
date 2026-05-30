@@ -105,6 +105,11 @@ function HomePage() {
     queryKey: ["blog-posts"],
     queryFn: () => listBlogPosts(),
   });
+  const { data: publishedDestinations } = useQuery({
+    queryKey: ["destinations", "public-list"],
+    queryFn: () => listPublicDestinations(),
+  });
+  const publishedSlugs = new Set((publishedDestinations ?? []).map((d) => d.slug));
   return (
     <PageShell>
       {/* HERO */}
