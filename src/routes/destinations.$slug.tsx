@@ -178,21 +178,29 @@ function DestinationPage() {
   const openLightbox = (i: number) => setLightbox({ open: true, index: i });
 
   const shrinesList = (shrines ?? []) as PublicShrine[];
-  function handleShrineClick(i: number) {
-    if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
-      setShrineModal(i);
-    } else {
-      setShrineExpand((cur) => {
-        const next = cur === i ? null : i;
-        if (typeof window !== "undefined") {
-          const targetId = next !== null ? `shrine-expand-${next}` : `shrine-card-${i}`;
-          requestAnimationFrame(() => {
-            const el = document.getElementById(targetId);
-            el?.scrollIntoView({ behavior: "smooth", block: next !== null ? "nearest" : "start" });
-          });
-        }
-        return next;
+  function scrollToShrineCard(i: number) {
+    if (typeof window === "undefined") return;
+    const el = document.getElementById(`shrine-card-${i}`);
+    if (!el) return;
+    const headerEl = document.querySelector("header");
+    const offset = (headerEl?.getBoundingClientRect().height ?? 0) + 12;
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+  function handleShrineDesktopClick(i: number) {
+    setShrineModal(i);
+  }
+  function handleShrineAccordionChange(value: string) {
+    const next = value === "" ? null : Number(value.replace("s", ""));
+    setShrineExpand(next);
+    if (next !== null) {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`shrine-card-${next}`);
+        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       });
+    } else if (shrineExpand !== null) {
+      const prev = shrineExpand;
+      requestAnimationFrame(() => scrollToShrineCard(prev));
     }
   }
 
