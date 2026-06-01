@@ -36,7 +36,7 @@ import {
   CheckCircle2, Minus,
   Calendar,
   User, Phone, Mail, MessageSquare, Send,
-  ChevronDown, HelpCircle,
+  ChevronDown, ChevronUp, HelpCircle,
 } from "lucide-react";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
