@@ -382,28 +382,63 @@ function DestinationPage() {
         <section className="bg-secondary py-12 md:py-16">
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8 text-center">{t("Главные святыни", "Sfintele moaște")}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Desktop: cards open modal */}
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6">
               {shrinesList.map((s, i) => {
                 const stitle = pickL(s.title_ru, s.title_ro);
                 const sshort = pickL(s.short_ru, s.short_ro);
                 return (
-                  <div key={s.id} id={`shrine-card-${i}`}>
-                    <button
-                      type="button"
-                      onClick={() => handleShrineClick(i)}
-                      aria-expanded={shrineExpand === i}
-                      className="w-full text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300 block"
-                    >
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleShrineDesktopClick(i)}
+                    className="w-full text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300 block"
+                  >
+                    {s.image_url && (
+                      <div className="aspect-[4/3] overflow-hidden">
+                        <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="p-5 font-serif">
+                      <h3 className="text-xl text-foreground mb-2 leading-tight">{stitle}</h3>
+                      {sshort && (
+                        <p className="text-[17px] text-foreground/75 leading-relaxed">{sshort}</p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            {/* Mobile: Radix accordion */}
+            <Accordion
+              type="single"
+              collapsible
+              className="md:hidden flex flex-col gap-6"
+              value={shrineExpand !== null ? `s${shrineExpand}` : ""}
+              onValueChange={handleShrineAccordionChange}
+            >
+              {shrinesList.map((s, i) => {
+                const stitle = pickL(s.title_ru, s.title_ro);
+                const sshort = pickL(s.short_ru, s.short_ro);
+                const sfull = pickL(s.full_ru, s.full_ro) || sshort;
+                return (
+                  <AccordionItem
+                    key={s.id}
+                    value={`s${i}`}
+                    id={`shrine-card-${i}`}
+                    className="bg-card border border-gold/30 rounded-sm overflow-hidden"
+                  >
+                    <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden block w-full">
                       {s.image_url && (
                         <div className="aspect-[4/3] overflow-hidden">
                           <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
                         </div>
                       )}
-                      <div className="p-5 font-serif">
+                      <div className="p-5 font-serif text-left">
                         <h3 className="text-xl text-foreground mb-2 leading-tight flex items-center justify-between gap-2">
                           <span>{stitle}</span>
                           <ChevronDown
-                            className={`md:hidden w-5 h-5 text-accent shrink-0 transition-transform duration-200 ${shrineExpand === i ? "rotate-180" : ""}`}
+                            className={`w-5 h-5 text-accent shrink-0 transition-transform duration-200 ${shrineExpand === i ? "rotate-180" : ""}`}
                             aria-hidden="true"
                           />
                         </h3>
@@ -411,22 +446,14 @@ function DestinationPage() {
                           <p className="text-[17px] text-foreground/75 leading-relaxed">{sshort}</p>
                         )}
                       </div>
-                    </button>
-                    {shrineExpand === i && (
-                      <button
-                        type="button"
-                        id={`shrine-expand-${i}`}
-                        onClick={() => handleShrineClick(i)}
-                        aria-label={t("Свернуть", "Restrânge")}
-                        className="md:hidden mt-3 w-full text-left bg-card border border-gold/30 rounded-sm p-5 font-serif text-[17px] text-foreground/85 leading-relaxed animate-fade-in whitespace-pre-line cursor-pointer hover:border-gold transition-colors"
-                      >
-                        {pickL(s.full_ru, s.full_ro) || sshort}
-                      </button>
-                    )}
-                  </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-5 pb-5 font-serif text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line border-t border-gold/20 pt-4">
+                      {sfull}
+                    </AccordionContent>
+                  </AccordionItem>
                 );
               })}
-            </div>
+            </Accordion>
           </div>
         </section>
       )}
