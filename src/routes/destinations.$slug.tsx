@@ -191,17 +191,13 @@ function DestinationPage() {
     setShrineModal(i);
   }
   function handleShrineAccordionChange(value: string) {
+    const prev = shrineExpand;
     const next = value === "" ? null : Number(value.replace("s", ""));
     setShrineExpand(next);
-    if (next !== null) {
-      requestAnimationFrame(() => {
-        const el = document.getElementById(`shrine-card-${next}`);
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-    } else if (shrineExpand !== null) {
-      const prev = shrineExpand;
-      requestAnimationFrame(() => scrollToShrineCard(prev));
-    }
+    const target = next !== null ? next : prev;
+    if (target === null) return;
+    // Ждём окончания анимации высоты Radix (~250 мс)
+    window.setTimeout(() => scrollToShrineCard(target), 280);
   }
 
   const programDays = (program ?? []) as PublicProgramDay[];
