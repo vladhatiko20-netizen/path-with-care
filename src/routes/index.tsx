@@ -182,7 +182,7 @@ function HomePage() {
                   key={d.slug}
                   to={isPublished ? "/destinations/$slug" : "/destinations"}
                   params={isPublished ? { slug: d.slug } : undefined}
-                  className="group block bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500"
+                  className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-300"
                 >
                   <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
                     <img
@@ -191,7 +191,7 @@ function HomePage() {
                       loading="lazy"
                       width={800}
                       height={600}
-                      className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1200ms]"
+                      className="w-full h-full object-cover md:group-hover:scale-[1.05] transition-transform duration-500"
                     />
                   </div>
                   <div className="p-4">
