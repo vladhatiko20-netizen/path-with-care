@@ -36,7 +36,7 @@ import {
   CheckCircle2, Minus,
   Calendar,
   User, Phone, Mail, MessageSquare, Send,
-  ChevronDown, HelpCircle,
+  ChevronDown, ChevronUp, HelpCircle,
 } from "lucide-react";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -440,8 +440,18 @@ function DestinationPage() {
                         <ChevronDown className="w-5 h-5 text-accent shrink-0 mt-1 transition-transform duration-200 [[data-state=open]_&]:rotate-180" aria-hidden="true" />
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="px-5 pb-5 font-serif text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line border-t border-gold/20 pt-4">
-                      {sfull}
+                    <AccordionContent className="p-0 border-t border-gold/20">
+                      <button
+                        type="button"
+                        onClick={() => handleShrineAccordionChange("")}
+                        className="w-full text-left px-5 pt-4 pb-5 font-serif text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line flex flex-col gap-3"
+                        aria-label="Свернуть"
+                      >
+                        <span className="whitespace-pre-line">{sfull}</span>
+                        <span className="self-end inline-flex items-center justify-center w-9 h-9 rounded-full border border-gold/40 text-accent">
+                          <ChevronUp className="w-5 h-5" aria-hidden="true" />
+                        </span>
+                      </button>
                     </AccordionContent>
                   </AccordionItem>
                 );
