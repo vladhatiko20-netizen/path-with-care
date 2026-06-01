@@ -426,26 +426,20 @@ function DestinationPage() {
                     key={s.id}
                     value={`s${i}`}
                     id={`shrine-card-${i}`}
-                    className="bg-card border border-gold/30 rounded-sm overflow-hidden"
+                    className="bg-card border border-gold/30 rounded-sm overflow-hidden border-b"
                   >
-                    <AccordionTrigger className="p-0 hover:no-underline [&>svg]:hidden block w-full">
-                      {s.image_url && (
-                        <div className="aspect-[4/3] overflow-hidden">
-                          <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
-                        </div>
-                      )}
-                      <div className="p-5 font-serif text-left">
-                        <h3 className="text-xl text-foreground mb-2 leading-tight flex items-center justify-between gap-2">
-                          <span>{stitle}</span>
-                          <ChevronDown
-                            className={`w-5 h-5 text-accent shrink-0 transition-transform duration-200 ${shrineExpand === i ? "rotate-180" : ""}`}
-                            aria-hidden="true"
-                          />
-                        </h3>
-                        {sshort && (
-                          <p className="text-[17px] text-foreground/75 leading-relaxed">{sshort}</p>
-                        )}
+                    {s.image_url && (
+                      <div className="aspect-[4/3] overflow-hidden">
+                        <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
                       </div>
+                    )}
+                    <AccordionTrigger className="px-5 py-4 hover:no-underline font-serif text-xl text-foreground text-left [&>svg]:text-accent [&>svg]:w-5 [&>svg]:h-5">
+                      <span className="flex-1">
+                        {stitle}
+                        {sshort && (
+                          <span className="block mt-2 text-[17px] text-foreground/75 leading-relaxed font-normal">{sshort}</span>
+                        )}
+                      </span>
                     </AccordionTrigger>
                     <AccordionContent className="px-5 pb-5 font-serif text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line border-t border-gold/20 pt-4">
                       {sfull}
