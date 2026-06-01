@@ -69,11 +69,11 @@ function Page() {
                   key={d.slug}
                   to="/destinations/$slug"
                   params={{ slug: d.slug }}
-                  className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-300"
+                  className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
                 >
                   {d.cover_image && (
                     <div className="aspect-[4/3] overflow-hidden">
-                      <img src={d.cover_image} alt={title} loading="lazy" width={800} height={600} className="w-full h-full object-cover md:group-hover:scale-[1.05] transition-transform duration-500" />
+                      <img src={d.cover_image} alt={title} loading="lazy" width={800} height={600} className="w-full h-full object-cover md:group-hover:scale-[1.02] transition-transform duration-300" />
                     </div>
                   )}
                   <div className="p-5">

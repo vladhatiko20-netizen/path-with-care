@@ -191,17 +191,13 @@ function DestinationPage() {
     setShrineModal(i);
   }
   function handleShrineAccordionChange(value: string) {
+    const prev = shrineExpand;
     const next = value === "" ? null : Number(value.replace("s", ""));
     setShrineExpand(next);
-    if (next !== null) {
-      requestAnimationFrame(() => {
-        const el = document.getElementById(`shrine-card-${next}`);
-        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      });
-    } else if (shrineExpand !== null) {
-      const prev = shrineExpand;
-      requestAnimationFrame(() => scrollToShrineCard(prev));
-    }
+    const target = next !== null ? next : prev;
+    if (target === null) return;
+    // Ждём окончания анимации высоты Radix (~250 мс)
+    window.setTimeout(() => scrollToShrineCard(target), 280);
   }
 
   const programDays = (program ?? []) as PublicProgramDay[];
@@ -383,7 +379,7 @@ function DestinationPage() {
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-8 text-center">{t("Главные святыни", "Sfintele moaște")}</h2>
             {/* Desktop: cards open modal */}
-            <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
               {shrinesList.map((s, i) => {
                 const stitle = pickL(s.title_ru, s.title_ro);
                 const sshort = pickL(s.short_ru, s.short_ro);
@@ -392,14 +388,14 @@ function DestinationPage() {
                     key={s.id}
                     type="button"
                     onClick={() => handleShrineDesktopClick(i)}
-                    className="w-full text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300 block"
+                    className="w-full h-full text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_8px_24px_-15px_rgba(61,40,23,0.4)] transition-all duration-300 flex flex-col"
                   >
                     {s.image_url && (
-                      <div className="aspect-[4/3] overflow-hidden">
+                      <div className="aspect-[4/3] overflow-hidden shrink-0">
                         <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
                       </div>
                     )}
-                    <div className="p-5 font-serif">
+                    <div className="p-5 font-serif flex-1">
                       <h3 className="text-xl text-foreground mb-2 leading-tight">{stitle}</h3>
                       {sshort && (
                         <p className="text-[17px] text-foreground/75 leading-relaxed">{sshort}</p>
@@ -426,20 +422,23 @@ function DestinationPage() {
                     key={s.id}
                     value={`s${i}`}
                     id={`shrine-card-${i}`}
-                    className="bg-card border border-gold/30 rounded-sm overflow-hidden border-b"
+                    className="bg-card border border-gold/30 rounded-sm overflow-hidden"
                   >
-                    {s.image_url && (
-                      <div className="aspect-[4/3] overflow-hidden">
-                        <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
+                    <AccordionTrigger className="p-0 hover:no-underline font-serif text-left block w-full [&>svg]:hidden">
+                      {s.image_url && (
+                        <div className="aspect-[4/3] overflow-hidden">
+                          <img src={s.image_url} alt={stitle} loading="lazy" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      <div className="px-5 py-4 flex items-start gap-3">
+                        <span className="flex-1">
+                          <span className="block text-xl text-foreground leading-tight">{stitle}</span>
+                          {sshort && (
+                            <span className="block mt-2 text-[17px] text-foreground/75 leading-relaxed font-normal">{sshort}</span>
+                          )}
+                        </span>
+                        <ChevronDown className="w-5 h-5 text-accent shrink-0 mt-1 transition-transform duration-200 [[data-state=open]_&]:rotate-180" aria-hidden="true" />
                       </div>
-                    )}
-                    <AccordionTrigger className="px-5 py-4 hover:no-underline font-serif text-xl text-foreground text-left [&>svg]:text-accent [&>svg]:w-5 [&>svg]:h-5">
-                      <span className="flex-1">
-                        {stitle}
-                        {sshort && (
-                          <span className="block mt-2 text-[17px] text-foreground/75 leading-relaxed font-normal">{sshort}</span>
-                        )}
-                      </span>
                     </AccordionTrigger>
                     <AccordionContent className="px-5 pb-5 font-serif text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line border-t border-gold/20 pt-4">
                       {sfull}
