@@ -43,7 +43,6 @@ import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
-import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
 const SITE = "https://path-with-care.lovable.app";
 
@@ -134,7 +133,6 @@ function DestinationPage() {
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
-  const [shrineLightbox, setShrineLightbox] = useState<{ src: string; alt: string } | null>(null);
 
   const pickL = <R, O>(ru: R, ro: O): R | O => (lang === "ru" ? ru : ro);
 
@@ -473,16 +471,7 @@ function DestinationPage() {
             return (
               <div className="grid md:grid-cols-2 max-h-[90vh]">
                 <div className="aspect-square md:aspect-auto overflow-hidden bg-secondary">
-                  {s.image_url && (
-                    <button
-                      type="button"
-                      onClick={() => setShrineLightbox({ src: s.image_url!, alt: stitle })}
-                      className="block w-full h-full cursor-zoom-in"
-                      aria-label={stitle}
-                    >
-                      <img src={s.image_url} alt={stitle} className="w-full h-full object-cover" />
-                    </button>
-                  )}
+                  {s.image_url && <img src={s.image_url} alt={stitle} className="w-full h-full object-cover" />}
                 </div>
                 <div className="p-8 md:p-10 font-serif overflow-y-auto">
                   <DialogHeader>
@@ -657,20 +646,10 @@ function DestinationPage() {
           index={lightbox.index}
           close={() => setLightbox({ open: false, index: 0 })}
           slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
-          plugins={[Thumbnails, Captions, Zoom]}
+          plugins={[Thumbnails, Captions]}
           captions={{ descriptionTextAlign: "center", showToggle: false }}
-          zoom={{ maxZoomPixelRatio: 3, zoomInMultiplier: 2, scrollToZoom: true, doubleTapDelay: 300 }}
         />
       )}
-      <Lightbox
-        open={shrineLightbox !== null}
-        close={() => setShrineLightbox(null)}
-        slides={shrineLightbox ? [{ src: shrineLightbox.src, alt: shrineLightbox.alt }] : []}
-        plugins={[Zoom]}
-        zoom={{ maxZoomPixelRatio: 3, zoomInMultiplier: 2, scrollToZoom: true, doubleTapDelay: 300 }}
-        carousel={{ finite: true }}
-        render={{ buttonPrev: () => null, buttonNext: () => null }}
-      />
     </PageShell>
   );
 }
