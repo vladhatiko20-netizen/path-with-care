@@ -43,6 +43,7 @@ import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
 const SITE = "https://path-with-care.lovable.app";
 
@@ -646,8 +647,16 @@ function DestinationPage() {
           index={lightbox.index}
           close={() => setLightbox({ open: false, index: 0 })}
           slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
-          plugins={[Thumbnails, Captions]}
+          plugins={[Thumbnails, Captions, Zoom]}
           captions={{ descriptionTextAlign: "center", showToggle: false }}
+          zoom={{
+            maxZoomPixelRatio: 3,
+            zoomInMultiplier: 2,
+            doubleTapDelay: 250,
+            doubleClickDelay: 250,
+            doubleClickMaxStops: 2,
+            scrollToZoom: true,
+          }}
         />
       )}
     </PageShell>
