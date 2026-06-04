@@ -4,7 +4,7 @@ import imageCompression from "browser-image-compression";
 
 const BUCKET = "public-images";
 const MAX_SIZE = 15 * 1024 * 1024; // 15 MB (исходник до сжатия)
-const ALLOWED = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 export function ImageUpload({
   value,
@@ -24,7 +24,7 @@ export function ImageUpload({
   async function handleFile(file: File) {
     setError(null);
     if (!ALLOWED.includes(file.type)) {
-      setError("Только JPG, PNG или WEBP");
+      setError("Только JPG, PNG, WEBP или AVIF");
       return;
     }
     if (file.size > MAX_SIZE) {
@@ -83,7 +83,7 @@ export function ImageUpload({
           <input
             ref={inputRef}
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            accept="image/jpeg,image/png,image/webp,image/avif"
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];
@@ -108,7 +108,7 @@ export function ImageUpload({
             </button>
           )}
           <p className="text-xs text-muted-foreground">
-            JPG, PNG, WEBP — до 15 МБ. Фото автоматически оптимизируется для веба (до 1920px, качество 90%).
+            JPG, PNG, WEBP, AVIF — до 15 МБ. Фото автоматически оптимизируется для веба (до 1920px, качество 90%).
           </p>
         </div>
       </div>
