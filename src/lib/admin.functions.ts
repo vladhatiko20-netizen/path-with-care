@@ -808,6 +808,8 @@ export const adminImportDestination = createServerFn({ method: "POST" })
     const { data: destRow, error: destErr } = await context.supabase
       .from("destinations").insert(destPayload).select("id, slug").single();
     if (destErr) throw new Error(`Ошибка создания направления: ${destErr.message}`);
+    if (!destRow) throw new Error("Ошибка создания направления: пустой ответ от базы.");
+    const destId = destRow.id;
 
     async function rollback(reason: string): Promise<never> {
       try {
@@ -816,7 +818,7 @@ export const adminImportDestination = createServerFn({ method: "POST" })
         await context.supabase.from("destination_inclusions").delete().eq("destination_slug", slug);
         await context.supabase.from("destination_faq").delete().eq("destination_slug", slug);
         await context.supabase.from("destination_gallery_images").delete().eq("destination_slug", slug);
-        await context.supabase.from("destinations").delete().eq("id", destRow.id);
+        await context.supabase.from("destinations").delete().eq("id", destId);
       } catch (e) {
         throw new Error(`${reason}. Откат также завершился ошибкой: ${e instanceof Error ? e.message : String(e)}`);
       }
@@ -884,7 +886,7 @@ export const adminImportDestination = createServerFn({ method: "POST" })
 
     return {
       ok: true,
-      id: destRow.id,
+      id: destId,
       slug,
       title_ru: data.destination.title_ru,
       counts: {
