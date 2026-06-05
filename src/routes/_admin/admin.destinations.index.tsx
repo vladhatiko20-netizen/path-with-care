@@ -2,7 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { adminListDestinations, adminDeleteDestination } from "@/lib/admin.functions";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/_admin/admin/destinations/")({
   component: Page,
@@ -28,9 +28,14 @@ function Page() {
     <div className="p-8 max-w-6xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-serif text-3xl">Направления</h1>
-        <Link to="/admin/destinations/new" className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary-foreground rounded-sm font-serif text-sm">
-          <Plus className="w-4 h-4" /> Новое направление
-        </Link>
+        <div className="flex gap-2">
+          <Link to="/admin/destinations/import" className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-sm font-serif text-sm">
+            <Upload className="w-4 h-4" /> Импорт из JSON
+          </Link>
+          <Link to="/admin/destinations/new" className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary-foreground rounded-sm font-serif text-sm">
+            <Plus className="w-4 h-4" /> Новое направление
+          </Link>
+        </div>
       </div>
 
       {isLoading ? <p className="text-muted-foreground">Загрузка…</p> : (
