@@ -26,9 +26,9 @@ function Page() {
 
   return (
     <div className="p-8 max-w-6xl">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-3xl">Направления</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col items-center gap-3 mb-6 md:flex-row md:justify-between">
+        <h1 className="font-serif text-3xl text-center md:text-left">Направления</h1>
+        <div className="flex flex-wrap justify-center gap-2">
           <Link to="/admin/destinations/import" className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-sm font-serif text-sm">
             <Upload className="w-4 h-4" /> Импорт из JSON
           </Link>
