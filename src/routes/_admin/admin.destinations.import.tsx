@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { adminImportDestination } from "@/lib/admin.functions";
+import { useQuery } from "@tanstack/react-query";
+import { adminImportDestination, adminExportDestination, adminListDestinations } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin/admin/destinations/import")({
   component: Page,
@@ -88,11 +89,51 @@ type ImportResult = {
 
 function Page() {
   const importFn = useServerFn(adminImportDestination);
+  const exportFn = useServerFn(adminExportDestination);
   const router = useRouter();
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
+  const [exportId, setExportId] = useState<string>("");
+  const [exportBusy, setExportBusy] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  const listFn = useServerFn(adminListDestinations);
+  const listQuery = useQuery({
+    queryKey: ["admin", "destinations", "list"],
+    queryFn: () => listFn(),
+  });
+
+  async function runExport(mode: "download" | "insert") {
+    if (!exportId) {
+      setExportError("Выберите направление.");
+      return;
+    }
+    setExportError(null);
+    setExportBusy(true);
+    try {
+      const res = await exportFn({ data: { id: exportId } });
+      const json = JSON.stringify(res.payload, null, 2);
+      if (mode === "download") {
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${res.slug}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        setText(json);
+        setError(null);
+        setResult(null);
+      }
+    } catch (e: unknown) {
+      setExportError(e instanceof Error ? e.message : "Ошибка экспорта");
+    } finally {
+      setExportBusy(false);
+    }
+  }
 
   function loadTemplate() {
     setText(JSON.stringify(EMPTY_TEMPLATE, null, 2));
@@ -140,6 +181,47 @@ function Page() {
       <p className="text-sm text-muted-foreground mb-6 max-w-3xl">
         Вставьте JSON-документ и нажмите «Импортировать». Будет создано направление вместе со святынями, программой по дням, разделом «Включено / Не включено» и FAQ. Фотографии (главное, OG, святынь, галерея) загружаются отдельно через админ-форму после импорта. <strong>Направление создаётся со статусом «Черновик»</strong> — опубликуйте его вручную после проверки.
       </p>
+
+      <div className="mb-6 p-4 border border-border rounded-sm bg-muted/30">
+        <h2 className="font-serif text-lg mb-1">Экспортировать существующее направление</h2>
+        <p className="text-xs text-muted-foreground mb-3 max-w-3xl">
+          Структура экспорта идентична схеме импорта — можно сразу импортировать обратно. Все поля картинок в основном объекте равны <code>null</code>; реальные URL вынесены в отдельный блок <code>_images_manifest</code> (игнорируется при импорте; используется как резервная копия и для миграции).
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <select
+            value={exportId}
+            onChange={(e) => setExportId(e.target.value)}
+            className="px-3 py-2 border border-border rounded-sm bg-background text-sm min-w-[260px]"
+            disabled={listQuery.isLoading}
+          >
+            <option value="">— выберите направление —</option>
+            {(listQuery.data ?? []).map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.title_ru} ({d.slug}){d.is_published ? "" : " · черновик"}
+              </option>
+            ))}
+          </select>
+          <button
+            type="button"
+            onClick={() => runExport("download")}
+            disabled={!exportId || exportBusy}
+            className="px-4 py-2 border border-border rounded-sm font-serif text-sm disabled:opacity-50"
+          >
+            {exportBusy ? "Экспорт…" : "Скачать JSON"}
+          </button>
+          <button
+            type="button"
+            onClick={() => runExport("insert")}
+            disabled={!exportId || exportBusy}
+            className="px-4 py-2 border border-border rounded-sm font-serif text-sm disabled:opacity-50"
+          >
+            Вставить в поле ниже
+          </button>
+        </div>
+        {exportError && (
+          <p className="mt-3 text-sm text-destructive">{exportError}</p>
+        )}
+      </div>
 
       <div className="flex flex-wrap gap-3 mb-4">
         <button type="button" onClick={loadTemplate} className="px-4 py-2 border border-border rounded-sm font-serif text-sm">
