@@ -898,3 +898,131 @@ export const adminImportDestination = createServerFn({ method: "POST" })
       },
     };
   });
+
+// ============================================================
+// Export destination to JSON, mirroring the import schema 1:1.
+// All image fields in the main payload are null so re-import is a clean
+// round-trip. Real storage URLs live under top-level `_images_manifest`
+// (ignored by the import validator since z.object strips unknown keys).
+// ============================================================
+
+export const adminExportDestination = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: dest, error: destErr } = await context.supabase
+      .from("destinations").select("*").eq("id", data.id).maybeSingle();
+    if (destErr) throw new Error(`Чтение направления: ${destErr.message}`);
+    if (!dest) throw new Error("Направление не найдено.");
+    const slug = dest.slug as string;
+
+    const [shrinesRes, daysRes, incRes, faqRes, galleryRes] = await Promise.all([
+      context.supabase.from("destination_shrines").select("*")
+        .eq("destination_slug", slug)
+        .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+      context.supabase.from("destination_program_days").select("*")
+        .eq("destination_slug", slug)
+        .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+      context.supabase.from("destination_inclusions").select("*")
+        .eq("destination_slug", slug)
+        .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+      context.supabase.from("destination_faq").select("*")
+        .eq("destination_slug", slug)
+        .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+      context.supabase.from("destination_gallery_images").select("*")
+        .eq("destination_slug", slug)
+        .order("sort_order", { ascending: true }).order("created_at", { ascending: true }),
+    ]);
+    for (const r of [shrinesRes, daysRes, incRes, faqRes, galleryRes]) {
+      if (r.error) throw new Error(`Чтение связанных таблиц: ${r.error.message}`);
+    }
+    const shrines = shrinesRes.data ?? [];
+    const days = daysRes.data ?? [];
+    const inclusions = incRes.data ?? [];
+    const faq = faqRes.data ?? [];
+    const gallery = galleryRes.data ?? [];
+
+    const payload = {
+      destination: {
+        slug,
+        title_ru: dest.title_ru,
+        title_ro: dest.title_ro,
+        short_title_ru: dest.short_title_ru ?? null,
+        short_title_ro: dest.short_title_ro ?? null,
+        description_ru: dest.description_ru ?? null,
+        description_ro: dest.description_ro ?? null,
+        duration_ru: dest.duration_ru ?? null,
+        duration_ro: dest.duration_ro ?? null,
+        price_from: dest.price_from ?? null,
+        group_size_ru: dest.group_size_ru ?? null,
+        group_size_ro: dest.group_size_ro ?? null,
+        accompaniment_ru: dest.accompaniment_ru ?? null,
+        accompaniment_ro: dest.accompaniment_ro ?? null,
+        hero_quote_ru: dest.hero_quote_ru ?? null,
+        hero_quote_ro: dest.hero_quote_ro ?? null,
+        hero_quote_author_ru: dest.hero_quote_author_ru ?? null,
+        hero_quote_author_ro: dest.hero_quote_author_ro ?? null,
+        intro_ru: dest.intro_ru ?? null,
+        intro_ro: dest.intro_ro ?? null,
+        notice_ru: dest.notice_ru ?? null,
+        notice_ro: dest.notice_ro ?? null,
+        seo_title_ru: dest.seo_title_ru ?? null,
+        seo_title_ro: dest.seo_title_ro ?? null,
+        seo_description_ru: dest.seo_description_ru ?? null,
+        seo_description_ro: dest.seo_description_ro ?? null,
+        program_ru: dest.program_ru ?? null,
+        program_ro: dest.program_ro ?? null,
+      },
+      shrines: shrines.map((s: any) => ({
+        title_ru: s.title_ru,
+        title_ro: s.title_ro,
+        short_ru: s.short_ru ?? null,
+        short_ro: s.short_ro ?? null,
+        full_ru: s.full_ru ?? null,
+        full_ro: s.full_ro ?? null,
+      })),
+      program_days: days.map((p: any) => ({
+        day_label_ru: p.day_label_ru ?? null,
+        day_label_ro: p.day_label_ro ?? null,
+        title_ru: p.title_ru,
+        title_ro: p.title_ro,
+        description_ru: p.description_ru ?? null,
+        description_ro: p.description_ro ?? null,
+      })),
+      inclusions: {
+        included: inclusions
+          .filter((it: any) => it.kind === "included")
+          .map((it: any) => ({ text_ru: it.text_ru, text_ro: it.text_ro })),
+        not_included: inclusions
+          .filter((it: any) => it.kind === "excluded")
+          .map((it: any) => ({ text_ru: it.text_ru, text_ro: it.text_ro })),
+      },
+      faq: faq.map((f: any) => ({
+        question_ru: f.question_ru,
+        question_ro: f.question_ro,
+        answer_ru: f.answer_ru ?? null,
+        answer_ro: f.answer_ro ?? null,
+      })),
+      _images_manifest: {
+        note: "Справочный блок: реальные URL картинок из текущего хранилища. Игнорируется при импорте. Используется как резервная копия и для миграции на собственный Supabase.",
+        cover_image: dest.cover_image ?? null,
+        og_image: dest.og_image ?? null,
+        shrines: shrines.map((s: any) => ({
+          title_ru: s.title_ru,
+          title_ro: s.title_ro,
+          image_url: s.image_url ?? null,
+        })),
+        gallery: gallery.map((g: any) => ({
+          image_url: g.image_url,
+          alt_ru: g.alt_ru ?? null,
+          alt_ro: g.alt_ro ?? null,
+          author: g.author ?? null,
+          license: g.license ?? null,
+          source_url: g.source_url ?? null,
+          sort_order: g.sort_order ?? 0,
+        })),
+      },
+    };
+
+    return { ok: true as const, slug, title_ru: dest.title_ru as string, payload };
+  });
