@@ -718,7 +718,7 @@ const importDestSchema = z.object({
   short_title_ro: z.string().max(120).nullable().optional(),
   card_text_ru: z.string().max(120).nullable().optional(),
   card_text_ro: z.string().max(120).nullable().optional(),
-  sort_order: z.number().int().min(0).max(100000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000).optional(),
   description_ru: z.string().max(5000).nullable().optional(),
   description_ro: z.string().max(5000).nullable().optional(),
   duration_ru: z.string().max(255).nullable().optional(),
