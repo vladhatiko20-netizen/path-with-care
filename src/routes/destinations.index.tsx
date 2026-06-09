@@ -60,7 +60,6 @@ function Page() {
               const desc = lang === "ru" ? d.description_ru : d.description_ro;
               const details = lang === "ru" ? d.intro_ru : d.intro_ro;
               const duration = lang === "ru" ? d.duration_ru : d.duration_ro;
-              const notice = lang === "ru" ? d.notice_ru : d.notice_ro;
               const price = d.price_from != null
                 ? t(`от €${d.price_from}`, `de la €${d.price_from}`)
                 : null;
@@ -78,7 +77,6 @@ function Page() {
                   )}
                   <div className="p-5">
                     <h2 className="font-serif text-xl text-foreground mb-1 leading-tight">{title}</h2>
-                    {notice && <p className="text-xs italic text-accent mb-2 font-serif">— {notice}</p>}
                     {desc && <p className="text-sm text-foreground/65 leading-snug mb-3">{desc}</p>}
                     {details && <p className="text-sm text-foreground/75 italic font-serif leading-relaxed mb-4 line-clamp-3">{details}</p>}
                     {(duration || price) && (

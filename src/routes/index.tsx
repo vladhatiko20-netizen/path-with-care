@@ -127,7 +127,6 @@ function HomePage() {
                   (lang === "ru" ? d.card_text_ru : d.card_text_ro) ??
                   (lang === "ru" ? d.description_ru : d.description_ro) ??
                   "";
-                const notice = lang === "ru" ? d.notice_ru : d.notice_ro;
                 const duration = lang === "ru" ? d.duration_ru : d.duration_ro;
                 const price =
                   d.price_from != null ? t(`от €${d.price_from}`, `de la €${d.price_from}`) : null;
@@ -152,9 +151,6 @@ function HomePage() {
                       <h3 className="font-serif text-lg text-foreground mb-1 leading-tight">
                         {title}
                       </h3>
-                      {notice && (
-                        <p className="text-[11px] italic text-accent mb-1 font-serif">— {notice}</p>
-                      )}
                       {caption && (
                         <p className="text-sm text-foreground/65 leading-snug mb-3 line-clamp-2">{caption}</p>
                       )}
