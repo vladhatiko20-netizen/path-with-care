@@ -30,56 +30,6 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-type Destination = {
-  slug: string;
-  ru: { title: string; desc: string; duration: string; price: string; notice?: string };
-  ro: { title: string; desc: string; duration: string; price: string; notice?: string };
-  img: string;
-};
-
-const destinations: Destination[] = [
-  {
-    slug: "jerusalem", img: jerusalemImg,
-    ru: { title: "Иерусалим и Святая Земля", desc: "Гроб Господень, Гефсимания, Вифлеем, Назарет.", duration: "8–10 дней", price: "от €1200" },
-    ro: { title: "Ierusalim și Țara Sfântă", desc: "Sfântul Mormânt, Ghetsimani, Betleem, Nazaret.", duration: "8–10 zile", price: "de la €1200" },
-  },
-  {
-    slug: "bari", img: bariImg,
-    ru: { title: "Бари — к мощам Святителя Николая", desc: "Поклонение мощам Святителя Николая Чудотворца.", duration: "5–7 дней", price: "от €750" },
-    ro: { title: "Bari — la moaștele Sf. Nicolae", desc: "Închinare la moaștele Sfântului Nicolae.", duration: "5–7 zile", price: "de la €750" },
-  },
-  {
-    slug: "corfu", img: corfuImg,
-    ru: { title: "Корфу — к мощам Святителя Спиридона", desc: "Нетленные мощи Святителя Спиридона Тримифунтского.", duration: "5–7 дней", price: "от €700" },
-    ro: { title: "Corfu — la moaștele Sf. Spiridon", desc: "Moaștele neputrede ale Sfântului Spiridon.", duration: "5–7 zile", price: "de la €700" },
-  },
-  {
-    slug: "athos", img: athosImg,
-    ru: { title: "Афон — Святая Гора", desc: "Поездка на Святую Гору Афон, оформление диамонитириона.", duration: "5–8 дней", price: "от €900", notice: "только для мужчин" },
-    ro: { title: "Athos — Muntele Sfânt", desc: "Călătorie la Muntele Athos, asistență diamonitirion.", duration: "5–8 zile", price: "de la €900", notice: "doar pentru bărbați" },
-  },
-  {
-    slug: "georgia", img: georgiaImg,
-    ru: { title: "Грузия — святыни Грузинской Церкви", desc: "Мцхета, Светицховели, Бодбе, Давида Гареджи.", duration: "6–8 дней", price: "от €650" },
-    ro: { title: "Georgia — sanctuarele georgiene", desc: "Mțheta, Svetițhoveli, Bodbe, David Gareja.", duration: "6–8 zile", price: "de la €650" },
-  },
-  {
-    slug: "romania", img: romaniaImg,
-    ru: { title: "Румыния — монастыри и святые отцы", desc: "Путна, Воронец, Сучевица. Места румынских старцев.", duration: "4–6 дней", price: "от €400" },
-    ro: { title: "România — mănăstiri și părinți", desc: "Putna, Voroneț, Sucevița. Locuri ale stareților.", duration: "4–6 zile", price: "de la €400" },
-  },
-  {
-    slug: "ukraine", img: ukraineImg,
-    ru: { title: "Украина — Почаев и Киев", desc: "Святыни Почаевской Лавры и Киево-Печерской.", duration: "5–7 дней", price: "от €500", notice: "уточняйте даты" },
-    ro: { title: "Ucraina — Poceaev și Kiev", desc: "Sanctuarele Lavrei de la Poceaev și Kiev.", duration: "5–7 zile", price: "de la €500", notice: "verificați datele" },
-  },
-  {
-    slug: "moldova", img: moldovaImg,
-    ru: { title: "Молдова — святыни родного края", desc: "Каприана, Куркь, Хынку, Сахарна.", duration: "1–2 дня", price: "от €30" },
-    ro: { title: "Moldova — sanctuarele pământului natal", desc: "Căpriana, Curchi, Hâncu, Saharna.", duration: "1–2 zile", price: "de la €30" },
-  },
-];
-
 const upcoming = [
   { date: { ru: "15 марта 2026", ro: "15 martie 2026" }, dest: { ru: "Бари + Корфу", ro: "Bari + Corfu" }, dur: { ru: "7 дней", ro: "7 zile" }, price: "€890", seats: { ru: "8 мест", ro: "8 locuri" }, urgent: false },
   { date: { ru: "10 апреля 2026", ro: "10 aprilie 2026" }, dest: { ru: "Иерусалим (Страстная)", ro: "Ierusalim (Săpt. Patimilor)" }, dur: { ru: "10 дней", ro: "10 zile" }, price: "€1450", seats: { ru: "4 места", ro: "4 locuri" }, urgent: true },
