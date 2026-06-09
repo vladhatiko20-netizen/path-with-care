@@ -171,6 +171,31 @@ export function DestinationForm({ initial }: { initial: Initial }) {
           <label className="block text-sm font-serif mb-1">Краткое описание (RO)</label>
           <textarea className={cls} rows={4} value={form.description_ro ?? ""} onChange={(e) => set("description_ro", e.target.value || null)} maxLength={5000} />
         </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-serif mb-1">Текст на карточке главной (RU)</label>
+            <input
+              className={cls}
+              value={form.card_text_ru ?? ""}
+              onChange={(e) => set("card_text_ru", e.target.value || null)}
+              maxLength={120}
+              placeholder="Короткая подпись под названием, ~120 знаков"
+            />
+            <p className="text-xs text-muted-foreground mt-1">{(form.card_text_ru ?? "").length}/120</p>
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Текст на карточке главной (RO)</label>
+            <input
+              className={cls}
+              value={form.card_text_ro ?? ""}
+              onChange={(e) => set("card_text_ro", e.target.value || null)}
+              maxLength={120}
+              placeholder="Subtitlu scurt sub titlu, ~120 caractere"
+            />
+            <p className="text-xs text-muted-foreground mt-1">{(form.card_text_ro ?? "").length}/120</p>
+          </div>
+          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-1">Показывается только на главной странице под названием направления. Если пусто — возьмётся краткое описание.</p>
+        </div>
       </section>
 
       <section className="space-y-5">
