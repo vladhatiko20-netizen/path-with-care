@@ -56,6 +56,8 @@ export type PublicDestinationListItem = {
   title_ro: string;
   description_ru: string | null;
   description_ro: string | null;
+  card_text_ru: string | null;
+  card_text_ro: string | null;
   intro_ru: string | null;
   intro_ro: string | null;
   duration_ru: string | null;
@@ -70,8 +72,9 @@ export const listPublicDestinations = createServerFn({ method: "GET" })
   .handler(async (): Promise<PublicDestinationListItem[]> => {
     const { data, error } = await supabaseAdmin
       .from("destinations")
-      .select("slug, title_ru, title_ro, description_ru, description_ro, intro_ru, intro_ro, duration_ru, duration_ro, price_from, cover_image, notice_ru, notice_ro")
+      .select("slug, title_ru, title_ro, description_ru, description_ro, card_text_ru, card_text_ro, intro_ru, intro_ro, duration_ru, duration_ro, price_from, cover_image, notice_ru, notice_ro")
       .eq("is_published", true)
+      .order("sort_order", { ascending: true })
       .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     return (data as PublicDestinationListItem[] | null) ?? [];

@@ -41,6 +41,9 @@ type Initial = {
   accompaniment_ro: string | null;
   short_title_ru: string | null;
   short_title_ro: string | null;
+  card_text_ru: string | null;
+  card_text_ro: string | null;
+  sort_order?: number;
   is_published: boolean;
 };
 
@@ -97,6 +100,20 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             <input className={cls} value={form.short_title_ro ?? ""} onChange={(e) => set("short_title_ro", e.target.value || null)} maxLength={120} placeholder="Bari" />
           </div>
           <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">Используется только в хлебных крошках. Если пусто — берётся первое слово полного названия.</p>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-serif mb-1">Порядок сортировки</label>
+            <input
+              type="number"
+              className={cls}
+              value={form.sort_order ?? ""}
+              onChange={(e) => set("sort_order", e.target.value ? Number(e.target.value) : undefined)}
+              min={0}
+              max={100000}
+              step={1}
+              placeholder="напр. 10"
+            />
+            <p className="text-xs text-muted-foreground mt-1">Чем меньше — тем выше в списке на главной и в каталоге. Можно оставить пустым у новых направлений — присвоится автоматически.</p>
+          </div>
         </div>
         <ImageUpload
           value={form.cover_image}
@@ -153,6 +170,31 @@ export function DestinationForm({ initial }: { initial: Initial }) {
         <div>
           <label className="block text-sm font-serif mb-1">Краткое описание (RO)</label>
           <textarea className={cls} rows={4} value={form.description_ro ?? ""} onChange={(e) => set("description_ro", e.target.value || null)} maxLength={5000} />
+        </div>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-serif mb-1">Текст на карточке главной (RU)</label>
+            <input
+              className={cls}
+              value={form.card_text_ru ?? ""}
+              onChange={(e) => set("card_text_ru", e.target.value || null)}
+              maxLength={120}
+              placeholder="Короткая подпись под названием, ~120 знаков"
+            />
+            <p className="text-xs text-muted-foreground mt-1">{(form.card_text_ru ?? "").length}/120</p>
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">Текст на карточке главной (RO)</label>
+            <input
+              className={cls}
+              value={form.card_text_ro ?? ""}
+              onChange={(e) => set("card_text_ro", e.target.value || null)}
+              maxLength={120}
+              placeholder="Subtitlu scurt sub titlu, ~120 caractere"
+            />
+            <p className="text-xs text-muted-foreground mt-1">{(form.card_text_ro ?? "").length}/120</p>
+          </div>
+          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-1">Показывается только на главной странице под названием направления. Если пусто — возьмётся краткое описание.</p>
         </div>
       </section>
 

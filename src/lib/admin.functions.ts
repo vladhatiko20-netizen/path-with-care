@@ -65,6 +65,9 @@ const destSchema = z.object({
   accompaniment_ro: z.string().max(255).nullable().optional(),
   short_title_ru: z.string().max(120).nullable().optional(),
   short_title_ro: z.string().max(120).nullable().optional(),
+  card_text_ru: z.string().max(120).nullable().optional(),
+  card_text_ro: z.string().max(120).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000).optional(),
   is_published: z.boolean(),
 });
 
@@ -713,6 +716,9 @@ const importDestSchema = z.object({
   title_ro: z.string().min(1).max(500),
   short_title_ru: z.string().max(120).nullable().optional(),
   short_title_ro: z.string().max(120).nullable().optional(),
+  card_text_ru: z.string().max(120).nullable().optional(),
+  card_text_ro: z.string().max(120).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000).optional(),
   description_ru: z.string().max(5000).nullable().optional(),
   description_ro: z.string().max(5000).nullable().optional(),
   duration_ru: z.string().max(255).nullable().optional(),
@@ -804,7 +810,14 @@ export const adminImportDestination = createServerFn({ method: "POST" })
     if (existingErr) throw new Error(`Проверка slug: ${existingErr.message}`);
     if (existing) throw new Error(`Направление со slug "${slug}" уже существует. Удалите его или используйте другой slug.`);
 
-    const destPayload = { ...data.destination, is_published: false };
+    let sortOrder = data.destination.sort_order;
+    if (sortOrder === undefined) {
+      const { data: maxRow } = await context.supabase
+        .from("destinations").select("sort_order")
+        .order("sort_order", { ascending: false }).limit(1).maybeSingle();
+      sortOrder = ((maxRow?.sort_order as number | undefined) ?? 0) + 1;
+    }
+    const destPayload = { ...data.destination, sort_order: sortOrder, is_published: false };
     const { data: destRow, error: destErr } = await context.supabase
       .from("destinations").insert(destPayload).select("id, slug").single();
     if (destErr) throw new Error(`Ошибка создания направления: ${destErr.message}`);
@@ -954,6 +967,9 @@ async function buildDestinationExportPayload(supabase: any, id: string) {
       title_ro: dest.title_ro,
       short_title_ru: dest.short_title_ru ?? null,
       short_title_ro: dest.short_title_ro ?? null,
+      card_text_ru: dest.card_text_ru ?? null,
+      card_text_ro: dest.card_text_ro ?? null,
+      sort_order: dest.sort_order ?? 0,
       description_ru: dest.description_ru ?? null,
       description_ro: dest.description_ro ?? null,
       duration_ru: dest.duration_ru ?? null,
@@ -1040,7 +1056,9 @@ export const adminExportAllDestinations = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data: rows, error } = await context.supabase
-      .from("destinations").select("id").order("title_ru", { ascending: true });
+      .from("destinations").select("id")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
     if (error) throw new Error(`Список направлений: ${error.message}`);
     const ids = (rows ?? []).map((r: any) => r.id as string);
     const destinations: any[] = [];
@@ -1064,7 +1082,14 @@ type ImportItem = z.infer<typeof importPayloadSchema>;
 
 async function insertSingleDestination(supabase: any, item: ImportItem) {
   const slug = item.destination.slug;
-  const destPayload = { ...item.destination, is_published: false };
+  let sortOrder = item.destination.sort_order;
+  if (sortOrder === undefined) {
+    const { data: maxRow } = await supabase
+      .from("destinations").select("sort_order")
+      .order("sort_order", { ascending: false }).limit(1).maybeSingle();
+    sortOrder = ((maxRow?.sort_order as number | undefined) ?? 0) + 1;
+  }
+  const destPayload = { ...item.destination, sort_order: sortOrder, is_published: false };
   const { data: destRow, error: destErr } = await supabase
     .from("destinations").insert(destPayload).select("id, slug").single();
   if (destErr) throw new Error(`Ошибка создания направления: ${destErr.message}`);

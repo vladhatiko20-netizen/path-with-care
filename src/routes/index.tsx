@@ -7,14 +7,6 @@ import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
 import priestImg from "@/assets/orthodox-priest.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
-import jerusalemImg from "@/assets/dest-jerusalem.jpg";
-import bariImg from "@/assets/dest-bari.jpg";
-import corfuImg from "@/assets/dest-corfu.jpg";
-import athosImg from "@/assets/dest-athos.jpg";
-import georgiaImg from "@/assets/dest-georgia.jpg";
-import romaniaImg from "@/assets/dest-romania.jpg";
-import ukraineImg from "@/assets/dest-ukraine.jpg";
-import moldovaImg from "@/assets/dest-moldova.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 
@@ -38,56 +30,6 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-type Destination = {
-  slug: string;
-  ru: { title: string; desc: string; duration: string; price: string; notice?: string };
-  ro: { title: string; desc: string; duration: string; price: string; notice?: string };
-  img: string;
-};
-
-const destinations: Destination[] = [
-  {
-    slug: "jerusalem", img: jerusalemImg,
-    ru: { title: "Иерусалим и Святая Земля", desc: "Гроб Господень, Гефсимания, Вифлеем, Назарет.", duration: "8–10 дней", price: "от €1200" },
-    ro: { title: "Ierusalim și Țara Sfântă", desc: "Sfântul Mormânt, Ghetsimani, Betleem, Nazaret.", duration: "8–10 zile", price: "de la €1200" },
-  },
-  {
-    slug: "bari", img: bariImg,
-    ru: { title: "Бари — к мощам Святителя Николая", desc: "Поклонение мощам Святителя Николая Чудотворца.", duration: "5–7 дней", price: "от €750" },
-    ro: { title: "Bari — la moaștele Sf. Nicolae", desc: "Închinare la moaștele Sfântului Nicolae.", duration: "5–7 zile", price: "de la €750" },
-  },
-  {
-    slug: "corfu", img: corfuImg,
-    ru: { title: "Корфу — к мощам Святителя Спиридона", desc: "Нетленные мощи Святителя Спиридона Тримифунтского.", duration: "5–7 дней", price: "от €700" },
-    ro: { title: "Corfu — la moaștele Sf. Spiridon", desc: "Moaștele neputrede ale Sfântului Spiridon.", duration: "5–7 zile", price: "de la €700" },
-  },
-  {
-    slug: "athos", img: athosImg,
-    ru: { title: "Афон — Святая Гора", desc: "Поездка на Святую Гору Афон, оформление диамонитириона.", duration: "5–8 дней", price: "от €900", notice: "только для мужчин" },
-    ro: { title: "Athos — Muntele Sfânt", desc: "Călătorie la Muntele Athos, asistență diamonitirion.", duration: "5–8 zile", price: "de la €900", notice: "doar pentru bărbați" },
-  },
-  {
-    slug: "georgia", img: georgiaImg,
-    ru: { title: "Грузия — святыни Грузинской Церкви", desc: "Мцхета, Светицховели, Бодбе, Давида Гареджи.", duration: "6–8 дней", price: "от €650" },
-    ro: { title: "Georgia — sanctuarele georgiene", desc: "Mțheta, Svetițhoveli, Bodbe, David Gareja.", duration: "6–8 zile", price: "de la €650" },
-  },
-  {
-    slug: "romania", img: romaniaImg,
-    ru: { title: "Румыния — монастыри и святые отцы", desc: "Путна, Воронец, Сучевица. Места румынских старцев.", duration: "4–6 дней", price: "от €400" },
-    ro: { title: "România — mănăstiri și părinți", desc: "Putna, Voroneț, Sucevița. Locuri ale stareților.", duration: "4–6 zile", price: "de la €400" },
-  },
-  {
-    slug: "ukraine", img: ukraineImg,
-    ru: { title: "Украина — Почаев и Киев", desc: "Святыни Почаевской Лавры и Киево-Печерской.", duration: "5–7 дней", price: "от €500", notice: "уточняйте даты" },
-    ro: { title: "Ucraina — Poceaev și Kiev", desc: "Sanctuarele Lavrei de la Poceaev și Kiev.", duration: "5–7 zile", price: "de la €500", notice: "verificați datele" },
-  },
-  {
-    slug: "moldova", img: moldovaImg,
-    ru: { title: "Молдова — святыни родного края", desc: "Каприана, Куркь, Хынку, Сахарна.", duration: "1–2 дня", price: "от €30" },
-    ro: { title: "Moldova — sanctuarele pământului natal", desc: "Căpriana, Curchi, Hâncu, Saharna.", duration: "1–2 zile", price: "de la €30" },
-  },
-];
-
 const upcoming = [
   { date: { ru: "15 марта 2026", ro: "15 martie 2026" }, dest: { ru: "Бари + Корфу", ro: "Bari + Corfu" }, dur: { ru: "7 дней", ro: "7 zile" }, price: "€890", seats: { ru: "8 мест", ro: "8 locuri" }, urgent: false },
   { date: { ru: "10 апреля 2026", ro: "10 aprilie 2026" }, dest: { ru: "Иерусалим (Страстная)", ro: "Ierusalim (Săpt. Patimilor)" }, dur: { ru: "10 дней", ro: "10 zile" }, price: "€1450", seats: { ru: "4 места", ro: "4 locuri" }, urgent: true },
@@ -109,7 +51,7 @@ function HomePage() {
     queryKey: ["destinations", "public-list"],
     queryFn: () => listPublicDestinations(),
   });
-  const publishedSlugs = new Set((publishedDestinations ?? []).map((d) => d.slug));
+  const dbDestinations = (publishedDestinations ?? []).filter((d) => !!d.cover_image);
   return (
     <PageShell>
       {/* HERO */}
@@ -173,44 +115,61 @@ function HomePage() {
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {destinations.map((d) => {
-              const c = lang === "ru" ? d.ru : d.ro;
-              const isPublished = publishedSlugs.has(d.slug);
-              return (
-                <Link
-                  key={d.slug}
-                  to={isPublished ? "/destinations/$slug" : "/destinations"}
-                  params={isPublished ? { slug: d.slug } : undefined}
-                  className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
-                    <img
-                      src={d.img}
-                      alt={c.title}
-                      loading="lazy"
-                      width={800}
-                      height={600}
-                      className="w-full h-full object-cover md:group-hover:scale-[1.02] transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-serif text-lg text-foreground mb-1 leading-tight">
-                      {c.title}
-                    </h3>
-                    {c.notice && (
-                      <p className="text-[11px] italic text-accent mb-1 font-serif">— {c.notice}</p>
-                    )}
-                    <p className="text-sm text-foreground/65 leading-snug mb-3 line-clamp-2">{c.desc}</p>
-                    <div className="flex items-center justify-between pt-2 border-t border-border/60">
-                      <span className="text-xs text-muted-foreground font-serif">{c.duration}</span>
-                      <span className="text-base text-gold font-serif font-medium">{c.price}</span>
+          {dbDestinations.length === 0 ? (
+            <p className="text-center text-foreground/60 py-10">
+              {t("Направления скоро появятся.", "Destinațiile vor apărea în curând.")}
+            </p>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {dbDestinations.map((d) => {
+                const title = lang === "ru" ? d.title_ru : d.title_ro;
+                const caption =
+                  (lang === "ru" ? d.card_text_ru : d.card_text_ro) ??
+                  (lang === "ru" ? d.description_ru : d.description_ro) ??
+                  "";
+                const notice = lang === "ru" ? d.notice_ru : d.notice_ro;
+                const duration = lang === "ru" ? d.duration_ru : d.duration_ro;
+                const price =
+                  d.price_from != null ? t(`от €${d.price_from}`, `de la €${d.price_from}`) : null;
+                return (
+                  <Link
+                    key={d.slug}
+                    to="/destinations/$slug"
+                    params={{ slug: d.slug }}
+                    className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
+                      <img
+                        src={d.cover_image ?? ""}
+                        alt={title}
+                        loading="lazy"
+                        width={800}
+                        height={600}
+                        className="w-full h-full object-cover md:group-hover:scale-[1.02] transition-transform duration-300"
+                      />
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                    <div className="p-4">
+                      <h3 className="font-serif text-lg text-foreground mb-1 leading-tight">
+                        {title}
+                      </h3>
+                      {notice && (
+                        <p className="text-[11px] italic text-accent mb-1 font-serif">— {notice}</p>
+                      )}
+                      {caption && (
+                        <p className="text-sm text-foreground/65 leading-snug mb-3 line-clamp-2">{caption}</p>
+                      )}
+                      <div className="flex items-center justify-between pt-2 border-t border-border/60">
+                        <span className="text-xs text-muted-foreground font-serif">{duration ?? ""}</span>
+                        {price && (
+                          <span className="text-base text-gold font-serif font-medium">{price}</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
