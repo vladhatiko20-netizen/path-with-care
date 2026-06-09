@@ -264,6 +264,8 @@ export type Database = {
         Row: {
           accompaniment_ro: string | null
           accompaniment_ru: string | null
+          card_text_ro: string | null
+          card_text_ru: string | null
           cover_image: string | null
           created_at: string
           description_ro: string | null
@@ -293,6 +295,7 @@ export type Database = {
           short_title_ro: string | null
           short_title_ru: string | null
           slug: string
+          sort_order: number
           title_ro: string
           title_ru: string
           updated_at: string
@@ -300,6 +303,8 @@ export type Database = {
         Insert: {
           accompaniment_ro?: string | null
           accompaniment_ru?: string | null
+          card_text_ro?: string | null
+          card_text_ru?: string | null
           cover_image?: string | null
           created_at?: string
           description_ro?: string | null
@@ -329,6 +334,7 @@ export type Database = {
           short_title_ro?: string | null
           short_title_ru?: string | null
           slug: string
+          sort_order?: number
           title_ro: string
           title_ru: string
           updated_at?: string
@@ -336,6 +342,8 @@ export type Database = {
         Update: {
           accompaniment_ro?: string | null
           accompaniment_ru?: string | null
+          card_text_ro?: string | null
+          card_text_ru?: string | null
           cover_image?: string | null
           created_at?: string
           description_ro?: string | null
@@ -365,6 +373,7 @@ export type Database = {
           short_title_ro?: string | null
           short_title_ru?: string | null
           slug?: string
+          sort_order?: number
           title_ro?: string
           title_ru?: string
           updated_at?: string
