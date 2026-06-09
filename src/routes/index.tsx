@@ -51,7 +51,7 @@ function HomePage() {
     queryKey: ["destinations", "public-list"],
     queryFn: () => listPublicDestinations(),
   });
-  const publishedSlugs = new Set((publishedDestinations ?? []).map((d) => d.slug));
+  const dbDestinations = (publishedDestinations ?? []).filter((d) => !!d.cover_image);
   return (
     <PageShell>
       {/* HERO */}
