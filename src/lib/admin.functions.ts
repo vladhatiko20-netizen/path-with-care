@@ -1049,7 +1049,9 @@ export const adminExportAllDestinations = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data: rows, error } = await context.supabase
-      .from("destinations").select("id").order("title_ru", { ascending: true });
+      .from("destinations").select("id")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
     if (error) throw new Error(`Список направлений: ${error.message}`);
     const ids = (rows ?? []).map((r: any) => r.id as string);
     const destinations: any[] = [];
