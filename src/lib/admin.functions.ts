@@ -810,7 +810,14 @@ export const adminImportDestination = createServerFn({ method: "POST" })
     if (existingErr) throw new Error(`Проверка slug: ${existingErr.message}`);
     if (existing) throw new Error(`Направление со slug "${slug}" уже существует. Удалите его или используйте другой slug.`);
 
-    const destPayload = { ...data.destination, is_published: false };
+    let sortOrder = data.destination.sort_order;
+    if (sortOrder === undefined) {
+      const { data: maxRow } = await context.supabase
+        .from("destinations").select("sort_order")
+        .order("sort_order", { ascending: false }).limit(1).maybeSingle();
+      sortOrder = ((maxRow?.sort_order as number | undefined) ?? 0) + 1;
+    }
+    const destPayload = { ...data.destination, sort_order: sortOrder, is_published: false };
     const { data: destRow, error: destErr } = await context.supabase
       .from("destinations").insert(destPayload).select("id, slug").single();
     if (destErr) throw new Error(`Ошибка создания направления: ${destErr.message}`);
