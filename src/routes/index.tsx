@@ -115,44 +115,61 @@ function HomePage() {
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {destinations.map((d) => {
-              const c = lang === "ru" ? d.ru : d.ro;
-              const isPublished = publishedSlugs.has(d.slug);
-              return (
-                <Link
-                  key={d.slug}
-                  to={isPublished ? "/destinations/$slug" : "/destinations"}
-                  params={isPublished ? { slug: d.slug } : undefined}
-                  className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
-                    <img
-                      src={d.img}
-                      alt={c.title}
-                      loading="lazy"
-                      width={800}
-                      height={600}
-                      className="w-full h-full object-cover md:group-hover:scale-[1.02] transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-serif text-lg text-foreground mb-1 leading-tight">
-                      {c.title}
-                    </h3>
-                    {c.notice && (
-                      <p className="text-[11px] italic text-accent mb-1 font-serif">— {c.notice}</p>
-                    )}
-                    <p className="text-sm text-foreground/65 leading-snug mb-3 line-clamp-2">{c.desc}</p>
-                    <div className="flex items-center justify-between pt-2 border-t border-border/60">
-                      <span className="text-xs text-muted-foreground font-serif">{c.duration}</span>
-                      <span className="text-base text-gold font-serif font-medium">{c.price}</span>
+          {dbDestinations.length === 0 ? (
+            <p className="text-center text-foreground/60 py-10">
+              {t("Направления скоро появятся.", "Destinațiile vor apărea în curând.")}
+            </p>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {dbDestinations.map((d) => {
+                const title = lang === "ru" ? d.title_ru : d.title_ro;
+                const caption =
+                  (lang === "ru" ? d.card_text_ru : d.card_text_ro) ??
+                  (lang === "ru" ? d.description_ru : d.description_ro) ??
+                  "";
+                const notice = lang === "ru" ? d.notice_ru : d.notice_ro;
+                const duration = lang === "ru" ? d.duration_ru : d.duration_ro;
+                const price =
+                  d.price_from != null ? t(`от €${d.price_from}`, `de la €${d.price_from}`) : null;
+                return (
+                  <Link
+                    key={d.slug}
+                    to="/destinations/$slug"
+                    params={{ slug: d.slug }}
+                    className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
+                  >
+                    <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
+                      <img
+                        src={d.cover_image ?? ""}
+                        alt={title}
+                        loading="lazy"
+                        width={800}
+                        height={600}
+                        className="w-full h-full object-cover md:group-hover:scale-[1.02] transition-transform duration-300"
+                      />
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                    <div className="p-4">
+                      <h3 className="font-serif text-lg text-foreground mb-1 leading-tight">
+                        {title}
+                      </h3>
+                      {notice && (
+                        <p className="text-[11px] italic text-accent mb-1 font-serif">— {notice}</p>
+                      )}
+                      {caption && (
+                        <p className="text-sm text-foreground/65 leading-snug mb-3 line-clamp-2">{caption}</p>
+                      )}
+                      <div className="flex items-center justify-between pt-2 border-t border-border/60">
+                        <span className="text-xs text-muted-foreground font-serif">{duration ?? ""}</span>
+                        {price && (
+                          <span className="text-base text-gold font-serif font-medium">{price}</span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
