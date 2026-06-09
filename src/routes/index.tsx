@@ -7,14 +7,6 @@ import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
 import priestImg from "@/assets/orthodox-priest.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
-import jerusalemImg from "@/assets/dest-jerusalem.jpg";
-import bariImg from "@/assets/dest-bari.jpg";
-import corfuImg from "@/assets/dest-corfu.jpg";
-import athosImg from "@/assets/dest-athos.jpg";
-import georgiaImg from "@/assets/dest-georgia.jpg";
-import romaniaImg from "@/assets/dest-romania.jpg";
-import ukraineImg from "@/assets/dest-ukraine.jpg";
-import moldovaImg from "@/assets/dest-moldova.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 
