@@ -41,6 +41,9 @@ type Initial = {
   accompaniment_ro: string | null;
   short_title_ru: string | null;
   short_title_ro: string | null;
+  card_text_ru: string | null;
+  card_text_ro: string | null;
+  sort_order?: number;
   is_published: boolean;
 };
 
