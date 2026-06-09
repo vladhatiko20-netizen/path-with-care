@@ -56,6 +56,9 @@ function Page() {
         accompaniment_ro: data.accompaniment_ro,
         short_title_ru: data.short_title_ru,
         short_title_ro: data.short_title_ro,
+        card_text_ru: data.card_text_ru,
+        card_text_ro: data.card_text_ro,
+        sort_order: data.sort_order,
         is_published: data.is_published,
       }} />
     </div>

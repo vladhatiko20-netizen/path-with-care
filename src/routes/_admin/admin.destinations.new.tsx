@@ -30,6 +30,8 @@ function Page() {
         accompaniment_ro: null,
         short_title_ru: null,
         short_title_ro: null,
+        card_text_ru: null,
+        card_text_ro: null,
         is_published: false,
       }} />
     </div>
