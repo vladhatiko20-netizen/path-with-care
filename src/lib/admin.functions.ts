@@ -1082,7 +1082,14 @@ type ImportItem = z.infer<typeof importPayloadSchema>;
 
 async function insertSingleDestination(supabase: any, item: ImportItem) {
   const slug = item.destination.slug;
-  const destPayload = { ...item.destination, is_published: false };
+  let sortOrder = item.destination.sort_order;
+  if (sortOrder === undefined) {
+    const { data: maxRow } = await supabase
+      .from("destinations").select("sort_order")
+      .order("sort_order", { ascending: false }).limit(1).maybeSingle();
+    sortOrder = ((maxRow?.sort_order as number | undefined) ?? 0) + 1;
+  }
+  const destPayload = { ...item.destination, sort_order: sortOrder, is_published: false };
   const { data: destRow, error: destErr } = await supabase
     .from("destinations").insert(destPayload).select("id, slug").single();
   if (destErr) throw new Error(`Ошибка создания направления: ${destErr.message}`);
