@@ -65,6 +65,9 @@ const destSchema = z.object({
   accompaniment_ro: z.string().max(255).nullable().optional(),
   short_title_ru: z.string().max(120).nullable().optional(),
   short_title_ro: z.string().max(120).nullable().optional(),
+  card_text_ru: z.string().max(120).nullable().optional(),
+  card_text_ro: z.string().max(120).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000).optional(),
   is_published: z.boolean(),
 });
 
