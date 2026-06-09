@@ -100,6 +100,20 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             <input className={cls} value={form.short_title_ro ?? ""} onChange={(e) => set("short_title_ro", e.target.value || null)} maxLength={120} placeholder="Bari" />
           </div>
           <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">Используется только в хлебных крошках. Если пусто — берётся первое слово полного названия.</p>
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-serif mb-1">Порядок сортировки</label>
+            <input
+              type="number"
+              className={cls}
+              value={form.sort_order ?? ""}
+              onChange={(e) => set("sort_order", e.target.value ? Number(e.target.value) : undefined)}
+              min={0}
+              max={100000}
+              step={1}
+              placeholder="напр. 10"
+            />
+            <p className="text-xs text-muted-foreground mt-1">Чем меньше — тем выше в списке на главной и в каталоге. Можно оставить пустым у новых направлений — присвоится автоматически.</p>
+          </div>
         </div>
         <ImageUpload
           value={form.cover_image}
