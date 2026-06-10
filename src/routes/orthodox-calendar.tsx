@@ -14,6 +14,7 @@ export const Route = createFileRoute("/orthodox-calendar")({
       { property: "og:title", content: "Православный календарь — Паломник" },
       { property: "og:description", content: "Православный календарь: память святых, посты, праздники и связь с паломническими поездками." },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/orthodox-calendar" }],
   }),
   component: Page,
 });

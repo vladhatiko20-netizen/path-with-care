@@ -10,6 +10,7 @@ export const Route = createFileRoute("/public-offer")({
       { property: "og:title", content: "Публичная оферта — Паломник" },
       { property: "og:description", content: "Условия публичной оферты на услуги паломнических поездок Паломник." },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/public-offer" }],
   }),
   component: Page,
 });

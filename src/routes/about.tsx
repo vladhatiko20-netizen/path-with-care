@@ -24,6 +24,7 @@ export const Route = createFileRoute("/about")({
       { property: "og:description", content: "Анна Плотник — путешественница и паломница." },
       { property: "og:image", content: annaHero },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/about" }],
   }),
   component: Page,
 });

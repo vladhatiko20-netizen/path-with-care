@@ -24,6 +24,7 @@ export const Route = createFileRoute("/blog")({
       { property: "og:description", content: "Истории паломников и рассказы о святых местах." },
       { property: "og:image", content: heroImg },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/blog" }],
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(blogListQueryOptions());

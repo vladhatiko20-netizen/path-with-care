@@ -23,6 +23,7 @@ export const Route = createFileRoute("/calendar")({
       { property: "og:description", content: "Полный календарь паломнических поездок на 2026 год." },
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-calendar.jpg" },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/calendar" }],
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(pilgrimagesQueryOptions());

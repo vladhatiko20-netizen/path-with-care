@@ -16,6 +16,7 @@ export const Route = createFileRoute("/contacts")({
       { property: "og:description", content: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв." },
       { property: "og:image", content: heroImg },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/contacts" }],
     scripts: [
       {
         type: "application/ld+json",

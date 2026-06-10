@@ -20,6 +20,7 @@ export const Route = createFileRoute("/catalog")({
       { property: "og:description", content: "Каталог икон и святынь по предзаказу из паломнических поездок." },
       { property: "og:image", content: heroImg },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/catalog" }],
   }),
   component: Page,
 });

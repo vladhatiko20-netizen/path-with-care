@@ -47,6 +47,83 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
 const SITE = "https://path-with-care.lovable.app";
 
+type LoaderData = {
+  destination: { title_ru: string; description_ru: string | null; seo_description_ru: string | null; cover_image: string | null; price_from: number | null };
+  program: ReadonlyArray<{ title_ru: string; description_ru: string | null }>;
+  faq: ReadonlyArray<{ question_ru: string; answer_ru: string | null }>;
+};
+
+function buildJsonLd(data: LoaderData | undefined, url: string) {
+  if (!data) return [];
+  const d = data.destination;
+  const desc = d.seo_description_ru || d.description_ru || "";
+  const image = d.cover_image || undefined;
+  const offers = d.price_from
+    ? {
+        "@type": "Offer",
+        price: d.price_from,
+        priceCurrency: "EUR",
+        availability: "https://schema.org/InStock",
+        url,
+      }
+    : undefined;
+  const provider = {
+    "@type": "Organization",
+    name: "Паломник",
+    url: SITE,
+    parentOrganization: { "@type": "Organization", name: "SRL Eldorado Tur" },
+  };
+  const itinerary = (data.program ?? []).map((day, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: day.title_ru,
+    description: day.description_ru ?? undefined,
+  }));
+  const touristTrip = {
+    "@context": "https://schema.org",
+    "@type": "TouristTrip",
+    name: d.title_ru,
+    description: desc,
+    ...(image ? { image } : {}),
+    provider,
+    ...(offers ? { offers } : {}),
+    ...(itinerary.length
+      ? { itinerary: { "@type": "ItemList", itemListElement: itinerary } }
+      : {}),
+    url,
+  };
+  const product = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: d.title_ru,
+    description: desc,
+    ...(image ? { image } : {}),
+    brand: provider,
+    ...(offers ? { offers } : {}),
+    url,
+  };
+  const scripts: Array<{ type: string; children: string }> = [
+    { type: "application/ld+json", children: JSON.stringify(touristTrip) },
+    { type: "application/ld+json", children: JSON.stringify(product) },
+  ];
+  const faqItems = (data.faq ?? []).filter((f) => f.answer_ru && f.answer_ru.trim());
+  if (faqItems.length > 0) {
+    scripts.push({
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((f) => ({
+          "@type": "Question",
+          name: f.question_ru,
+          acceptedAnswer: { "@type": "Answer", text: f.answer_ru },
+        })),
+      }),
+    });
+  }
+  return scripts;
+}
+
 export const Route = createFileRoute("/destinations/$slug")({
   loader: async ({ params }) => {
     const destination = await getDestinationBySlug({ data: { slug: params.slug } });
@@ -83,6 +160,7 @@ export const Route = createFileRoute("/destinations/$slug")({
         ...(img ? [{ name: "twitter:image", content: img }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
+      scripts: buildJsonLd(loaderData, url),
     };
   },
   notFoundComponent: () => (
