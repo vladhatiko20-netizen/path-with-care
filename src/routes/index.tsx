@@ -171,7 +171,7 @@ function HomePage() {
                     key={d.slug}
                     to="/destinations/$slug"
                     params={{ slug: d.slug }}
-                    className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
+                    className="group flex flex-col h-full bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
                   >
                     <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
                       <img
