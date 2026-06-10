@@ -39,6 +39,9 @@ export const Route = createFileRoute("/blog_/$slug")({
         { name: "twitter:description", content: post.excerpt_ru ?? post.title_ru },
         { name: "twitter:image", content: cover },
       ],
+      links: [
+        { rel: "canonical", href: `https://path-with-care.lovable.app/blog/${post.slug}` },
+      ],
     };
   },
   errorComponent: ({ error }) => {
