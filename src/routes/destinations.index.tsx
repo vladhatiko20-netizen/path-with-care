@@ -22,6 +22,7 @@ export const Route = createFileRoute("/destinations/")({
       { property: "og:description", content: "Восемь направлений к православным святыням мира из Кишинёва." },
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-destinations.jpg" },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/destinations" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(destinationsListQueryOptions),
   errorComponent: ({ error }) => (

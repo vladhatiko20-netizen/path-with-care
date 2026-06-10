@@ -19,6 +19,7 @@ export const Route = createFileRoute("/with-priest")({
       { property: "og:description", content: "Беседы со священниками, сопровождающими паломников." },
       { property: "og:image", content: heroImg },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/with-priest" }],
     scripts: [
       {
         type: "application/ld+json",
