@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo, useOtherLangPath, useUrlLang } from "@/lib/locale";
 import thumbHome from "@/assets/menu-home.jpg";
 import thumbDestinations from "@/assets/menu-destinations.jpg";
 import thumbCalendar from "@/assets/menu-calendar.jpg";
@@ -30,8 +31,17 @@ const navItems: NavItem[] = [
 ];
 
 export function Header() {
-  const { lang, setLang, t } = useLang();
+  const { t } = useLang();
+  const lang = useUrlLang();
+  const otherLangPath = useOtherLangPath();
+  const loc = useLocalizedTo();
   const [open, setOpen] = useState(false);
+
+  // Switcher: ru-button always goes to the RU equivalent of the current page;
+  // ro-button always goes to /ro equivalent. Avoids extra clicks for users
+  // already on the target language.
+  const ruHref = lang === "ru" ? "#" : otherLangPath;
+  const roHref = lang === "ro" ? "#" : otherLangPath;
 
   return (
     <header className="bg-background border-b border-gold/30 sticky top-0 z-40 backdrop-blur-sm bg-background/95">
@@ -47,29 +57,31 @@ export function Header() {
             {t("Eldorado Tur ↗", "Eldorado Tur ↗")}
           </a>
           <div className="flex items-center gap-2 font-serif">
-            <button
-              onClick={() => setLang("ru")}
+            <a
+              href={ruHref}
+              aria-current={lang === "ru" ? "page" : undefined}
               className={`px-3 py-1 rounded text-[15px] md:text-base font-medium tracking-wide transition-colors ${
                 lang === "ru"
                   ? "bg-[#6b1f24] text-cream"
                   : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
               }`}
-            >RU</button>
-            <button
-              onClick={() => setLang("ro")}
+            >RU</a>
+            <a
+              href={roHref}
+              aria-current={lang === "ro" ? "page" : undefined}
               className={`px-3 py-1 rounded text-[15px] md:text-base font-medium tracking-wide transition-colors ${
                 lang === "ro"
                   ? "bg-[#6b1f24] text-cream"
                   : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
               }`}
-            >RO</button>
+            >RO</a>
           </div>
         </div>
       </div>
 
       <div className="pl-3 pr-3 lg:pl-8 lg:pr-0 py-2 flex items-center justify-between gap-4">
         <Link
-          to="/"
+          to={loc("/")}
           className="flex items-center gap-3 group shrink-0"
           aria-label="Home"
           onClick={() => {
@@ -94,7 +106,7 @@ export function Header() {
           {navItems.slice(1).map((item) => (
               <Link
                 key={item.to}
-                to={item.to}
+                to={loc(item.to)}
                 className="text-[#8a3a1f] hover:text-[#a04826] inline-block transition-all duration-300 ease-out hover:scale-105"
                 activeProps={{ className: "text-[#a04826] gold-underline" }}
               >
@@ -105,22 +117,24 @@ export function Header() {
 
         <div className="hidden lg:flex flex-col items-end justify-between self-stretch pr-3">
           <div className="flex items-center gap-2 font-serif">
-            <button
-              onClick={() => setLang("ru")}
+            <a
+              href={ruHref}
+              aria-current={lang === "ru" ? "page" : undefined}
               className={`px-3 py-1 rounded text-[15px] font-medium tracking-wide transition-colors ${
                 lang === "ru"
                   ? "bg-[#6b1f24] text-cream"
                   : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
               }`}
-            >RU</button>
-            <button
-              onClick={() => setLang("ro")}
+            >RU</a>
+            <a
+              href={roHref}
+              aria-current={lang === "ro" ? "page" : undefined}
               className={`px-3 py-1 rounded text-[15px] font-medium tracking-wide transition-colors ${
                 lang === "ro"
                   ? "bg-[#6b1f24] text-cream"
                   : "text-[#6b1f24] hover:bg-[#6b1f24]/10 border border-[#6b1f24]/40"
               }`}
-            >RO</button>
+            >RO</a>
           </div>
           <a
             href="https://eldoradotur.md"
@@ -147,7 +161,7 @@ export function Header() {
             {navItems.map((item) => (
               <Link
                 key={item.to}
-                to={item.to}
+                to={loc(item.to)}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-4 py-4 px-3 border-b border-gold/20 last:border-0 hover:bg-secondary/50 transition-colors"
                 activeProps={{ className: "bg-secondary/60" }}
