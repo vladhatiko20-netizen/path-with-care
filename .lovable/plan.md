@@ -1,60 +1,46 @@
-# План — 3 SEO-фикса
+## План — карточки направлений на главной (src/routes/index.tsx)
 
-Сначала короткая оценка предложений, потом сам план.
+Только этот файл. Раскладка, изображение, цвета, шрифты, сетка `sm:grid-cols-2 lg:grid-cols-4 gap-5` — не трогаю.
 
-## Оценка ваших предложений
+### Fix 1 — обрезается подпись (card_text)
 
-**Fix 1 (JSON-LD TouristTrip + FAQPage)** — хорошо и стандартно. Один нюанс: тип `TouristTrip` существует, но Google официально rich-результаты по нему не показывает; пользы от него меньше, чем от `Product` + `Offer` (для цены) или `TouristAttraction`. Предлагаю **дать оба JSON-LD блока: TouristTrip (для семантики поездки) + Product с offers (для цены, это Google понимает напрямую)**. FAQPage — однозначно полезно, Google его поддерживает. Язык schema — `ru` (основной контент сайта).
+Причина: сейчас `line-clamp-2` принудительно обрезает подпись на 2 строки. При коротких словах в узкой колонке (lg: 4 в ряд) одно предложение часто занимает 3 строки → визуально «срезано».
 
-**Fix 2 (canonical везде)** — правильно. Важный нюанс из проектных правил: canonical нельзя класть в `__root.tsx` (TanStack конкатенирует `links` без дедупликации — будут дубли). Поэтому добавляем только на листовые роуты. На `destinations/$slug` canonical уже есть. На страницах с языковым переключателем (ru/ro в одном URL) canonical всё равно один — это ок, hreflang отдельно сейчас не делаем.
+Решение: убрать `line-clamp-2` совсем. Подпись — 1–2 предложения, пусть растёт по содержимому и показывается полностью. Высоту карточек выравниваем за счёт Fix 2 (flex-колонка + футер `mt-auto`), а не за счёт обрезки.
 
-**Fix 3 (динамический sitemap)** — правильно. Sitemap уже сделан server-route'ом, дополним его `listPublicDestinations()` и `listBlogPosts()`. Добавлю `lastmod` для блога (`published_at`), для направлений `lastmod` пропустим (в таблице нет `updated_at` в публичной функции — не будем плодить лишних запросов).
+Альтернативы, которые я отверг:
+- Фиксированная высота карточки/секции → всё равно обрежет на длинных.
+- `line-clamp-3/4` → то же самое, просто реже.
 
-Итого: ваши три фикса в полном объёме применимы, единственная содержательная правка — добавить Product+offers рядом с TouristTrip, потому что именно его Google рендерит с ценой в выдаче.
+### Fix 2 — золотая линия и строка «длительность/цена» не выровнены
 
----
+Причина: подпись разной длины → футер каждой карточки сидит на разной высоте.
 
-## Что меняем
+Решение:
+- Внешний `<Link>` → `flex flex-col h-full`.
+- Контентный `<div className="p-4">` → `flex flex-col flex-1`.
+- Футер (`<div>` с `border-t`) → добавляю `mt-auto`, чтобы он прилипал к низу.
+- Сетка карточек уже даёт равную высоту строк (`grid` + `items-stretch` по умолчанию), так что футеры всех 4 карточек в ряду окажутся ровно на одной линии.
 
-### 1. `src/routes/destinations.$slug.tsx`
-В `head()` добавить `scripts: [...]` с двумя JSON-LD:
+### Fix 3 — длительность слишком мелкая
 
-- **TouristTrip**: `name = title_ru`, `description = description_ru/seo_description_ru`, `image = cover_image`, `touristType`, `itinerary` → массив `{ "@type": "ListItem", position, name: day.title_ru, description: day.description_ru }` из `program`, `provider` → Organization (Паломник / SRL Eldorado Tur), `offers` → `{ "@type": "Offer", price: price_from, priceCurrency: "EUR", availability: "InStock", url }` если `price_from` задана.
-- **Product** (опционально, но полезно для цены): name/description/image + offers (то же Offer). Это то, что Google реально показывает.
-- **FAQPage**: `mainEntity` → массив `{ "@type": "Question", name: question_ru, acceptedAnswer: { "@type": "Answer", text: answer_ru } }` из `faq` (только если массив непуст).
+Сейчас: `text-xs` (~12px). Цена: `text-base` (16px).
 
-Всё строим из уже загруженных в loader данных, новых запросов нет.
+Увеличиваю длительность примерно в 1.5×: `text-xs` → `text-[1.125rem]` эквивалент `text-lg` (18px) слишком крупно рядом с ценой; правильнее `text-base` (16px) — это ровно 1.33×, ближайшее к 1.5× из дизайн-токенов без перебора. Если хочется именно ~1.5×, ставлю `text-[18px]` (но это вне токенов). 
 
-### 2. Canonical на публичных роутах
-Добавить `links: [{ rel: "canonical", href: "https://path-with-care.lovable.app<path>" }]` в `head()` следующих файлов:
+Предложение: использую `text-base` (16px, ×1.33, токен). Цена остаётся `text-base text-gold font-serif font-medium` — без изменений. Если нужно строго ×1.5 — скажите, поставлю `text-lg`.
 
-- `src/routes/index.tsx` → `/`
-- `src/routes/about.tsx` → `/about`
-- `src/routes/destinations.index.tsx` → `/destinations`
-- `src/routes/catalog.tsx` → `/catalog`
-- `src/routes/calendar.tsx` → `/calendar`
-- `src/routes/with-priest.tsx` → `/with-priest`
-- `src/routes/blog.tsx` → `/blog`
-- `src/routes/blog_.$slug.tsx` → `/blog/<slug>`
-- `src/routes/contacts.tsx` → `/contacts`
-- `src/routes/public-offer.tsx` → `/public-offer`
-- `src/routes/privacy.tsx` → `/privacy`
-- `src/routes/orthodox-calendar.tsx` → `/orthodox-calendar`
+### Технические правки (один блок JSX, строки 170–200)
 
-На `__root.tsx` canonical **не** добавляем (важно — иначе будут дубли). На `destinations.$slug.tsx` уже есть, не трогаем. Админка/логин/sitemap/robots — пропускаем.
+```text
+Link           → + "flex flex-col h-full"
+div p-4        → + "flex flex-col flex-1"
+p caption      → убрать "line-clamp-2", оставить "mb-3"
+div footer     → + "mt-auto"
+span duration  → "text-xs" → "text-base"
+```
 
-### 3. `src/routes/sitemap[.]xml.ts`
-- Импортировать `listPublicDestinations` и `listBlogPosts`.
-- В GET-обработчике выполнить оба запроса параллельно (`Promise.all`).
-- К текущим 10 статическим записям добавить:
-  - `/destinations/<slug>` для каждой опубликованной (priority `0.8`, changefreq `monthly`).
-  - `/blog/<slug>` для каждого опубликованного поста (priority `0.6`, changefreq `monthly`, `lastmod` = `published_at`).
-- Структура и кеширование (`max-age=3600`) сохраняются.
+Больше ничего в файле не меняю.
 
-## Что НЕ трогаем
-- Никаких изменений UI, стилей, бизнес-логики.
-- `__root.tsx` не трогаем (canonical туда нельзя).
-- Hreflang, миграции БД, админка — вне scope.
-- `destinations.$slug.tsx` canonical уже корректный — оставляем.
-
-Подтвердите план — и я переключусь в build mode и применю.
+### Вопрос к вам
+По Fix 3: `text-base` (×1.33, в токенах) или `text-lg` (×1.5, тоже токен, но крупнее цены воспринимается одинаково)? По умолчанию беру `text-base`.

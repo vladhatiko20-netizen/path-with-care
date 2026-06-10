@@ -171,7 +171,7 @@ function HomePage() {
                     key={d.slug}
                     to="/destinations/$slug"
                     params={{ slug: d.slug }}
-                    className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
+                    className="group flex flex-col h-full bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
                   >
                     <div className="aspect-[4/3] max-md:max-h-[250px] overflow-hidden">
                       <img
@@ -183,15 +183,15 @@ function HomePage() {
                         className="w-full h-full object-cover md:group-hover:scale-[1.02] transition-transform duration-300"
                       />
                     </div>
-                    <div className="p-4">
+                    <div className="p-4 flex flex-col flex-1">
                       <h3 className="font-serif text-lg text-foreground mb-1 leading-tight">
                         {title}
                       </h3>
                       {caption && (
-                        <p className="text-sm text-foreground/65 leading-snug mb-3 line-clamp-2">{caption}</p>
+                        <p className="text-sm text-foreground/65 leading-snug mb-3">{caption}</p>
                       )}
-                      <div className="flex items-center justify-between pt-2 border-t border-border/60">
-                        <span className="text-xs text-muted-foreground font-serif">{duration ?? ""}</span>
+                      <div className="mt-auto flex items-center justify-between pt-2 border-t border-border/60">
+                        <span className="text-base text-muted-foreground font-serif">{duration ?? ""}</span>
                         {price && (
                           <span className="text-base text-gold font-serif font-medium">{price}</span>
                         )}
