@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useLang } from "@/lib/i18n";
+import { BLESSING_BY } from "@/lib/constants";
 
 export function Footer() {
   const { t } = useLang();

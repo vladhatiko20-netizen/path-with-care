@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
+import { BLESSING_BY } from "@/lib/constants";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
 import priestImg from "@/assets/orthodox-priest.jpg";
