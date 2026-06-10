@@ -81,11 +81,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
       { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c193a27-601f-4f03-b952-b16dc687db89/id-preview-d4c48717--62783b1d-8187-4a6f-bbb8-769bea06820d.lovable.app-1778505054029.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c193a27-601f-4f03-b952-b16dc687db89/id-preview-d4c48717--62783b1d-8187-4a6f-bbb8-769bea06820d.lovable.app-1778505054029.png" },
+      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
+      { name: "twitter:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
     ],
     links: [
       {
