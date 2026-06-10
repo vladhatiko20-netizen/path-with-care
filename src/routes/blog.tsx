@@ -2,7 +2,6 @@ import { createFileRoute, Link, ErrorComponent, useRouter } from "@tanstack/reac
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 import { listBlogPosts, type BlogPostSummary } from "@/lib/blog.functions";
 import { resolveBlogImage } from "@/lib/blog-images";
 import heroImg from "@/assets/hero-blog.jpg";
@@ -25,7 +24,7 @@ export const Route = createFileRoute("/blog")({
       { property: "og:description", content: "Истории паломников и рассказы о святых местах." },
       { property: "og:image", content: heroImg },
     ],
-    links: buildHreflang("/blog", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/blog" }],
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(blogListQueryOptions());
@@ -68,7 +67,7 @@ function formatDate(iso: string, lang: "ru" | "ro") {
   });
 }
 
-export function Page() {
+function Page() {
   const { t, lang } = useLang();
   const { data: posts } = useSuspenseQuery(blogListQueryOptions());
 

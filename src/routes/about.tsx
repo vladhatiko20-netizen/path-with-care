@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 import annaHero from "@/assets/anna-hero.jpg";
 import annaJerusalem from "@/assets/anna-jerusalem.jpg";
 import annaCorfu from "@/assets/anna-corfu.jpg";
@@ -25,12 +24,12 @@ export const Route = createFileRoute("/about")({
       { property: "og:description", content: "Анна Плотник — путешественница и паломница." },
       { property: "og:image", content: annaHero },
     ],
-    links: buildHreflang("/about", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/about" }],
   }),
   component: Page,
 });
 
-export function Page() {
+function Page() {
   const { t, lang } = useLang();
 
   const gallery = [

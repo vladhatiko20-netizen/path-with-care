@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 import heroImg from "@/assets/hero-contacts.jpg";
 
 export const Route = createFileRoute("/contacts")({
@@ -17,7 +16,7 @@ export const Route = createFileRoute("/contacts")({
       { property: "og:description", content: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв." },
       { property: "og:image", content: heroImg },
     ],
-    links: buildHreflang("/contacts", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/contacts" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -47,7 +46,7 @@ export const Route = createFileRoute("/contacts")({
   component: Page,
 });
 
-export function Page() {
+function Page() {
   const { t } = useLang();
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [sent, setSent] = useState(false);

@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -11,12 +10,12 @@ export const Route = createFileRoute("/privacy")({
       { property: "og:title", content: "Политика конфиденциальности — Паломник" },
       { property: "og:description", content: "Политика конфиденциальности сайта Паломник: как мы обрабатываем персональные данные." },
     ],
-    links: buildHreflang("/privacy", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/privacy" }],
   }),
   component: Page,
 });
 
-export function Page() {
+function Page() {
   const { t } = useLang();
   return (
     <PageShell>

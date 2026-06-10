@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 export type Lang = "ru" | "ro";
 
@@ -14,23 +14,21 @@ const LangContext = createContext<Ctx>({
   t: (ru) => ru,
 });
 
-/**
- * Language is taken from the URL via the route layout (RU root provides "ru",
- * /ro layout provides "ro"). localStorage is NOT the source of truth — it only
- * persists the user's last manual click, never drives the first SSR render.
- */
-export function LangProvider({ lang, children }: { lang: Lang; children: ReactNode }) {
+export function LangProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>("ru");
+
   useEffect(() => {
     try {
-      document.documentElement.lang = lang;
-      window.localStorage.setItem("palomnik-lang", lang);
+      const stored = window.localStorage.getItem("palomnik-lang");
+      if (stored === "ru" || stored === "ro") setLangState(stored);
     } catch {}
-  }, [lang]);
+  }, []);
 
-  // setLang kept for API compatibility; the switcher uses URL navigation now.
   const setLang = (l: Lang) => {
+    setLangState(l);
     try {
       window.localStorage.setItem("palomnik-lang", l);
+      document.documentElement.lang = l;
     } catch {}
   };
 

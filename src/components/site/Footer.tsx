@@ -1,11 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { useLang } from "@/lib/i18n";
-import { useLocalizedTo } from "@/lib/locale";
 import { BLESSING_BY } from "@/lib/constants";
 
 export function Footer() {
   const { t } = useLang();
-  const loc = useLocalizedTo();
   return (
     <footer className="bg-secondary border-t border-border">
       <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-3 gap-12">
@@ -39,13 +37,13 @@ export function Footer() {
         <div>
           <h4 className="overline mb-4">{t("Разделы", "Secțiuni")}</h4>
           <ul className="space-y-2 text-sm font-serif">
-            <li><Link to={loc("/destinations")} className="hover:text-gold transition-colors">{t("Направления", "Destinații")}</Link></li>
-            <li><Link to={loc("/calendar")} className="hover:text-gold transition-colors">{t("Календарь поездок", "Calendar de călătorii")}</Link></li>
-            <li><Link to={loc("/with-priest")} className="hover:text-gold transition-colors">{t("Диалог со священником", "Dialog cu preotul")}</Link></li>
-            <li><Link to={loc("/blog")} className="hover:text-gold transition-colors">{t("Блог", "Blog")}</Link></li>
-            <li><Link to={loc("/catalog")} className="hover:text-gold transition-colors">{t("Святыни", "Obiecte sfinte")}</Link></li>
-            <li><Link to={loc("/about")} className="hover:text-gold transition-colors">{t("О нас", "Despre")}</Link></li>
-            <li><Link to={loc("/contacts")} className="hover:text-gold transition-colors">{t("Контакты", "Contacte")}</Link></li>
+            <li><Link to="/destinations" className="hover:text-gold transition-colors">{t("Направления", "Destinații")}</Link></li>
+            <li><Link to="/calendar" className="hover:text-gold transition-colors">{t("Календарь поездок", "Calendar de călătorii")}</Link></li>
+            <li><Link to="/with-priest" className="hover:text-gold transition-colors">{t("Диалог со священником", "Dialog cu preotul")}</Link></li>
+            <li><Link to="/blog" className="hover:text-gold transition-colors">{t("Блог", "Blog")}</Link></li>
+            <li><Link to="/catalog" className="hover:text-gold transition-colors">{t("Святыни", "Obiecte sfinte")}</Link></li>
+            <li><Link to="/about" className="hover:text-gold transition-colors">{t("О нас", "Despre")}</Link></li>
+            <li><Link to="/contacts" className="hover:text-gold transition-colors">{t("Контакты", "Contacte")}</Link></li>
           </ul>
         </div>
 
@@ -64,8 +62,8 @@ export function Footer() {
           </p>
           <p className="text-xs text-muted-foreground mt-4">© 2026 Eldorado Tur SRL</p>
           <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
-            <Link to={loc("/privacy")} className="hover:text-foreground">{t("Конфиденциальность", "Confidențialitate")}</Link>
-            <Link to={loc("/public-offer")} className="hover:text-foreground">{t("Публичная оферта", "Ofertă publică")}</Link>
+            <Link to="/privacy" className="hover:text-foreground">{t("Конфиденциальность", "Confidențialitate")}</Link>
+            <Link to="/public-offer" className="hover:text-foreground">{t("Публичная оферта", "Ofertă publică")}</Link>
           </div>
         </div>
       </div>

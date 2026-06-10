@@ -50,46 +50,20 @@ export const Route = createFileRoute("/sitemap.xml")({
           });
         }
 
-        const roPath = (p: string) => (p === "/" ? "/ro" : `/ro${p}`);
-
-        const urls: string[] = [];
-        for (const e of entries) {
-          const ruLoc = `${BASE_URL}${e.path}`;
-          const roLoc = `${BASE_URL}${roPath(e.path)}`;
-          const alternates = [
-            `    <xhtml:link rel="alternate" hreflang="ru" href="${ruLoc}"/>`,
-            `    <xhtml:link rel="alternate" hreflang="ro" href="${roLoc}"/>`,
-            `    <xhtml:link rel="alternate" hreflang="x-default" href="${ruLoc}"/>`,
-          ];
-          // RU entry
-          urls.push(
-            [
-              `  <url>`,
-              `    <loc>${ruLoc}</loc>`,
-              e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
-              e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-              e.priority ? `    <priority>${e.priority}</priority>` : null,
-              ...alternates,
-              `  </url>`,
-            ].filter(Boolean).join("\n"),
-          );
-          // RO mirror
-          urls.push(
-            [
-              `  <url>`,
-              `    <loc>${roLoc}</loc>`,
-              e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
-              e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
-              e.priority ? `    <priority>${e.priority}</priority>` : null,
-              ...alternates,
-              `  </url>`,
-            ].filter(Boolean).join("\n"),
-          );
-        }
+        const urls = entries.map((e) =>
+          [
+            `  <url>`,
+            `    <loc>${BASE_URL}${e.path}</loc>`,
+            e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
+            e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
+            e.priority ? `    <priority>${e.priority}</priority>` : null,
+            `  </url>`,
+          ].filter(Boolean).join("\n")
+        );
 
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`,
+          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
           ...urls,
           `</urlset>`,
         ].join("\n");

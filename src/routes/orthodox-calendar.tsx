@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 import { feasts, nextFeast, todayFeast, formatFeastDate } from "@/lib/orthodox-feasts";
 
 export const Route = createFileRoute("/orthodox-calendar")({
@@ -15,12 +14,12 @@ export const Route = createFileRoute("/orthodox-calendar")({
       { property: "og:title", content: "Православный календарь — Паломник" },
       { property: "og:description", content: "Православный календарь: память святых, посты, праздники и связь с паломническими поездками." },
     ],
-    links: buildHreflang("/orthodox-calendar", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/orthodox-calendar" }],
   }),
   component: Page,
 });
 
-export function Page() {
+function Page() {
   const { t, lang } = useLang();
   const now = new Date();
   const todayStr = now.toLocaleDateString(lang === "ru" ? "ru-RU" : "ro-RO", {

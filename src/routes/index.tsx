@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
-import { buildHreflang } from "@/lib/locale";
 import { BLESSING_BY } from "@/lib/constants";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
@@ -39,7 +38,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
     ],
-    links: buildHreflang("/", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/" }],
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(destinationsListQueryOptions);
@@ -75,7 +74,7 @@ function formatTripDuration(start: string, end: string, lang: "ru" | "ro") {
   return days === 1 ? "1 zi" : days < 20 ? `${days} zile` : `${days} de zile`;
 }
 
-export function HomePage() {
+function HomePage() {
   const { t, lang } = useLang();
   const { data: blogPosts } = useQuery({
     queryKey: ["blog-posts"],

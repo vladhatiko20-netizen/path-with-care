@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 import heroImg from "@/assets/hero-destinations.jpg";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 
@@ -23,7 +22,7 @@ export const Route = createFileRoute("/destinations/")({
       { property: "og:description", content: "Восемь направлений к православным святыням мира из Кишинёва." },
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-destinations.jpg" },
     ],
-    links: buildHreflang("/destinations", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/destinations" }],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(destinationsListQueryOptions),
   errorComponent: ({ error }) => (
@@ -36,7 +35,7 @@ export const Route = createFileRoute("/destinations/")({
   component: Page,
 });
 
-export function Page() {
+function Page() {
   const { t, lang } = useLang();
   const { data: items } = useSuspenseQuery(destinationsListQueryOptions);
   return (

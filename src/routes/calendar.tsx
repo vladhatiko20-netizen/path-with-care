@@ -2,7 +2,6 @@ import { createFileRoute, Link, useNavigate, ErrorComponent, useRouter } from "@
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import { buildHreflang } from "@/lib/locale";
 import heroImg from "@/assets/hero-calendar.jpg";
 import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 
@@ -24,7 +23,7 @@ export const Route = createFileRoute("/calendar")({
       { property: "og:description", content: "Полный календарь паломнических поездок на 2026 год." },
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-calendar.jpg" },
     ],
-    links: buildHreflang("/calendar", "ru"),
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/calendar" }],
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(pilgrimagesQueryOptions());
@@ -66,7 +65,7 @@ function durationDays(start: string, end: string) {
   return Math.max(1, Math.round(ms / 86_400_000) + 1);
 }
 
-export function Page() {
+function Page() {
   const { t, lang } = useLang();
   const navigate = useNavigate();
   const { data: trips } = useSuspenseQuery(pilgrimagesQueryOptions());
