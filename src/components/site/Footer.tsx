@@ -49,9 +49,11 @@ export function Footer() {
 
         <div>
           <h4 className="overline mb-4">{t("Информация", "Informații")}</h4>
-          <p className="text-sm text-muted-foreground italic font-serif mb-3">
-            {t("По благословению …", "Cu binecuvântarea …")}
-          </p>
+          {BLESSING_BY && (
+            <p className="text-sm text-muted-foreground italic font-serif mb-3">
+              {t(`По благословению ${BLESSING_BY}`, `Cu binecuvântarea ${BLESSING_BY}`)}
+            </p>
+          )}
           <p className="text-xs text-muted-foreground leading-relaxed">
             {t(
               "Лицензия: Министерство культуры Республики Молдова",

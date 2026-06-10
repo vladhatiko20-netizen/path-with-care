@@ -384,15 +384,16 @@ function HomePage() {
       </section>
 
       {/* BLESSING */}
-      <section className="py-6 md:py-10">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <p className="divider-gold overline mb-7">{t("С молитвой", "Cu rugăciune")}</p>
-          <p className="font-serif italic text-2xl md:text-3xl text-foreground/85 leading-relaxed">
-            {t("По благословению ", "Cu binecuvântarea ")}
-            <span className="text-muted-foreground">[…]</span>
-          </p>
-        </div>
-      </section>
+      {BLESSING_BY && (
+        <section className="py-6 md:py-10">
+          <div className="max-w-3xl mx-auto px-6 text-center">
+            <p className="divider-gold overline mb-7">{t("С молитвой", "Cu rugăciune")}</p>
+            <p className="font-serif italic text-2xl md:text-3xl text-foreground/85 leading-relaxed">
+              {t(`По благословению ${BLESSING_BY}`, `Cu binecuvântarea ${BLESSING_BY}`)}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* TRUST BADGES */}
       <section className="bg-secondary/50 py-6 md:py-12 border-t border-border/60">
