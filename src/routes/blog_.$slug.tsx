@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, ErrorComponent, useRouter, useParams } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { queryOptions, useSuspenseQuery, type QueryClient } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import DOMPurify from "isomorphic-dompurify";
 import { PageShell } from "@/components/site/PageShell";
@@ -14,7 +14,7 @@ export const postQueryOptions = (slug: string) =>
     queryFn: () => getBlogPostBySlug({ data: { slug } }),
   });
 
-export async function loadPost(slug: string, queryClient: import("@tanstack/react-query").QueryClient) {
+export async function loadPost(slug: string, queryClient: QueryClient) {
   const post = await queryClient.ensureQueryData(postQueryOptions(slug));
   if (!post) throw notFound();
   return { post };
