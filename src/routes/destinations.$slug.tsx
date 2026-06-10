@@ -83,6 +83,7 @@ export const Route = createFileRoute("/destinations/$slug")({
         ...(img ? [{ name: "twitter:image", content: img }] : []),
       ],
       links: [{ rel: "canonical", href: url }],
+      scripts: buildJsonLd(loaderData, url),
     };
   },
   notFoundComponent: () => (
