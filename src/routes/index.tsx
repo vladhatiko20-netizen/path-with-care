@@ -205,6 +205,7 @@ function HomePage() {
       </section>
 
       {/* UPCOMING TRIPS */}
+      {upcoming.length > 0 && (
       <section className="bg-card/60 py-6 md:py-12 border-y border-border/60">
         <div className="max-w-5xl mx-auto px-6">
           <div className="mb-8">
@@ -227,16 +228,14 @@ function HomePage() {
                 </tr>
               </thead>
               <tbody>
-                {upcoming.map((row, i) => (
-                  <tr key={i} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
+                {upcoming.map((row) => (
+                  <tr key={row.id} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
                     <td className="py-2.5 pr-3 text-accent text-lg leading-none align-middle">☦</td>
-                    <td className="py-2.5 pr-3 text-foreground/85 text-[15px]">{row.date[lang]}</td>
-                    <td className="py-2.5 pr-3 text-foreground text-[15px]">{row.dest[lang]}</td>
-                    <td className="py-2.5 pr-3 text-foreground/70 text-[14px] hidden md:table-cell">{row.dur[lang]}</td>
-                    <td className="py-2.5 pr-3 text-gold font-medium text-[15px]">{row.price}</td>
-                    <td className={`py-2.5 italic text-sm hidden sm:table-cell ${row.urgent ? "text-accent" : "text-muted-foreground"}`}>
-                      {row.seats[lang]}
-                    </td>
+                    <td className="py-2.5 pr-3 text-foreground/85 text-[15px]">{formatTripDate(row.start_date, lang)}</td>
+                    <td className="py-2.5 pr-3 text-foreground text-[15px]">{lang === "ru" ? row.destination_ru : row.destination_ro}</td>
+                    <td className="py-2.5 pr-3 text-foreground/70 text-[14px] hidden md:table-cell">{formatTripDuration(row.start_date, row.end_date, lang)}</td>
+                    <td className="py-2.5 pr-3 text-gold font-medium text-[15px]">{row.price_eur != null ? `€${row.price_eur}` : ""}</td>
+                    <td className="py-2.5 italic text-sm hidden sm:table-cell text-muted-foreground"></td>
                   </tr>
                 ))}
               </tbody>
@@ -253,6 +252,7 @@ function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* О ПАЛОМНИЧЕСТВЕ */}
       <section className="max-w-6xl mx-auto px-6 py-6 md:py-12">
