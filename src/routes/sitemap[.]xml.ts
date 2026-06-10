@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { listPublicDestinations } from "@/lib/destinations.functions";
+import { listBlogPosts } from "@/lib/blog.functions";
 
 const BASE_URL = "https://path-with-care.lovable.app";
 
 interface SitemapEntry {
   path: string;
+  lastmod?: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
 }
@@ -26,10 +29,32 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/privacy", changefreq: "yearly", priority: "0.3" },
         ];
 
+        const [destinations, posts] = await Promise.all([
+          listPublicDestinations().catch(() => []),
+          listBlogPosts().catch(() => []),
+        ]);
+
+        for (const d of destinations) {
+          entries.push({
+            path: `/destinations/${d.slug}`,
+            changefreq: "monthly",
+            priority: "0.8",
+          });
+        }
+        for (const p of posts) {
+          entries.push({
+            path: `/blog/${p.slug}`,
+            lastmod: p.published_at?.slice(0, 10),
+            changefreq: "monthly",
+            priority: "0.6",
+          });
+        }
+
         const urls = entries.map((e) =>
           [
             `  <url>`,
             `    <loc>${BASE_URL}${e.path}</loc>`,
+            e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
