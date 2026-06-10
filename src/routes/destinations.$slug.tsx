@@ -210,23 +210,6 @@ export const Route = createFileRoute("/destinations/$slug")({
   component: DestinationPage,
 });
 
-// (Legacy loader/head body kept above as helpers; below is retained for reference only.)
-const _legacy_unused = () => {
-  return async ({ params }: any) => {
-    const destination = await getDestinationBySlug({ data: { slug: params.slug } });
-    if (!destination) throw notFound();
-    const [pilgrimages, gallery, shrines, program, inclusions, faq] = await Promise.all([
-      listPilgrimages(),
-      listGalleryByDestinationSlug({ data: { slug: params.slug } }),
-      listShrinesByDestinationSlug({ data: { slug: params.slug } }),
-      listProgramByDestinationSlug({ data: { slug: params.slug } }),
-      listInclusionsByDestinationSlug({ data: { slug: params.slug } }),
-      listFaqByDestinationSlug({ data: { slug: params.slug } }),
-    ]);
-    return { destination, pilgrimages, gallery, shrines, program, inclusions, faq };
-  };
-};
-
 function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
   const locale = lang === "ru" ? "ru-RU" : "ro-RO";
   const s = new Date(start);
