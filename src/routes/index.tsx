@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "И вместе ко Христу. Поездки к святым местам с духовным сопровождением.",
       },
-      { property: "og:image", content: heroImg },
+      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
     ],
   }),
   component: HomePage,

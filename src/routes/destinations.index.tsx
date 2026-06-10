@@ -20,7 +20,7 @@ export const Route = createFileRoute("/destinations/")({
       { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "Направления — Паломник" },
       { property: "og:description", content: "Восемь направлений к православным святыням мира из Кишинёва." },
-      { property: "og:image", content: heroImg },
+      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-destinations.jpg" },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(destinationsListQueryOptions),

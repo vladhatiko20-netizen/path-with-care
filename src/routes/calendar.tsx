@@ -21,7 +21,7 @@ export const Route = createFileRoute("/calendar")({
       { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:title", content: "Календарь поездок 2026 — Паломник" },
       { property: "og:description", content: "Полный календарь паломнических поездок на 2026 год." },
-      { property: "og:image", content: heroImg },
+      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-calendar.jpg" },
     ],
   }),
   loader: ({ context }) => {
