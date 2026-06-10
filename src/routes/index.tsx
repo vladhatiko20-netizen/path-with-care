@@ -38,6 +38,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
     ],
+    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/" }],
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(destinationsListQueryOptions);
