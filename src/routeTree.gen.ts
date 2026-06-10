@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WithPriestRouteImport } from './routes/with-priest'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RoRouteImport } from './routes/ro'
 import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
@@ -22,10 +23,23 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RoIndexRouteImport } from './routes/ro.index'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
+import { Route as RoWithPriestRouteImport } from './routes/ro.with-priest'
+import { Route as RoPublicOfferRouteImport } from './routes/ro.public-offer'
+import { Route as RoPrivacyRouteImport } from './routes/ro.privacy'
+import { Route as RoOrthodoxCalendarRouteImport } from './routes/ro.orthodox-calendar'
+import { Route as RoContactsRouteImport } from './routes/ro.contacts'
+import { Route as RoCatalogRouteImport } from './routes/ro.catalog'
+import { Route as RoCalendarRouteImport } from './routes/ro.calendar'
+import { Route as RoBlogRouteImport } from './routes/ro.blog'
+import { Route as RoAboutRouteImport } from './routes/ro.about'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
+import { Route as RoDestinationsIndexRouteImport } from './routes/ro.destinations.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
+import { Route as RoDestinationsSlugRouteImport } from './routes/ro.destinations.$slug'
+import { Route as RoBlogSlugRouteImport } from './routes/ro.blog_.$slug'
 import { Route as AdminAdminPilgrimagesIndexRouteImport } from './routes/_admin/admin.pilgrimages.index'
 import { Route as AdminAdminLeadsIndexRouteImport } from './routes/_admin/admin.leads.index'
 import { Route as AdminAdminDestinationsIndexRouteImport } from './routes/_admin/admin.destinations.index'
@@ -47,6 +61,11 @@ const WithPriestRoute = WithPriestRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoRoute = RoRouteImport.update({
+  id: '/ro',
+  path: '/ro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicOfferRoute = PublicOfferRouteImport.update({
@@ -103,10 +122,60 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoIndexRoute = RoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RoRoute,
+} as any)
 const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
   id: '/destinations/',
   path: '/destinations/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const RoWithPriestRoute = RoWithPriestRouteImport.update({
+  id: '/with-priest',
+  path: '/with-priest',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoPublicOfferRoute = RoPublicOfferRouteImport.update({
+  id: '/public-offer',
+  path: '/public-offer',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoPrivacyRoute = RoPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoOrthodoxCalendarRoute = RoOrthodoxCalendarRouteImport.update({
+  id: '/orthodox-calendar',
+  path: '/orthodox-calendar',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoContactsRoute = RoContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoCatalogRoute = RoCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoCalendarRoute = RoCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoBlogRoute = RoBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoAboutRoute = RoAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => RoRoute,
 } as any)
 const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   id: '/destinations/$slug',
@@ -118,10 +187,25 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoDestinationsIndexRoute = RoDestinationsIndexRouteImport.update({
+  id: '/destinations/',
+  path: '/destinations/',
+  getParentRoute: () => RoRoute,
+} as any)
 const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
   getParentRoute: () => AdminRoute,
+} as any)
+const RoDestinationsSlugRoute = RoDestinationsSlugRouteImport.update({
+  id: '/destinations/$slug',
+  path: '/destinations/$slug',
+  getParentRoute: () => RoRoute,
+} as any)
+const RoBlogSlugRoute = RoBlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => RoRoute,
 } as any)
 const AdminAdminPilgrimagesIndexRoute =
   AdminAdminPilgrimagesIndexRouteImport.update({
@@ -201,12 +285,26 @@ export interface FileRoutesByFullPath {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
+  '/ro': typeof RoRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/ro/about': typeof RoAboutRoute
+  '/ro/blog': typeof RoBlogRoute
+  '/ro/calendar': typeof RoCalendarRoute
+  '/ro/catalog': typeof RoCatalogRoute
+  '/ro/contacts': typeof RoContactsRoute
+  '/ro/orthodox-calendar': typeof RoOrthodoxCalendarRoute
+  '/ro/privacy': typeof RoPrivacyRoute
+  '/ro/public-offer': typeof RoPublicOfferRoute
+  '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
+  '/ro/': typeof RoIndexRoute
+  '/ro/blog/$slug': typeof RoBlogSlugRoute
+  '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/admin/': typeof AdminAdminIndexRoute
+  '/ro/destinations/': typeof RoDestinationsIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
@@ -235,8 +333,21 @@ export interface FileRoutesByTo {
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/ro/about': typeof RoAboutRoute
+  '/ro/blog': typeof RoBlogRoute
+  '/ro/calendar': typeof RoCalendarRoute
+  '/ro/catalog': typeof RoCatalogRoute
+  '/ro/contacts': typeof RoContactsRoute
+  '/ro/orthodox-calendar': typeof RoOrthodoxCalendarRoute
+  '/ro/privacy': typeof RoPrivacyRoute
+  '/ro/public-offer': typeof RoPublicOfferRoute
+  '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations': typeof DestinationsIndexRoute
+  '/ro': typeof RoIndexRoute
+  '/ro/blog/$slug': typeof RoBlogSlugRoute
+  '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/admin': typeof AdminAdminIndexRoute
+  '/ro/destinations': typeof RoDestinationsIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
@@ -263,12 +374,26 @@ export interface FileRoutesById {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
+  '/ro': typeof RoRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog_/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
+  '/ro/about': typeof RoAboutRoute
+  '/ro/blog': typeof RoBlogRoute
+  '/ro/calendar': typeof RoCalendarRoute
+  '/ro/catalog': typeof RoCatalogRoute
+  '/ro/contacts': typeof RoContactsRoute
+  '/ro/orthodox-calendar': typeof RoOrthodoxCalendarRoute
+  '/ro/privacy': typeof RoPrivacyRoute
+  '/ro/public-offer': typeof RoPublicOfferRoute
+  '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
+  '/ro/': typeof RoIndexRoute
+  '/ro/blog_/$slug': typeof RoBlogSlugRoute
+  '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
+  '/ro/destinations/': typeof RoDestinationsIndexRoute
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/_admin/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
@@ -295,12 +420,26 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
+    | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
     | '/destinations/$slug'
+    | '/ro/about'
+    | '/ro/blog'
+    | '/ro/calendar'
+    | '/ro/catalog'
+    | '/ro/contacts'
+    | '/ro/orthodox-calendar'
+    | '/ro/privacy'
+    | '/ro/public-offer'
+    | '/ro/with-priest'
     | '/destinations/'
+    | '/ro/'
+    | '/ro/blog/$slug'
+    | '/ro/destinations/$slug'
     | '/admin/'
+    | '/ro/destinations/'
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/destinations/$id'
@@ -329,8 +468,21 @@ export interface FileRouteTypes {
     | '/with-priest'
     | '/blog/$slug'
     | '/destinations/$slug'
+    | '/ro/about'
+    | '/ro/blog'
+    | '/ro/calendar'
+    | '/ro/catalog'
+    | '/ro/contacts'
+    | '/ro/orthodox-calendar'
+    | '/ro/privacy'
+    | '/ro/public-offer'
+    | '/ro/with-priest'
     | '/destinations'
+    | '/ro'
+    | '/ro/blog/$slug'
+    | '/ro/destinations/$slug'
     | '/admin'
+    | '/ro/destinations'
     | '/admin/blog/$id'
     | '/admin/blog/new'
     | '/admin/destinations/$id'
@@ -356,12 +508,26 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
+    | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog_/$slug'
     | '/destinations/$slug'
+    | '/ro/about'
+    | '/ro/blog'
+    | '/ro/calendar'
+    | '/ro/catalog'
+    | '/ro/contacts'
+    | '/ro/orthodox-calendar'
+    | '/ro/privacy'
+    | '/ro/public-offer'
+    | '/ro/with-priest'
     | '/destinations/'
+    | '/ro/'
+    | '/ro/blog_/$slug'
+    | '/ro/destinations/$slug'
     | '/_admin/admin/'
+    | '/ro/destinations/'
     | '/_admin/admin/blog/$id'
     | '/_admin/admin/blog/new'
     | '/_admin/admin/destinations/$id'
@@ -388,6 +554,7 @@ export interface RootRouteChildren {
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
   PublicOfferRoute: typeof PublicOfferRoute
+  RoRoute: typeof RoRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -409,6 +576,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ro': {
+      id: '/ro'
+      path: '/ro'
+      fullPath: '/ro'
+      preLoaderRoute: typeof RoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/public-offer': {
@@ -488,12 +662,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ro/': {
+      id: '/ro/'
+      path: '/'
+      fullPath: '/ro/'
+      preLoaderRoute: typeof RoIndexRouteImport
+      parentRoute: typeof RoRoute
+    }
     '/destinations/': {
       id: '/destinations/'
       path: '/destinations'
       fullPath: '/destinations/'
       preLoaderRoute: typeof DestinationsIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/ro/with-priest': {
+      id: '/ro/with-priest'
+      path: '/with-priest'
+      fullPath: '/ro/with-priest'
+      preLoaderRoute: typeof RoWithPriestRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/public-offer': {
+      id: '/ro/public-offer'
+      path: '/public-offer'
+      fullPath: '/ro/public-offer'
+      preLoaderRoute: typeof RoPublicOfferRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/privacy': {
+      id: '/ro/privacy'
+      path: '/privacy'
+      fullPath: '/ro/privacy'
+      preLoaderRoute: typeof RoPrivacyRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/orthodox-calendar': {
+      id: '/ro/orthodox-calendar'
+      path: '/orthodox-calendar'
+      fullPath: '/ro/orthodox-calendar'
+      preLoaderRoute: typeof RoOrthodoxCalendarRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/contacts': {
+      id: '/ro/contacts'
+      path: '/contacts'
+      fullPath: '/ro/contacts'
+      preLoaderRoute: typeof RoContactsRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/catalog': {
+      id: '/ro/catalog'
+      path: '/catalog'
+      fullPath: '/ro/catalog'
+      preLoaderRoute: typeof RoCatalogRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/calendar': {
+      id: '/ro/calendar'
+      path: '/calendar'
+      fullPath: '/ro/calendar'
+      preLoaderRoute: typeof RoCalendarRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/blog': {
+      id: '/ro/blog'
+      path: '/blog'
+      fullPath: '/ro/blog'
+      preLoaderRoute: typeof RoBlogRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/about': {
+      id: '/ro/about'
+      path: '/about'
+      fullPath: '/ro/about'
+      preLoaderRoute: typeof RoAboutRouteImport
+      parentRoute: typeof RoRoute
     }
     '/destinations/$slug': {
       id: '/destinations/$slug'
@@ -509,12 +753,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ro/destinations/': {
+      id: '/ro/destinations/'
+      path: '/destinations'
+      fullPath: '/ro/destinations/'
+      preLoaderRoute: typeof RoDestinationsIndexRouteImport
+      parentRoute: typeof RoRoute
+    }
     '/_admin/admin/': {
       id: '/_admin/admin/'
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/ro/destinations/$slug': {
+      id: '/ro/destinations/$slug'
+      path: '/destinations/$slug'
+      fullPath: '/ro/destinations/$slug'
+      preLoaderRoute: typeof RoDestinationsSlugRouteImport
+      parentRoute: typeof RoRoute
+    }
+    '/ro/blog_/$slug': {
+      id: '/ro/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/ro/blog/$slug'
+      preLoaderRoute: typeof RoBlogSlugRouteImport
+      parentRoute: typeof RoRoute
     }
     '/_admin/admin/pilgrimages/': {
       id: '/_admin/admin/pilgrimages/'
@@ -637,6 +902,40 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface RoRouteChildren {
+  RoAboutRoute: typeof RoAboutRoute
+  RoBlogRoute: typeof RoBlogRoute
+  RoCalendarRoute: typeof RoCalendarRoute
+  RoCatalogRoute: typeof RoCatalogRoute
+  RoContactsRoute: typeof RoContactsRoute
+  RoOrthodoxCalendarRoute: typeof RoOrthodoxCalendarRoute
+  RoPrivacyRoute: typeof RoPrivacyRoute
+  RoPublicOfferRoute: typeof RoPublicOfferRoute
+  RoWithPriestRoute: typeof RoWithPriestRoute
+  RoIndexRoute: typeof RoIndexRoute
+  RoBlogSlugRoute: typeof RoBlogSlugRoute
+  RoDestinationsSlugRoute: typeof RoDestinationsSlugRoute
+  RoDestinationsIndexRoute: typeof RoDestinationsIndexRoute
+}
+
+const RoRouteChildren: RoRouteChildren = {
+  RoAboutRoute: RoAboutRoute,
+  RoBlogRoute: RoBlogRoute,
+  RoCalendarRoute: RoCalendarRoute,
+  RoCatalogRoute: RoCatalogRoute,
+  RoContactsRoute: RoContactsRoute,
+  RoOrthodoxCalendarRoute: RoOrthodoxCalendarRoute,
+  RoPrivacyRoute: RoPrivacyRoute,
+  RoPublicOfferRoute: RoPublicOfferRoute,
+  RoWithPriestRoute: RoWithPriestRoute,
+  RoIndexRoute: RoIndexRoute,
+  RoBlogSlugRoute: RoBlogSlugRoute,
+  RoDestinationsSlugRoute: RoDestinationsSlugRoute,
+  RoDestinationsIndexRoute: RoDestinationsIndexRoute,
+}
+
+const RoRouteWithChildren = RoRoute._addFileChildren(RoRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
@@ -649,6 +948,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
   PublicOfferRoute: PublicOfferRoute,
+  RoRoute: RoRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
   BlogSlugRoute: BlogSlugRoute,
@@ -658,3 +958,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

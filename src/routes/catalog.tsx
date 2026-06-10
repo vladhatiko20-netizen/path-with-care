@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { buildHreflang } from "@/lib/locale";
 import heroImg from "@/assets/catalog-hero.jpg";
 import iNikolay from "@/assets/cat-nikolay.jpg";
 import iJer from "@/assets/cat-jerusalem.jpg";
@@ -20,7 +21,7 @@ export const Route = createFileRoute("/catalog")({
       { property: "og:description", content: "Каталог икон и святынь по предзаказу из паломнических поездок." },
       { property: "og:image", content: heroImg },
     ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/catalog" }],
+    links: buildHreflang("/catalog", "ru"),
   }),
   component: Page,
 });
@@ -43,7 +44,7 @@ const items: Item[] = [
   { img: iJer, cat: "other", ru: "Поясок «Живый в помощи»", ro: "Brâuleț „Cel ce locuiește”" },
 ];
 
-function Page() {
+export function Page() {
   const { t, lang } = useLang();
   const [cat, setCat] = useState<"all" | Cat>("all");
   const [order, setOrder] = useState<Item | null>(null);

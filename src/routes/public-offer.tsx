@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { buildHreflang } from "@/lib/locale";
 
 export const Route = createFileRoute("/public-offer")({
   head: () => ({
@@ -10,12 +11,12 @@ export const Route = createFileRoute("/public-offer")({
       { property: "og:title", content: "Публичная оферта — Паломник" },
       { property: "og:description", content: "Условия публичной оферты на услуги паломнических поездок Паломник." },
     ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/public-offer" }],
+    links: buildHreflang("/public-offer", "ru"),
   }),
   component: Page,
 });
 
-function Page() {
+export function Page() {
   const { t } = useLang();
   return (
     <PageShell>
