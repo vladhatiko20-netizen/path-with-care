@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { buildHreflang } from "@/lib/locale";
 import heroImg from "@/assets/hero-priest.jpg";
 import p1 from "@/assets/team-priest1.jpg";
 import p2 from "@/assets/team-priest2.jpg";
@@ -65,7 +66,7 @@ const faq = [
     ro: { q: "Ce trebuie să știu despre eticheta bisericească?", a: "În biserică — liniște, haine modeste, fără fotografii ale slujbei. Lumânările se aprind cu rugăciune." } },
 ];
 
-function Page() {
+export function Page() {
   const { t, lang } = useLang();
   const [form, setForm] = useState({ name: "", email: "", question: "" });
   const [sent, setSent] = useState(false);

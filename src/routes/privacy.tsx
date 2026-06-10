@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { buildHreflang } from "@/lib/locale";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/privacy")({
   component: Page,
 });
 
-function Page() {
+export function Page() {
   const { t } = useLang();
   return (
     <PageShell>
