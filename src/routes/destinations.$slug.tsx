@@ -1,9 +1,10 @@
-import { createFileRoute, Link, useRouter, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter, notFound, useLoaderData, useParams } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { buildHreflang } from "@/lib/locale";
 import {
   getDestinationBySlug,
   listGalleryByDestinationSlug,
@@ -48,15 +49,21 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom";
 const SITE = "https://path-with-care.lovable.app";
 
 type LoaderData = {
-  destination: { title_ru: string; description_ru: string | null; seo_description_ru: string | null; cover_image: string | null; price_from: number | null };
-  program: ReadonlyArray<{ title_ru: string; description_ru: string | null }>;
-  faq: ReadonlyArray<{ question_ru: string; answer_ru: string | null }>;
+  destination: {
+    title_ru: string; title_ro: string;
+    description_ru: string | null; description_ro: string | null;
+    seo_description_ru: string | null; seo_description_ro: string | null;
+    cover_image: string | null; price_from: number | null;
+  };
+  program: ReadonlyArray<{ title_ru: string; title_ro: string; description_ru: string | null; description_ro: string | null }>;
+  faq: ReadonlyArray<{ question_ru: string; question_ro: string; answer_ru: string | null; answer_ro: string | null }>;
 };
 
-function buildJsonLd(data: LoaderData | undefined, url: string) {
+function buildJsonLd(data: LoaderData | undefined, url: string, lang: "ru" | "ro") {
   if (!data) return [];
   const d = data.destination;
-  const desc = d.seo_description_ru || d.description_ru || "";
+  const name = lang === "ru" ? d.title_ru : d.title_ro;
+  const desc = (lang === "ru" ? (d.seo_description_ru || d.description_ru) : (d.seo_description_ro || d.description_ro)) || "";
   const image = d.cover_image || undefined;
   const offers = d.price_from
     ? {
@@ -69,20 +76,20 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
     : undefined;
   const provider = {
     "@type": "Organization",
-    name: "Паломник",
+    name: lang === "ru" ? "Паломник" : "Pelerin",
     url: SITE,
     parentOrganization: { "@type": "Organization", name: "SRL Eldorado Tur" },
   };
   const itinerary = (data.program ?? []).map((day, i) => ({
     "@type": "ListItem",
     position: i + 1,
-    name: day.title_ru,
-    description: day.description_ru ?? undefined,
+    name: lang === "ru" ? day.title_ru : day.title_ro,
+    description: (lang === "ru" ? day.description_ru : day.description_ro) ?? undefined,
   }));
   const touristTrip = {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
-    name: d.title_ru,
+    name,
     description: desc,
     ...(image ? { image } : {}),
     provider,
@@ -95,7 +102,7 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
   const product = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: d.title_ru,
+    name,
     description: desc,
     ...(image ? { image } : {}),
     brand: provider,
@@ -106,7 +113,10 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
     { type: "application/ld+json", children: JSON.stringify(touristTrip) },
     { type: "application/ld+json", children: JSON.stringify(product) },
   ];
-  const faqItems = (data.faq ?? []).filter((f) => f.answer_ru && f.answer_ru.trim());
+  const faqItems = (data.faq ?? []).filter((f) => {
+    const a = lang === "ru" ? f.answer_ru : f.answer_ro;
+    return a && a.trim();
+  });
   if (faqItems.length > 0) {
     scripts.push({
       type: "application/ld+json",
@@ -115,8 +125,8 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
         "@type": "FAQPage",
         mainEntity: faqItems.map((f) => ({
           "@type": "Question",
-          name: f.question_ru,
-          acceptedAnswer: { "@type": "Answer", text: f.answer_ru },
+          name: lang === "ru" ? f.question_ru : f.question_ro,
+          acceptedAnswer: { "@type": "Answer", text: lang === "ru" ? f.answer_ru : f.answer_ro },
         })),
       }),
     });
@@ -124,26 +134,31 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
   return scripts;
 }
 
-export const Route = createFileRoute("/destinations/$slug")({
-  loader: async ({ params }) => {
-    const destination = await getDestinationBySlug({ data: { slug: params.slug } });
+export async function loadDestination(slug: string) {
+    const destination = await getDestinationBySlug({ data: { slug } });
     if (!destination) throw notFound();
     const [pilgrimages, gallery, shrines, program, inclusions, faq] = await Promise.all([
       listPilgrimages(),
-      listGalleryByDestinationSlug({ data: { slug: params.slug } }),
-      listShrinesByDestinationSlug({ data: { slug: params.slug } }),
-      listProgramByDestinationSlug({ data: { slug: params.slug } }),
-      listInclusionsByDestinationSlug({ data: { slug: params.slug } }),
-      listFaqByDestinationSlug({ data: { slug: params.slug } }),
+      listGalleryByDestinationSlug({ data: { slug } }),
+      listShrinesByDestinationSlug({ data: { slug } }),
+      listProgramByDestinationSlug({ data: { slug } }),
+      listInclusionsByDestinationSlug({ data: { slug } }),
+      listFaqByDestinationSlug({ data: { slug } }),
     ]);
     return { destination, pilgrimages, gallery, shrines, program, inclusions, faq };
-  },
-  head: ({ loaderData, params }) => {
+}
+
+export function buildDestinationHead(loaderData: any, slug: string, lang: "ru" | "ro") {
     const d = loaderData?.destination;
     if (!d) return {};
-    const title = d.seo_title_ru || d.title_ru;
-    const desc = d.seo_description_ru || d.description_ru || "";
-    const url = `${SITE}/destinations/${params.slug}`;
+    const title = lang === "ru"
+      ? (d.seo_title_ru || d.title_ru)
+      : (d.seo_title_ro || d.title_ro);
+    const desc = lang === "ru"
+      ? (d.seo_description_ru || d.description_ru || "")
+      : (d.seo_description_ro || d.description_ro || "");
+    const ruPath = `/destinations/${slug}`;
+    const url = lang === "ru" ? `${SITE}${ruPath}` : `${SITE}/ro${ruPath}`;
     const img = d.og_image || d.cover_image || undefined;
     return {
       meta: [
@@ -159,10 +174,14 @@ export const Route = createFileRoute("/destinations/$slug")({
         { name: "twitter:description", content: desc },
         ...(img ? [{ name: "twitter:image", content: img }] : []),
       ],
-      links: [{ rel: "canonical", href: url }],
-      scripts: buildJsonLd(loaderData, url),
+      links: buildHreflang(ruPath, lang),
+      scripts: buildJsonLd(loaderData, url, lang),
     };
-  },
+}
+
+export const Route = createFileRoute("/destinations/$slug")({
+  loader: async ({ params }) => loadDestination(params.slug),
+  head: ({ loaderData, params }) => buildDestinationHead(loaderData, params.slug, "ru"),
   notFoundComponent: () => (
     <PageShell>
       <div className="max-w-3xl mx-auto px-6 py-20 text-center">
@@ -191,6 +210,23 @@ export const Route = createFileRoute("/destinations/$slug")({
   component: DestinationPage,
 });
 
+// (Legacy loader/head body kept above as helpers; below is retained for reference only.)
+const _legacy_unused = () => {
+  return async ({ params }: any) => {
+    const destination = await getDestinationBySlug({ data: { slug: params.slug } });
+    if (!destination) throw notFound();
+    const [pilgrimages, gallery, shrines, program, inclusions, faq] = await Promise.all([
+      listPilgrimages(),
+      listGalleryByDestinationSlug({ data: { slug: params.slug } }),
+      listShrinesByDestinationSlug({ data: { slug: params.slug } }),
+      listProgramByDestinationSlug({ data: { slug: params.slug } }),
+      listInclusionsByDestinationSlug({ data: { slug: params.slug } }),
+      listFaqByDestinationSlug({ data: { slug: params.slug } }),
+    ]);
+    return { destination, pilgrimages, gallery, shrines, program, inclusions, faq };
+  };
+};
+
 function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
   const locale = lang === "ru" ? "ru-RU" : "ro-RO";
   const s = new Date(start);
@@ -204,9 +240,9 @@ function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
   return `${s.toLocaleDateString(locale)} – ${e.toLocaleDateString(locale)}`;
 }
 
-function DestinationPage() {
-  const { destination, pilgrimages, gallery, shrines, program, inclusions, faq } = Route.useLoaderData();
-  const { slug } = Route.useParams();
+export function DestinationPage() {
+  const { destination, pilgrimages, gallery, shrines, program, inclusions, faq } = useLoaderData({ strict: false }) as any;
+  const { slug } = useParams({ strict: false }) as { slug: string };
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
   const [shrineModal, setShrineModal] = useState<number | null>(null);
