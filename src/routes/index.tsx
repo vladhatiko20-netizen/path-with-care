@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
 import { BLESSING_BY } from "@/lib/constants";
@@ -10,6 +10,17 @@ import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
+import { listPilgrimages } from "@/lib/pilgrimages.functions";
+
+const destinationsListQueryOptions = queryOptions({
+  queryKey: ["destinations", "public-list"],
+  queryFn: () => listPublicDestinations(),
+});
+
+const upcomingPilgrimagesQueryOptions = queryOptions({
+  queryKey: ["pilgrimages", "upcoming"],
+  queryFn: () => listPilgrimages(),
+});
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,19 +39,39 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
     ],
   }),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(destinationsListQueryOptions);
+    context.queryClient.ensureQueryData(upcomingPilgrimagesQueryOptions);
+  },
   component: HomePage,
 });
 
-const upcoming = [
-  { date: { ru: "15 марта 2026", ro: "15 martie 2026" }, dest: { ru: "Бари + Корфу", ro: "Bari + Corfu" }, dur: { ru: "7 дней", ro: "7 zile" }, price: "€890", seats: { ru: "8 мест", ro: "8 locuri" }, urgent: false },
-  { date: { ru: "10 апреля 2026", ro: "10 aprilie 2026" }, dest: { ru: "Иерусалим (Страстная)", ro: "Ierusalim (Săpt. Patimilor)" }, dur: { ru: "10 дней", ro: "10 zile" }, price: "€1450", seats: { ru: "4 места", ro: "4 locuri" }, urgent: true },
-  { date: { ru: "5 мая 2026", ro: "5 mai 2026" }, dest: { ru: "Афон", ro: "Athos" }, dur: { ru: "6 дней (мужчины)", ro: "6 zile (bărbați)" }, price: "€920", seats: { ru: "5 мест", ro: "5 locuri" }, urgent: true },
-  { date: { ru: "20 июня 2026", ro: "20 iunie 2026" }, dest: { ru: "Грузия", ro: "Georgia" }, dur: { ru: "7 дней", ro: "7 zile" }, price: "€680", seats: { ru: "12 мест", ro: "12 locuri" }, urgent: false },
-  { date: { ru: "15 августа 2026", ro: "15 august 2026" }, dest: { ru: "Иерусалим (Успение)", ro: "Ierusalim (Adormirea)" }, dur: { ru: "9 дней", ro: "9 zile" }, price: "€1380", seats: { ru: "6 мест", ro: "6 locuri" }, urgent: true },
-  { date: { ru: "10 сентября 2026", ro: "10 septembrie 2026" }, dest: { ru: "Румыния — монастыри", ro: "România — mănăstiri" }, dur: { ru: "5 дней", ro: "5 zile" }, price: "€450", seats: { ru: "14 мест", ro: "14 locuri" }, urgent: false },
-  { date: { ru: "1 октября 2026", ro: "1 octombrie 2026" }, dest: { ru: "Корфу", ro: "Corfu" }, dur: { ru: "6 дней", ro: "6 zile" }, price: "€750", seats: { ru: "10 мест", ro: "10 locuri" }, urgent: false },
-  { date: { ru: "5 ноября 2026", ro: "5 noiembrie 2026" }, dest: { ru: "Молдова — выходного дня", ro: "Moldova — weekend" }, dur: { ru: "2 дня", ro: "2 zile" }, price: "€60", seats: { ru: "20 мест", ro: "20 locuri" }, urgent: false },
-];
+const RU_MONTHS = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+const RO_MONTHS = ["ianuarie","februarie","martie","aprilie","mai","iunie","iulie","august","septembrie","octombrie","noiembrie","decembrie"];
+
+function formatTripDate(iso: string, lang: "ru" | "ro") {
+  const d = new Date(iso);
+  const day = d.getUTCDate();
+  const month = (lang === "ru" ? RU_MONTHS : RO_MONTHS)[d.getUTCMonth()];
+  return `${day} ${month} ${d.getUTCFullYear()}`;
+}
+
+function formatTripDuration(start: string, end: string, lang: "ru" | "ro") {
+  const ms = new Date(end).getTime() - new Date(start).getTime();
+  const days = Math.max(1, Math.round(ms / 86400000) + 1);
+  if (lang === "ru") {
+    const mod10 = days % 10;
+    const mod100 = days % 100;
+    const word =
+      mod10 === 1 && mod100 !== 11
+        ? "день"
+        : mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)
+          ? "дня"
+          : "дней";
+    return `${days} ${word}`;
+  }
+  return days === 1 ? "1 zi" : days < 20 ? `${days} zile` : `${days} de zile`;
+}
 
 function HomePage() {
   const { t, lang } = useLang();
@@ -48,11 +79,14 @@ function HomePage() {
     queryKey: ["blog-posts"],
     queryFn: () => listBlogPosts(),
   });
-  const { data: publishedDestinations } = useQuery({
-    queryKey: ["destinations", "public-list"],
-    queryFn: () => listPublicDestinations(),
-  });
-  const dbDestinations = (publishedDestinations ?? []).filter((d) => !!d.cover_image);
+  const { data: publishedDestinations } = useSuspenseQuery(destinationsListQueryOptions);
+  const { data: allPilgrimages } = useSuspenseQuery(upcomingPilgrimagesQueryOptions);
+  const dbDestinations = publishedDestinations.filter((d) => !!d.cover_image);
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const upcoming = allPilgrimages
+    .filter((p) => p.start_date >= todayIso)
+    .sort((a, b) => a.start_date.localeCompare(b.start_date))
+    .slice(0, 8);
   return (
     <PageShell>
       {/* HERO */}
