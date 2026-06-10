@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound, ErrorComponent, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, ErrorComponent, useRouter, useParams } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import DOMPurify from "isomorphic-dompurify";
@@ -6,44 +6,49 @@ import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { getBlogPostBySlug, type BlogPostFull } from "@/lib/blog.functions";
 import { resolveBlogImage } from "@/lib/blog-images";
+import { buildHreflang } from "@/lib/locale";
 
-const postQueryOptions = (slug: string) =>
+export const postQueryOptions = (slug: string) =>
   queryOptions({
     queryKey: ["blog-post", slug],
     queryFn: () => getBlogPostBySlug({ data: { slug } }),
   });
 
+export async function loadPost(slug: string, queryClient: import("@tanstack/react-query").QueryClient) {
+  const post = await queryClient.ensureQueryData(postQueryOptions(slug));
+  if (!post) throw notFound();
+  return { post };
+}
+
+export function buildPostHead(loaderData: { post?: BlogPostFull } | undefined, lang: "ru" | "ro") {
+  const post = loaderData?.post;
+  if (!post) {
+    return { meta: [{ title: lang === "ru" ? "Статья не найдена — Паломник" : "Articol nu a fost găsit — Pelerin" }] };
+  }
+  const cover = resolveBlogImage(post.cover_image);
+  const title = lang === "ru" ? post.title_ru : post.title_ro;
+  const excerpt = (lang === "ru" ? post.excerpt_ru : post.excerpt_ro) ?? title;
+  const brand = lang === "ru" ? "Паломник" : "Pelerin";
+  return {
+    meta: [
+      { title: `${title} — ${brand}` },
+      { name: "description", content: excerpt },
+      { name: "author", content: brand },
+      { property: "og:title", content: title },
+      { property: "og:description", content: excerpt },
+      { property: "og:image", content: cover },
+      { property: "og:type", content: "article" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: excerpt },
+      { name: "twitter:image", content: cover },
+    ],
+    links: buildHreflang(`/blog/${post.slug}`, lang),
+  };
+}
+
 export const Route = createFileRoute("/blog_/$slug")({
-  loader: async ({ params, context }) => {
-    const post = await context.queryClient.ensureQueryData(
-      postQueryOptions(params.slug),
-    );
-    if (!post) throw notFound();
-    return { post };
-  },
-  head: ({ loaderData }) => {
-    const post = loaderData?.post;
-    if (!post) {
-      return { meta: [{ title: "Статья не найдена — Паломник" }] };
-    }
-    const cover = resolveBlogImage(post.cover_image);
-    return {
-      meta: [
-        { title: `${post.title_ru} — Паломник` },
-        { name: "description", content: post.excerpt_ru ?? post.title_ru },
-        { name: "author", content: "Паломник" },
-        { property: "og:title", content: post.title_ru },
-        { property: "og:description", content: post.excerpt_ru ?? post.title_ru },
-        { property: "og:image", content: cover },
-        { name: "twitter:title", content: post.title_ru },
-        { name: "twitter:description", content: post.excerpt_ru ?? post.title_ru },
-        { name: "twitter:image", content: cover },
-      ],
-      links: [
-        { rel: "canonical", href: `https://path-with-care.lovable.app/blog/${post.slug}` },
-      ],
-    };
-  },
+  loader: ({ params, context }) => loadPost(params.slug, context.queryClient),
+  head: ({ loaderData }) => buildPostHead(loaderData, "ru"),
   errorComponent: ({ error }) => {
     const router = useRouter();
     return (
@@ -73,9 +78,9 @@ export const Route = createFileRoute("/blog_/$slug")({
   component: PostPage,
 });
 
-function PostPage() {
+export function PostPage() {
   const { t, lang } = useLang();
-  const { slug } = Route.useParams();
+  const { slug } = useParams({ strict: false }) as { slug: string };
   const { data } = useSuspenseQuery(postQueryOptions(slug));
   const post = data as BlogPostFull;
 
