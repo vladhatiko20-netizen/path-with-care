@@ -45,5 +45,38 @@ export const getBlogPostBySlug = createServerFn({ method: "GET" })
       .eq("is_published", true)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    return row;
+    if (!row) return null;
+
+    const { default: sanitizeHtml } = await import("sanitize-html");
+    const sanitizeOptions: Parameters<typeof sanitizeHtml>[1] = {
+      allowedTags: [
+        "h1", "h2", "h3", "h4", "h5", "h6",
+        "p", "br", "hr",
+        "strong", "b", "em", "i", "u", "s", "strike", "sub", "sup",
+        "ul", "ol", "li",
+        "blockquote", "pre", "code",
+        "a", "img",
+        "span", "div",
+      ],
+      allowedAttributes: {
+        a: ["href", "name", "target", "rel"],
+        img: ["src", "alt", "title", "width", "height", "loading"],
+        "*": ["class", "style"],
+      },
+      allowedSchemes: ["http", "https", "mailto", "tel"],
+      transformTags: {
+        a: (tagName, attribs) => ({
+          tagName,
+          attribs: {
+            ...attribs,
+            ...(attribs.target === "_blank"
+              ? { rel: "noopener noreferrer" }
+              : {}),
+          },
+        }),
+      },
+    };
+    const clean = (html: string | null) =>
+      html ? sanitizeHtml(html, sanitizeOptions) : html;
+    return { ...row, body_ru: clean(row.body_ru), body_ro: clean(row.body_ro) };
   });

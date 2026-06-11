@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
-import DOMPurify from "isomorphic-dompurify";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { getBlogPostBySlug, type BlogPostFull } from "@/lib/blog.functions";
@@ -40,7 +39,7 @@ export function Component({ slug }: { slug: string }) {
           {isHtml ? (
             <div
               className="prose prose-lg max-w-none text-foreground/85"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(body) }}
+              dangerouslySetInnerHTML={{ __html: body }}
             />
           ) : (
           <ReactMarkdown
