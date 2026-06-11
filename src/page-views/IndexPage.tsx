@@ -52,6 +52,7 @@ function formatTripDuration(start: string, end: string, lang: "ru" | "ro") {
 
 export function Component() {
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
   const { data: blogPosts } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: () => listBlogPosts(),
