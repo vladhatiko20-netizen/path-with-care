@@ -4,6 +4,7 @@ import { Component, postQueryOptions } from "@/page-views/BlogPostPage";
 import { resolveBlogImage } from "@/lib/blog-images";
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/blog_/$slug")({
   loader: async ({ params, context }) => {
@@ -18,18 +19,15 @@ export const Route = createFileRoute("/ro/blog_/$slug")({
     const title = post.title_ro || post.title_ru;
     const desc = post.excerpt_ro ?? post.excerpt_ru ?? title;
     return {
-      meta: [
-        { title: `${title} — Pelerin` },
-        { name: "description", content: desc },
-        { name: "author", content: "Pelerin" },
-        { property: "og:title", content: title },
-        { property: "og:description", content: desc },
-        { property: "og:image", content: cover },
-        { property: "og:url", content: `${SITE_ORIGIN}/ro/blog/${post.slug}` },
-        { name: "twitter:title", content: title },
-        { name: "twitter:description", content: desc },
-        { name: "twitter:image", content: cover },
-      ],
+      meta: buildPageMeta({
+        lang: "ro",
+        title: `${title} — Pelerin`,
+        description: desc,
+        ogTitle: title,
+        ogType: "article",
+        ogImage: cover,
+        ogUrl: `${SITE_ORIGIN}/ro/blog/${post.slug}`,
+      }),
       links: hreflangLinks(`/blog/${params.slug}`, "ro"),
     };
   },
