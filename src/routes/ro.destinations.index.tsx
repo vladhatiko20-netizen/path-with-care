@@ -3,17 +3,17 @@ import { PageShell } from "@/components/site/PageShell";
 import { Component, destinationsListQueryOptions } from "@/page-views/DestinationsIndexPage";
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/destinations/")({
   head: () => ({
-    meta: [
-      { title: "Direcții de pelerinaj – Pelerin" },
-      { name: "description", content: "Opt direcții de pelerinaj ortodox: Ierusalim, Bari, Corfu, Athos, Georgia, România, Ucraina, Moldova. Program, sfinte locuri, date." },
-      { name: "author", content: "Pelerin" },
-      { property: "og:title", content: "Direcții de pelerinaj – Pelerin" },
-      { property: "og:description", content: "Opt direcții de pelerinaj ortodox la sfintele locuri ale lumii." },
-      { property: "og:image", content: `${SITE_ORIGIN}/assets/hero-destinations.jpg` },
-    ],
+    meta: buildPageMeta({
+      lang: "ro",
+      title: "Direcții de pelerinaj – Pelerin",
+      description: "Opt direcții de pelerinaj ortodox: Ierusalim, Bari, Corfu, Athos, Georgia, România, Ucraina, Moldova. Program, sfinte locuri, date.",
+      ogDescription: "Opt direcții de pelerinaj ortodox la sfintele locuri ale lumii.",
+      ogImage: `${SITE_ORIGIN}/assets/hero-destinations.jpg`,
+    }),
     links: hreflangLinks("/destinations", "ro"),
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(destinationsListQueryOptions),
