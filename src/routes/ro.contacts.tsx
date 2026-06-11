@@ -5,14 +5,13 @@ import { hreflangLinks } from "@/lib/hreflang";
 import heroImg from "@/assets/hero-contacts.jpg";
 
 export const Route = createFileRoute("/ro/contacts")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "Контакты — Паломник" },
-      { name: "description", content: "Адрес офиса в Кишинёве, телефоны, электронная почта, часы работы и форма обратной связи." },
-      { name: "author", content: "Паломник" },
-      { property: "og:title", content: "Контакты — Паломник" },
-      { property: "og:description", content: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв." },
+      { title: "Contacte – Pelerin" },
+      { name: "description", content: "Cum ne găsiți: adresă, telefoane și formular de contact. Birou în Chișinău, subdiviziune Eldorado Tur." },
+      { name: "author", content: "Pelerin" },
+      { property: "og:title", content: "Contacte – Pelerin" },
+      { property: "og:description", content: "Cum ne găsiți: adresă, telefoane și formular de contact." },
       { property: "og:image", content: heroImg },
     ],
     links: hreflangLinks("/contacts", "ro"),
