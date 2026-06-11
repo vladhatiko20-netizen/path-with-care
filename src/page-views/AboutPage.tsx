@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import annaHero from "@/assets/anna-hero.jpg";
 import annaJerusalem from "@/assets/anna-jerusalem.jpg";
 import annaCorfu from "@/assets/anna-corfu.jpg";
@@ -14,6 +15,7 @@ import natalia from "@/assets/team-natalia.jpg";
 
 export function Component() {
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
 
   const gallery = [
     { img: annaJerusalem, ru: "Иерусалим, 2024 — у Гроба Господня", ro: "Ierusalim, 2024 — la Sfântul Mormânt" },
@@ -210,7 +212,7 @@ export function Component() {
             <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">palomnik.moldova@gmail.com</a>
           </p>
           <p className="mt-4 text-xs text-muted-foreground">
-            <Link to="/contacts" className="hover:text-foreground gold-underline">{t("Связаться с нами", "Contactați-ne")}</Link>
+            <Link to={localize("/contacts") as "/contacts"} className="hover:text-foreground gold-underline">{t("Связаться с нами", "Contactați-ne")}</Link>
           </p>
         </div>
       </section>

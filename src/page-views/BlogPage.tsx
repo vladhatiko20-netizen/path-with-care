@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import { listBlogPosts, type BlogPostSummary } from "@/lib/blog.functions";
 import { resolveBlogImage } from "@/lib/blog-images";
 import heroImg from "@/assets/hero-blog.jpg";
@@ -23,6 +24,7 @@ function formatDate(iso: string, lang: "ru" | "ro") {
 
 export function Component() {
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
   const { data: posts } = useSuspenseQuery(blogListQueryOptions());
 
   return (
@@ -50,7 +52,7 @@ export function Component() {
               const excerpt = lang === "ru" ? p.excerpt_ru : p.excerpt_ro;
               const img = resolveBlogImage(p.cover_image);
               return (
-                <Link key={p.slug} to="/blog/$slug" params={{ slug: p.slug }} className="block">
+                <Link key={p.slug} to={localize("/blog/$slug") as "/blog/$slug"} params={{ slug: p.slug }} className="block">
                   <article className="group bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] hover:-translate-y-0.5 transition-all duration-500 h-full">
                     <div className="aspect-[16/10] overflow-hidden">
                       <img src={img} alt={title} loading="lazy" width={800} height={500} className="w-full h-full object-cover group-hover:scale-[1.05] transition-transform duration-[1200ms]" />

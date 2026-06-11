@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import {
   getDestinationBySlug,
   listGalleryByDestinationSlug,
@@ -156,6 +157,7 @@ function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
 export function Component({ data, slug }: { data: DestinationLoaderData; slug: string }) {
   const { destination, pilgrimages, gallery, shrines, program, inclusions, faq } = data;
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
   const [prefill, setPrefill] = useState<string>("");
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
@@ -256,9 +258,9 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
       {/* Breadcrumbs */}
       <nav aria-label="breadcrumb" className="max-w-6xl mx-auto px-6 pt-2 text-[15px] md:text-base font-serif text-foreground/70">
         <ol className="flex flex-wrap items-center justify-center gap-2 min-h-[40px]">
-          <li><Link to="/" className="hover:text-accent">{t("Главная", "Acasă")}</Link></li>
+          <li><Link to={localize("/") as "/"} className="hover:text-accent">{t("Главная", "Acasă")}</Link></li>
           <li aria-hidden="true">→</li>
-          <li><Link to="/destinations" className="hover:text-accent">{t("Направления", "Destinații")}</Link></li>
+          <li><Link to={localize("/destinations") as "/destinations"} className="hover:text-accent">{t("Направления", "Destinații")}</Link></li>
           <li aria-hidden="true">→</li>
           <li className="text-foreground">{shortTitle}</li>
         </ol>

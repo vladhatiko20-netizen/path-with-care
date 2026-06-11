@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import heroImg from "@/assets/hero-calendar.jpg";
 import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 
@@ -34,6 +35,7 @@ function durationDays(start: string, end: string) {
 
 export function Component() {
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
   const navigate = useNavigate();
   const { data: trips } = useSuspenseQuery(pilgrimagesQueryOptions());
 
@@ -83,7 +85,7 @@ export function Component() {
                   <table className="w-full font-serif">
                     <tbody>
                       {m.trips.map((row) => (
-                        <tr key={row.id} onClick={() => navigate({ to: "/contacts" })} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
+                        <tr key={row.id} onClick={() => navigate({ to: localize("/contacts") as "/contacts" })} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
                           <td className="py-3 pr-3 text-accent text-lg leading-none align-middle w-8">{row.with_priest ? "☦" : "•"}</td>
                           <td className="py-3 pr-3 text-foreground/85 text-[15px] whitespace-nowrap">
                             {formatDateRange(row.start_date, row.end_date, lang)}
@@ -108,7 +110,7 @@ export function Component() {
         )}
 
         <div className="mt-14 text-center">
-          <Link to="/contacts" className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md">
+          <Link to={localize("/contacts") as "/contacts"} className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md">
             {t("Оставить заявку", "Lasă o cerere")}
           </Link>
         </div>
