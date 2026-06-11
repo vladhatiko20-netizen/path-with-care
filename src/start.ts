@@ -15,12 +15,10 @@ const errorMiddleware = createMiddleware({ type: "request" }).server(
       if (error instanceof Error && error.stack) {
         console.error(error.stack);
       }
-      return {
-        response: new Response(renderErrorPage(), {
-          status: 500,
-          headers: { "content-type": "text/html; charset=utf-8" },
-        }),
-      };
+      return new Response(renderErrorPage(), {
+        status: 500,
+        headers: { "content-type": "text/html; charset=utf-8" },
+      });
     }
   },
 );
