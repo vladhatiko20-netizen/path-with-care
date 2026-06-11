@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useRouter, notFound } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -45,18 +45,31 @@ import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
-const SITE = "https://path-with-care.lovable.app";
+/** Shared loader. Both RU `/destinations/$slug` and RO `/ro/destinations/$slug` call this. */
+export async function loadDestination(slug: string) {
+  const destination = await getDestinationBySlug({ data: { slug } });
+  if (!destination) return null;
+  const [pilgrimages, gallery, shrines, program, inclusions, faq] = await Promise.all([
+    listPilgrimages(),
+    listGalleryByDestinationSlug({ data: { slug } }),
+    listShrinesByDestinationSlug({ data: { slug } }),
+    listProgramByDestinationSlug({ data: { slug } }),
+    listInclusionsByDestinationSlug({ data: { slug } }),
+    listFaqByDestinationSlug({ data: { slug } }),
+  ]);
+  return { destination, pilgrimages, gallery, shrines, program, inclusions, faq };
+}
 
-type LoaderData = {
-  destination: { title_ru: string; description_ru: string | null; seo_description_ru: string | null; cover_image: string | null; price_from: number | null };
-  program: ReadonlyArray<{ title_ru: string; description_ru: string | null }>;
-  faq: ReadonlyArray<{ question_ru: string; answer_ru: string | null }>;
-};
+export type DestinationLoaderData = NonNullable<Awaited<ReturnType<typeof loadDestination>>>;
 
-function buildJsonLd(data: LoaderData | undefined, url: string) {
+/** JSON-LD builder. `lang` selects RU/RO fields for schema text. */
+export function buildDestinationJsonLd(data: DestinationLoaderData | undefined, url: string, lang: "ru" | "ro" = "ru") {
   if (!data) return [];
   const d = data.destination;
-  const desc = d.seo_description_ru || d.description_ru || "";
+  const desc = lang === "ru"
+    ? (d.seo_description_ru || d.description_ru || "")
+    : (d.seo_description_ro || d.description_ro || "");
+  const name = lang === "ru" ? d.title_ru : d.title_ro;
   const image = d.cover_image || undefined;
   const offers = d.price_from
     ? {
@@ -70,19 +83,19 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
   const provider = {
     "@type": "Organization",
     name: "Паломник",
-    url: SITE,
+    url: url.replace(/\/.*$/, ""), // host root
     parentOrganization: { "@type": "Organization", name: "SRL Eldorado Tur" },
   };
   const itinerary = (data.program ?? []).map((day, i) => ({
     "@type": "ListItem",
     position: i + 1,
-    name: day.title_ru,
-    description: day.description_ru ?? undefined,
+    name: lang === "ru" ? day.title_ru : day.title_ro,
+    description: (lang === "ru" ? day.description_ru : day.description_ro) ?? undefined,
   }));
   const touristTrip = {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
-    name: d.title_ru,
+    name,
     description: desc,
     ...(image ? { image } : {}),
     provider,
@@ -95,7 +108,7 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
   const product = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: d.title_ru,
+    name,
     description: desc,
     ...(image ? { image } : {}),
     brand: provider,
@@ -106,7 +119,10 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
     { type: "application/ld+json", children: JSON.stringify(touristTrip) },
     { type: "application/ld+json", children: JSON.stringify(product) },
   ];
-  const faqItems = (data.faq ?? []).filter((f) => f.answer_ru && f.answer_ru.trim());
+  const faqItems = (data.faq ?? []).filter((f) => {
+    const a = lang === "ru" ? f.answer_ru : f.answer_ro;
+    return a && a.trim();
+  });
   if (faqItems.length > 0) {
     scripts.push({
       type: "application/ld+json",
@@ -115,81 +131,14 @@ function buildJsonLd(data: LoaderData | undefined, url: string) {
         "@type": "FAQPage",
         mainEntity: faqItems.map((f) => ({
           "@type": "Question",
-          name: f.question_ru,
-          acceptedAnswer: { "@type": "Answer", text: f.answer_ru },
+          name: lang === "ru" ? f.question_ru : f.question_ro,
+          acceptedAnswer: { "@type": "Answer", text: lang === "ru" ? f.answer_ru : f.answer_ro },
         })),
       }),
     });
   }
   return scripts;
 }
-
-export const Route = createFileRoute("/destinations/$slug")({
-  loader: async ({ params }) => {
-    const destination = await getDestinationBySlug({ data: { slug: params.slug } });
-    if (!destination) throw notFound();
-    const [pilgrimages, gallery, shrines, program, inclusions, faq] = await Promise.all([
-      listPilgrimages(),
-      listGalleryByDestinationSlug({ data: { slug: params.slug } }),
-      listShrinesByDestinationSlug({ data: { slug: params.slug } }),
-      listProgramByDestinationSlug({ data: { slug: params.slug } }),
-      listInclusionsByDestinationSlug({ data: { slug: params.slug } }),
-      listFaqByDestinationSlug({ data: { slug: params.slug } }),
-    ]);
-    return { destination, pilgrimages, gallery, shrines, program, inclusions, faq };
-  },
-  head: ({ loaderData, params }) => {
-    const d = loaderData?.destination;
-    if (!d) return {};
-    const title = d.seo_title_ru || d.title_ru;
-    const desc = d.seo_description_ru || d.description_ru || "";
-    const url = `${SITE}/destinations/${params.slug}`;
-    const img = d.og_image || d.cover_image || undefined;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: desc },
-        { property: "og:title", content: title },
-        { property: "og:description", content: desc },
-        { property: "og:type", content: "product" },
-        { property: "og:url", content: url },
-        ...(img ? [{ property: "og:image", content: img }] : []),
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: title },
-        { name: "twitter:description", content: desc },
-        ...(img ? [{ name: "twitter:image", content: img }] : []),
-      ],
-      links: [{ rel: "canonical", href: url }],
-      scripts: buildJsonLd(loaderData, url),
-    };
-  },
-  notFoundComponent: () => (
-    <PageShell>
-      <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <h1 className="font-serif text-3xl mb-4">Страница не найдена</h1>
-        <Link to="/destinations" className="text-accent hover:underline font-serif">К направлениям</Link>
-      </div>
-    </PageShell>
-  ),
-  errorComponent: ({ error, reset }) => {
-    const router = useRouter();
-    return (
-      <PageShell>
-        <div className="max-w-3xl mx-auto px-6 py-20 text-center font-serif">
-          <h1 className="text-3xl mb-3">Не удалось загрузить страницу</h1>
-          <p className="text-foreground/70 mb-6">{error.message}</p>
-          <button
-            onClick={() => { reset(); router.invalidate(); }}
-            className="px-5 py-2 bg-accent text-primary-foreground rounded-sm"
-          >
-            Попробовать снова
-          </button>
-        </div>
-      </PageShell>
-    );
-  },
-  component: DestinationPage,
-});
 
 function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
   const locale = lang === "ru" ? "ru-RU" : "ro-RO";
