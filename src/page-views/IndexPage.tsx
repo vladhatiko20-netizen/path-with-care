@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
@@ -12,39 +12,14 @@ import { listBlogPosts } from "@/lib/blog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 import { listPilgrimages } from "@/lib/pilgrimages.functions";
 
-const destinationsListQueryOptions = queryOptions({
+export const destinationsListQueryOptions = queryOptions({
   queryKey: ["destinations", "public-list"],
   queryFn: () => listPublicDestinations(),
 });
 
-const upcomingPilgrimagesQueryOptions = queryOptions({
+export const upcomingPilgrimagesQueryOptions = queryOptions({
   queryKey: ["pilgrimages", "upcoming"],
   queryFn: () => listPilgrimages(),
-});
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Паломник — Православные паломнические поездки из Кишинёва" },
-      {
-        name: "description",
-        content:
-          "Паломник — поездки к святыням православного мира из Кишинёва: Иерусалим, Бари, Корфу, Афон, Грузия, Румыния, Молдова. И вместе ко Христу.",
-      },
-      { property: "og:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      {
-        property: "og:description",
-        content: "И вместе ко Христу. Поездки к святым местам с духовным сопровождением.",
-      },
-      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/" }],
-  }),
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(destinationsListQueryOptions);
-    context.queryClient.ensureQueryData(upcomingPilgrimagesQueryOptions);
-  },
-  component: HomePage,
 });
 
 const RU_MONTHS = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
@@ -74,7 +49,7 @@ function formatTripDuration(start: string, end: string, lang: "ru" | "ro") {
   return days === 1 ? "1 zi" : days < 20 ? `${days} zile` : `${days} de zile`;
 }
 
-function HomePage() {
+export function Component() {
   const { t, lang } = useLang();
   const { data: blogPosts } = useQuery({
     queryKey: ["blog-posts"],
