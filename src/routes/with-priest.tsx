@@ -2,19 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/WithPriestPage";
 import heroImg from "@/assets/hero-priest.jpg";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/with-priest")({
   head: () => ({
-    meta: [
-      { title: "Диалог со священником — Паломник" },
-      { name: "description", content: "Беседы со священниками, сопровождающими наши паломнические группы. Часто задаваемые вопросы и форма для личного вопроса." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Диалог со священником — Паломник" },
-      { property: "og:description", content: "Беседы со священниками, сопровождающими паломников." },
-      { property: "og:image", content: heroImg },
-    ],
+    meta: buildPageMeta({
+      lang: "ru",
+      title: "Диалог со священником — Паломник",
+      description: "Беседы со священниками, сопровождающими наши паломнические группы. Часто задаваемые вопросы и форма для личного вопроса.",
+      ogDescription: "Беседы со священниками, сопровождающими паломников.",
+      ogImage: heroImg,
+    }),
     links: hreflangLinks("/with-priest", "ru"),
     scripts: [
       {
