@@ -11,10 +11,11 @@ export const Route = createFileRoute("/ro/")({
   // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "Pelerin — Pelerinaje ortodoxe din Chișinău" },
-      { name: "description", content: "Pelerin — pelerinaje la sfintele locuri ale lumii ortodoxe din Chișinău: Ierusalim, Bari, Corfu, Athos, Georgia, România, Moldova. Și împreună spre Hristos." },
-      { property: "og:title", content: "Pelerin — pelerinaje din Chișinău" },
-      { property: "og:description", content: "Și împreună spre Hristos. Călătorii la sfintele locuri cu însoțire duhovnicească." },
+      { title: "Pelerin – Și împreună spre Hristos" },
+      { name: "description", content: "Pelerinaje ortodoxe la sfintele locuri ale lumii: Ierusalim, Bari, Corfu, Athos, Georgia, România, Ucraina, Moldova. Subdiviziune Eldorado Tur." },
+      { name: "author", content: "Pelerin" },
+      { property: "og:title", content: "Pelerin – Și împreună spre Hristos" },
+      { property: "og:description", content: "Pelerinaje ortodoxe la sfintele locuri ale lumii. Prieteni, să pornim împreună spre sfinte locuri." },
       { property: "og:image", content: `${SITE_ORIGIN}/assets/hero-monastery.jpg` },
     ],
     links: hreflangLinks("/", "ro"),
