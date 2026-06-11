@@ -1,15 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/PublicOfferPage";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/public-offer")({
   head: () => ({
-    meta: [
-      { title: "Публичная оферта — Паломник" },
-      { name: "description", content: "Публичная оферта сайта Паломник." },
-      { property: "og:title", content: "Публичная оферта — Паломник" },
-      { property: "og:description", content: "Условия публичной оферты на услуги паломнических поездок Паломник." },
-    ],
+    meta: buildPageMeta({
+      lang: "ru",
+      title: "Публичная оферта — Паломник",
+      description: "Публичная оферта сайта Паломник.",
+      ogDescription: "Условия публичной оферты на услуги паломнических поездок Паломник.",
+    }),
     links: hreflangLinks("/public-offer", "ru"),
   }),
   component: Component,
