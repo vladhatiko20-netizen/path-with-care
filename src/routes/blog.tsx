@@ -3,19 +3,17 @@ import { PageShell } from "@/components/site/PageShell";
 import { Component, blogListQueryOptions } from "@/page-views/BlogPage";
 import heroImg from "@/assets/hero-blog.jpg";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
-    meta: [
-      { title: "Православный блог — Паломник" },
-      { name: "description", content: "Истории паломников, практические советы, рассказы о святых местах." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Православный блог — Паломник" },
-      { property: "og:description", content: "Истории паломников и рассказы о святых местах." },
-      { property: "og:image", content: heroImg },
-    ],
+    meta: buildPageMeta({
+      lang: "ru",
+      title: "Православный блог — Паломник",
+      description: "Истории паломников, практические советы, рассказы о святых местах.",
+      ogDescription: "Истории паломников и рассказы о святых местах.",
+      ogImage: heroImg,
+    }),
     links: hreflangLinks("/blog", "ru"),
   }),
   loader: ({ context }) => {
