@@ -3,13 +3,12 @@ import { Component } from "@/page-views/PublicOfferPage";
 import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/ro/public-offer")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "Публичная оферта — Паломник" },
-      { name: "description", content: "Публичная оферта сайта Паломник." },
-      { property: "og:title", content: "Публичная оферта — Паломник" },
-      { property: "og:description", content: "Условия публичной оферты на услуги паломнических поездок Паломник." },
+      { title: "Oferta publică – Pelerin" },
+      { name: "description", content: "Condițiile de prestare a serviciilor de pelerinaj. Oferta publică." },
+      { property: "og:title", content: "Oferta publică – Pelerin" },
+      { property: "og:description", content: "Condițiile de prestare a serviciilor de pelerinaj." },
     ],
     links: hreflangLinks("/public-offer", "ro"),
   }),

@@ -3,13 +3,12 @@ import { Component } from "@/page-views/PrivacyPage";
 import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/ro/privacy")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "Политика конфиденциальности — Паломник" },
-      { name: "description", content: "Политика конфиденциальности сайта Паломник." },
-      { property: "og:title", content: "Политика конфиденциальности — Паломник" },
-      { property: "og:description", content: "Политика конфиденциальности сайта Паломник: как мы обрабатываем персональные данные." },
+      { title: "Politica de confidențialitate – Pelerin" },
+      { name: "description", content: "Cum prelucrăm și protejăm datele cu caracter personal." },
+      { property: "og:title", content: "Politica de confidențialitate – Pelerin" },
+      { property: "og:description", content: "Cum prelucrăm și protejăm datele cu caracter personal." },
     ],
     links: hreflangLinks("/privacy", "ro"),
   }),
