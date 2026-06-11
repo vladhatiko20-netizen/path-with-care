@@ -1,46 +1,44 @@
-## План — карточки направлений на главной (src/routes/index.tsx)
+## Plan: Apply RO meta to 11 static pages + verify /ro live
 
-Только этот файл. Раскладка, изображение, цвета, шрифты, сетка `sm:grid-cols-2 lg:grid-cols-4 gap-5` — не трогаю.
+### 1. Update 11 RO route files
+Replace RU fallback strings with the provided RO copy in `head().meta`. Touch only `title`, `description`, `og:title` (mirror title), `og:description`. Leave `og:image`, `links` (hreflang), `scripts` (JSON-LD), loader, component, error/notFound untouched. Remove the `// TODO: RO meta` comments.
 
-### Fix 1 — обрезается подпись (card_text)
+Files:
+- `src/routes/ro.index.tsx` — already has RO title/description; align with new exact strings ("Și împreună spre Hristos" / Eldorado Tur copy)
+- `src/routes/ro.about.tsx`
+- `src/routes/ro.destinations.index.tsx`
+- `src/routes/ro.catalog.tsx`
+- `src/routes/ro.calendar.tsx`
+- `src/routes/ro.with-priest.tsx`
+- `src/routes/ro.blog.tsx`
+- `src/routes/ro.contacts.tsx` (keep JSON-LD as-is)
+- `src/routes/ro.public-offer.tsx`
+- `src/routes/ro.privacy.tsx`
+- `src/routes/ro.orthodox-calendar.tsx`
 
-Причина: сейчас `line-clamp-2` принудительно обрезает подпись на 2 строки. При коротких словах в узкой колонке (lg: 4 в ряд) одно предложение часто занимает 3 строки → визуально «срезано».
+For each: set `name=author` to "Pelerin" where it currently says "Паломник" (consistency with RO title brand). All other fields unchanged.
 
-Решение: убрать `line-clamp-2` совсем. Подпись — 1–2 предложения, пусть растёт по содержимому и показывается полностью. Высоту карточек выравниваем за счёт Fix 2 (flex-колонка + футер `mt-auto`), а не за счёт обрезки.
+### 2. Typecheck
+Run `bunx tsc --noEmit`. Must be green.
 
-Альтернативы, которые я отверг:
-- Фиксированная высота карточки/секции → всё равно обрежет на длинных.
-- `line-clamp-3/4` → то же самое, просто реже.
+### 3. Publish
+Call `preview_ui--publish` to `path-with-care.lovable.app` with website_info_status=added_or_updated, summary noting RO meta updates on 11 static pages.
 
-### Fix 2 — золотая линия и строка «длительность/цена» не выровнены
+### 4. Live verification (production, view-source, no JS)
+Poll until `/ro` returns 200 (curl with retry). Then verify:
+- `curl -sI` status for: `/`, `/login`, `/admin`, `/destinations/bari`, `/blog`, `/ro`, `/ro/destinations/bari`, `/ro/blog`, `/ro/about`, `/ro/contacts` — all 200
+- `curl -s /ro/destinations/bari` view-source contains: `<link rel="canonical" href=".../ro/destinations/bari">`, hreflang ru/ro/x-default alternates pointing at correct RU and RO URLs
+- `curl -s /ro` shows RO `<title>` ("Pelerin – Și împreună spre Hristos") and `<html lang="ro">`
+- `curl -s /ro/destinations/bari` shows Romanian body HTML
+- `curl -s /sitemap.xml` includes both RU and RO entries with `xhtml:link` alternates
+- RU pages unchanged (spot-check `/destinations/bari` title still RU)
 
-Причина: подпись разной длины → футер каждой карточки сидит на разной высоте.
+For the RU↔RO switcher round-trip: confirmed via source by checking that `/ro` HTML contains an anchor to `/` (RU link) and `/` HTML contains an anchor to `/ro` in the Header (no JS needed to verify the href).
 
-Решение:
-- Внешний `<Link>` → `flex flex-col h-full`.
-- Контентный `<div className="p-4">` → `flex flex-col flex-1`.
-- Футер (`<div>` с `border-t`) → добавляю `mt-auto`, чтобы он прилипал к низу.
-- Сетка карточек уже даёт равную высоту строк (`grid` + `items-stretch` по умолчанию), так что футеры всех 4 карточек в ряду окажутся ровно на одной линии.
+### 5. Report
+List all 11 files changed, typecheck result, publish result, and per-URL live verification results (status + spot-checked head tags).
 
-### Fix 3 — длительность слишком мелкая
-
-Сейчас: `text-xs` (~12px). Цена: `text-base` (16px).
-
-Увеличиваю длительность примерно в 1.5×: `text-xs` → `text-[1.125rem]` эквивалент `text-lg` (18px) слишком крупно рядом с ценой; правильнее `text-base` (16px) — это ровно 1.33×, ближайшее к 1.5× из дизайн-токенов без перебора. Если хочется именно ~1.5×, ставлю `text-[18px]` (но это вне токенов). 
-
-Предложение: использую `text-base` (16px, ×1.33, токен). Цена остаётся `text-base text-gold font-serif font-medium` — без изменений. Если нужно строго ×1.5 — скажите, поставлю `text-lg`.
-
-### Технические правки (один блок JSX, строки 170–200)
-
-```text
-Link           → + "flex flex-col h-full"
-div p-4        → + "flex flex-col flex-1"
-p caption      → убрать "line-clamp-2", оставить "mb-3"
-div footer     → + "mt-auto"
-span duration  → "text-xs" → "text-base"
-```
-
-Больше ничего в файле не меняю.
-
-### Вопрос к вам
-По Fix 3: `text-base` (×1.33, в токенах) или `text-lg` (×1.5, тоже токен, но крупнее цены воспринимается одинаково)? По умолчанию беру `text-base`.
+### Out of scope
+- No code logic changes
+- No component, hreflang helper, sitemap, or layout changes
+- No new routes
