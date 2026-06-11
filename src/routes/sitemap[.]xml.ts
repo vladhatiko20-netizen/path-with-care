@@ -50,20 +50,33 @@ export const Route = createFileRoute("/sitemap.xml")({
           });
         }
 
-        const urls = entries.map((e) =>
-          [
+        const roPath = (p: string) => (p === "/" ? "/ro" : `/ro${p}`);
+        const urlBlock = (e: SitemapEntry, lang: "ru" | "ro") => {
+          const ruUrl = `${BASE_URL}${e.path}`;
+          const roUrl = `${BASE_URL}${roPath(e.path)}`;
+          const self = lang === "ru" ? ruUrl : roUrl;
+          return [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
+            `    <loc>${self}</loc>`,
             e.lastmod ? `    <lastmod>${e.lastmod}</lastmod>` : null,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
+            `    <xhtml:link rel="alternate" hreflang="ru" href="${ruUrl}"/>`,
+            `    <xhtml:link rel="alternate" hreflang="ro" href="${roUrl}"/>`,
+            `    <xhtml:link rel="alternate" hreflang="x-default" href="${ruUrl}"/>`,
             `  </url>`,
-          ].filter(Boolean).join("\n")
-        );
+          ].filter(Boolean).join("\n");
+        };
+
+        const urls: string[] = [];
+        for (const e of entries) {
+          urls.push(urlBlock(e, "ru"));
+          urls.push(urlBlock(e, "ro"));
+        }
 
         const xml = [
           `<?xml version="1.0" encoding="UTF-8"?>`,
-          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+          `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">`,
           ...urls,
           `</urlset>`,
         ].join("\n");
