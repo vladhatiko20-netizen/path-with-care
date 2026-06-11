@@ -4,6 +4,7 @@ import { Component, postQueryOptions } from "@/page-views/BlogPostPage";
 import { resolveBlogImage } from "@/lib/blog-images";
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/blog_/$slug")({
   loader: async ({ params, context }) => {
@@ -15,18 +16,17 @@ export const Route = createFileRoute("/blog_/$slug")({
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Статья не найдена — Паломник" }] };
     const cover = resolveBlogImage(post.cover_image);
+    const desc = post.excerpt_ru ?? post.title_ru;
     return {
-      meta: [
-        { title: `${post.title_ru} — Паломник` },
-        { name: "description", content: post.excerpt_ru ?? post.title_ru },
-        { name: "author", content: "Паломник" },
-        { property: "og:title", content: post.title_ru },
-        { property: "og:description", content: post.excerpt_ru ?? post.title_ru },
-        { property: "og:image", content: cover },
-        { name: "twitter:title", content: post.title_ru },
-        { name: "twitter:description", content: post.excerpt_ru ?? post.title_ru },
-        { name: "twitter:image", content: cover },
-      ],
+      meta: buildPageMeta({
+        lang: "ru",
+        title: `${post.title_ru} — Паломник`,
+        description: desc,
+        ogTitle: post.title_ru,
+        ogType: "article",
+        ogImage: cover,
+        ogUrl: `${SITE_ORIGIN}/blog/${post.slug}`,
+      }),
       links: hreflangLinks(`/blog/${post.slug}`, "ru"),
     };
   },

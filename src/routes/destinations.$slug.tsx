@@ -3,6 +3,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { Component, loadDestination, buildDestinationJsonLd } from "@/page-views/DestinationSlugPage";
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/destinations/$slug")({
   loader: async ({ params }) => {
@@ -18,19 +19,14 @@ export const Route = createFileRoute("/destinations/$slug")({
     const url = `${SITE_ORIGIN}/destinations/${params.slug}`;
     const img = d.og_image || d.cover_image || undefined;
     return {
-      meta: [
-        { title },
-        { name: "description", content: desc },
-        { property: "og:title", content: title },
-        { property: "og:description", content: desc },
-        { property: "og:type", content: "product" },
-        { property: "og:url", content: url },
-        ...(img ? [{ property: "og:image", content: img }] : []),
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: title },
-        { name: "twitter:description", content: desc },
-        ...(img ? [{ name: "twitter:image", content: img }] : []),
-      ],
+      meta: buildPageMeta({
+        lang: "ru",
+        title,
+        description: desc,
+        ogType: "product",
+        ogUrl: url,
+        ogImage: img,
+      }),
       links: hreflangLinks(`/destinations/${params.slug}`, "ru"),
       scripts: buildDestinationJsonLd(loaderData, url, "ru"),
     };

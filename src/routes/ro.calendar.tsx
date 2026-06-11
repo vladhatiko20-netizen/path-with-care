@@ -3,17 +3,17 @@ import { PageShell } from "@/components/site/PageShell";
 import { Component, pilgrimagesQueryOptions } from "@/page-views/CalendarPage";
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/calendar")({
   head: () => ({
-    meta: [
-      { title: "Calendarul pelerinajelor – Pelerin" },
-      { name: "description", content: "Datele apropiate ale pelerinajelor la sfintele locuri. Alegeți direcția și perioada potrivită." },
-      { name: "author", content: "Pelerin" },
-      { property: "og:title", content: "Calendarul pelerinajelor – Pelerin" },
-      { property: "og:description", content: "Datele apropiate ale pelerinajelor la sfintele locuri." },
-      { property: "og:image", content: `${SITE_ORIGIN}/assets/hero-calendar.jpg` },
-    ],
+    meta: buildPageMeta({
+      lang: "ro",
+      title: "Calendarul pelerinajelor – Pelerin",
+      description: "Datele apropiate ale pelerinajelor la sfintele locuri. Alegeți direcția și perioada potrivită.",
+      ogDescription: "Datele apropiate ale pelerinajelor la sfintele locuri.",
+      ogImage: `${SITE_ORIGIN}/assets/hero-calendar.jpg`,
+    }),
     links: hreflangLinks("/calendar", "ro"),
   }),
   loader: ({ context }) => {

@@ -3,19 +3,17 @@ import { Component } from "@/page-views/ContactsPage";
 import { SITE_ORIGIN } from "@/lib/constants";
 import heroImg from "@/assets/hero-contacts.jpg";
 import { hreflangLinks } from "@/lib/hreflang";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/contacts")({
   head: () => ({
-    meta: [
-      { title: "Контакты — Паломник" },
-      { name: "description", content: "Адрес офиса в Кишинёве, телефоны, электронная почта, часы работы и форма обратной связи." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Контакты — Паломник" },
-      { property: "og:description", content: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв." },
-      { property: "og:image", content: heroImg },
-    ],
+    meta: buildPageMeta({
+      lang: "ru",
+      title: "Контакты — Паломник",
+      description: "Адрес офиса в Кишинёве, телефоны, электронная почта, часы работы и форма обратной связи.",
+      ogDescription: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв.",
+      ogImage: heroImg,
+    }),
     links: hreflangLinks("/contacts", "ru"),
     scripts: [
       {
