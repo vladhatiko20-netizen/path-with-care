@@ -1,41 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-destinations.jpg";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 
-const destinationsListQueryOptions = queryOptions({
+export const destinationsListQueryOptions = queryOptions({
   queryKey: ["destinations", "public-list"],
   queryFn: () => listPublicDestinations(),
 });
 
-export const Route = createFileRoute("/destinations/")({
-  head: () => ({
-    meta: [
-      { title: "Направления — Паломник" },
-      { name: "description", content: "Восемь направлений к православным святыням мира из Кишинёва — Иерусалим, Бари, Корфу, Афон, Грузия, Румыния, Украина, Молдова." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Направления — Паломник" },
-      { property: "og:description", content: "Восемь направлений к православным святыням мира из Кишинёва." },
-      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-destinations.jpg" },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/destinations" }],
-  }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(destinationsListQueryOptions),
-  errorComponent: ({ error }) => (
-    <PageShell>
-      <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <p className="text-foreground/70">Не удалось загрузить список направлений: {error.message}</p>
-      </div>
-    </PageShell>
-  ),
-  component: Page,
-});
-
-function Page() {
+export function Component() {
   const { t, lang } = useLang();
   const { data: items } = useSuspenseQuery(destinationsListQueryOptions);
   return (

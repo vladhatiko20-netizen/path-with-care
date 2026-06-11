@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
@@ -6,40 +5,6 @@ import heroImg from "@/assets/hero-priest.jpg";
 import p1 from "@/assets/team-priest1.jpg";
 import p2 from "@/assets/team-priest2.jpg";
 import p3 from "@/assets/team-priest3.jpg";
-
-export const Route = createFileRoute("/with-priest")({
-  head: () => ({
-    meta: [
-      { title: "Диалог со священником — Паломник" },
-      { name: "description", content: "Беседы со священниками, сопровождающими наши паломнические группы. Часто задаваемые вопросы и форма для личного вопроса." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Диалог со священником — Паломник" },
-      { property: "og:description", content: "Беседы со священниками, сопровождающими паломников." },
-      { property: "og:image", content: heroImg },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/with-priest" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            { "@type": "Question", name: "Как готовиться к паломничеству?", acceptedAnswer: { "@type": "Answer", text: "Готовиться лучше всего исповедью и причастием перед поездкой, чтением утренних и вечерних молитв, чтением о святынях, к которым едете." } },
-            { "@type": "Question", name: "Нужно ли поститься перед поездкой?", acceptedAnswer: { "@type": "Answer", text: "Если поездка попадает на пост — соблюдаем общий пост Церкви. В обычные дни — по благословению духовника." } },
-            { "@type": "Question", name: "Что взять с собой в Иерусалим?", acceptedAnswer: { "@type": "Answer", text: "Удобную скромную одежду, удобную обувь, святую воду, крестильные крестики и иконки для освящения." } },
-            { "@type": "Question", name: "Как правильно прикладываться к мощам?", acceptedAnswer: { "@type": "Answer", text: "Перекреститесь дважды, поклонитесь, поцелуйте край раки или мощи, перекреститесь третий раз." } },
-            { "@type": "Question", name: "Можно ли участвовать невоцерковлённому человеку?", acceptedAnswer: { "@type": "Answer", text: "Да. Многие приходят в Церковь именно через паломничество. Священник в группе всегда готов поговорить и помочь." } },
-            { "@type": "Question", name: "Что нужно знать о церковной этике?", acceptedAnswer: { "@type": "Answer", text: "В храме — тишина, скромная одежда, не фотографируйте людей и службу без разрешения. Свечи ставят с молитвой." } },
-          ],
-        }),
-      },
-    ],
-  }),
-  component: Page,
-});
 
 const priests = [
   { img: p1, ru: { name: "Отец Михаил", place: "храм свв. Константина и Елены, Кишинёв", desc: "Сопровождает группы в Иерусалим и Грецию более десяти лет." },
@@ -65,7 +30,7 @@ const faq = [
     ro: { q: "Ce trebuie să știu despre eticheta bisericească?", a: "În biserică — liniște, haine modeste, fără fotografii ale slujbei. Lumânările se aprind cu rugăciune." } },
 ];
 
-function Page() {
+export function Component() {
   const { t, lang } = useLang();
   const [form, setForm] = useState({ name: "", email: "", question: "" });
   const [sent, setSent] = useState(false);

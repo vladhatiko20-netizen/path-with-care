@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
@@ -7,23 +6,6 @@ import iNikolay from "@/assets/cat-nikolay.jpg";
 import iJer from "@/assets/cat-jerusalem.jpg";
 import iLadan from "@/assets/cat-ladan.jpg";
 import iBook from "@/assets/cat-book.jpg";
-
-export const Route = createFileRoute("/catalog")({
-  head: () => ({
-    meta: [
-      { title: "Иконы и святыни — Паломник" },
-      { name: "description", content: "Каталог икон, ладана, духовной литературы. Анна привозит из паломнических поездок по предзаказу." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Иконы и святыни — Паломник" },
-      { property: "og:description", content: "Каталог икон и святынь по предзаказу из паломнических поездок." },
-      { property: "og:image", content: heroImg },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/catalog" }],
-  }),
-  component: Page,
-});
 
 type Cat = "icons" | "incense" | "books" | "other";
 type Item = { img: string; cat: Cat; ru: string; ro: string };
@@ -43,7 +25,7 @@ const items: Item[] = [
   { img: iJer, cat: "other", ru: "Поясок «Живый в помощи»", ro: "Brâuleț „Cel ce locuiește”" },
 ];
 
-function Page() {
+export function Component() {
   const { t, lang } = useLang();
   const [cat, setCat] = useState<"all" | Cat>("all");
   const [order, setOrder] = useState<Item | null>(null);

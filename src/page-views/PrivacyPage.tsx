@@ -1,21 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 
-export const Route = createFileRoute("/privacy")({
-  head: () => ({
-    meta: [
-      { title: "Политика конфиденциальности — Паломник" },
-      { name: "description", content: "Политика конфиденциальности сайта Паломник." },
-      { property: "og:title", content: "Политика конфиденциальности — Паломник" },
-      { property: "og:description", content: "Политика конфиденциальности сайта Паломник: как мы обрабатываем персональные данные." },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/privacy" }],
-  }),
-  component: Page,
-});
-
-function Page() {
+export function Component() {
   const { t } = useLang();
   return (
     <PageShell>

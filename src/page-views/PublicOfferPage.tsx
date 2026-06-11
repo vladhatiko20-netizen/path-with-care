@@ -1,21 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 
-export const Route = createFileRoute("/public-offer")({
-  head: () => ({
-    meta: [
-      { title: "Публичная оферта — Паломник" },
-      { name: "description", content: "Публичная оферта сайта Паломник." },
-      { property: "og:title", content: "Публичная оферта — Паломник" },
-      { property: "og:description", content: "Условия публичной оферты на услуги паломнических поездок Паломник." },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/public-offer" }],
-  }),
-  component: Page,
-});
-
-function Page() {
+export function Component() {
   const { t } = useLang();
   return (
     <PageShell>
