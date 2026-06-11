@@ -1,7 +1,10 @@
 import { describe, test, expect } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
-import { join } from "node:path";
-import { buildPageMeta } from "./page-meta";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildPageMeta } from "../src/lib/page-meta";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
 
 // --- Behavioral test: the builder itself MUST mirror twitter to og. ---
 describe("buildPageMeta", () => {
@@ -42,7 +45,7 @@ describe("buildPageMeta", () => {
 // --- Structural test: every public page route MUST go through buildPageMeta. ---
 // This catches the exact drift we hit manually: a route adds hand-rolled
 // twitter:* / og:* literals instead of using the shared builder.
-const ROUTES_DIR = join(import.meta.dir, "..", "routes");
+const ROUTES_DIR = join(HERE, "..", "src", "routes");
 
 // Files that legitimately have no head() of their own.
 const EXCLUDED = new Set([
