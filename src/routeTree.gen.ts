@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WithPriestRouteImport } from './routes/with-priest'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RoRouteImport } from './routes/ro'
 import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
@@ -47,6 +48,11 @@ const WithPriestRoute = WithPriestRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoRoute = RoRouteImport.update({
+  id: '/ro',
+  path: '/ro',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicOfferRoute = PublicOfferRouteImport.update({
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
+  '/ro': typeof RoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -231,6 +238,7 @@ export interface FileRoutesByTo {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
+  '/ro': typeof RoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/public-offer': typeof PublicOfferRoute
+  '/ro': typeof RoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog_/$slug': typeof BlogSlugRoute
@@ -295,6 +304,7 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
+    | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
@@ -325,6 +335,7 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
+    | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/public-offer'
+    | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog_/$slug'
@@ -388,6 +400,7 @@ export interface RootRouteChildren {
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
   PublicOfferRoute: typeof PublicOfferRoute
+  RoRoute: typeof RoRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -409,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ro': {
+      id: '/ro'
+      path: '/ro'
+      fullPath: '/ro'
+      preLoaderRoute: typeof RoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/public-offer': {
@@ -649,6 +669,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
   PublicOfferRoute: PublicOfferRoute,
+  RoRoute: RoRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
   BlogSlugRoute: BlogSlugRoute,
