@@ -75,17 +75,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // Neutral sitewide defaults only. Per-page title/description/og/twitter
+      // are set on leaves via `buildPageMeta`. Leaving leaf-specific tags here
+      // would leak (e.g. RU twitter values onto RO pages).
       { title: "Паломник — Православные паломнические поездки" },
       { name: "description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { name: "author", content: "Паломник" },
-      { property: "og:title", content: "Паломник — Православные паломнические поездки" },
-      { property: "og:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
+      { property: "og:site_name", content: "Паломник" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
-      { name: "twitter:image", content: "https://path-with-care.lovable.app/assets/hero-monastery.jpg" },
     ],
     links: [
       {
