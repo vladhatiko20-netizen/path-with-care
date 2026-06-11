@@ -3,17 +3,17 @@ import { Component } from "@/page-views/ContactsPage";
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
 import heroImg from "@/assets/hero-contacts.jpg";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/contacts")({
   head: () => ({
-    meta: [
-      { title: "Contacte – Pelerin" },
-      { name: "description", content: "Cum ne găsiți: adresă, telefoane și formular de contact. Birou în Chișinău, subdiviziune Eldorado Tur." },
-      { name: "author", content: "Pelerin" },
-      { property: "og:title", content: "Contacte – Pelerin" },
-      { property: "og:description", content: "Cum ne găsiți: adresă, telefoane și formular de contact." },
-      { property: "og:image", content: heroImg },
-    ],
+    meta: buildPageMeta({
+      lang: "ro",
+      title: "Contacte – Pelerin",
+      description: "Cum ne găsiți: adresă, telefoane și formular de contact. Birou în Chișinău, subdiviziune Eldorado Tur.",
+      ogDescription: "Cum ne găsiți: adresă, telefoane și formular de contact.",
+      ogImage: heroImg,
+    }),
     links: hreflangLinks("/contacts", "ro"),
     scripts: [
       {
