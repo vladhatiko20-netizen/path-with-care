@@ -4,14 +4,22 @@
 let lastCapturedError: { error: unknown; at: number } | undefined;
 const TTL_MS = 5_000;
 
-function record(error: unknown) {
+function record(tag: string, error: unknown) {
   lastCapturedError = { error, at: Date.now() };
+  if (error instanceof Error) {
+    console.error(`[error-capture ${tag}] ${error.name}: ${error.message}`);
+    if (error.stack) console.error(error.stack);
+  } else {
+    console.error(`[error-capture ${tag}]`, error);
+  }
 }
 
 if (typeof globalThis.addEventListener === "function") {
-  globalThis.addEventListener("error", (event) => record((event as ErrorEvent).error ?? event));
+  globalThis.addEventListener("error", (event) =>
+    record("error", (event as ErrorEvent).error ?? event),
+  );
   globalThis.addEventListener("unhandledrejection", (event) =>
-    record((event as PromiseRejectionEvent).reason),
+    record("unhandledrejection", (event as PromiseRejectionEvent).reason),
   );
 }
 
