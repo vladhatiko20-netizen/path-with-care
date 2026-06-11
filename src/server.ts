@@ -66,14 +66,29 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+function logError(tag: string, error: unknown) {
+  if (error instanceof Error) {
+    console.error(`[server.ts ${tag}] ${error.name}: ${error.message}`);
+    if (error.stack) console.error(error.stack);
+    const cause = (error as { cause?: unknown }).cause;
+    if (cause) console.error(`[server.ts ${tag}] cause:`, cause);
+  } else {
+    console.error(`[server.ts ${tag}]`, error);
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      if (normalized !== response) {
+        logError("normalized-500", consumeLastCapturedError() ?? new Error("h3 swallowed SSR error"));
+      }
+      return normalized;
     } catch (error) {
-      console.error(error);
+      logError("fetch-throw", error);
       return brandedErrorResponse();
     }
   },
