@@ -3,14 +3,13 @@ import { Component } from "@/page-views/OrthodoxCalendarPage";
 import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/ro/orthodox-calendar")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "Православный календарь — Паломник" },
-      { name: "description", content: "Православный календарь: память святых, посты, праздники и связь с паломническими поездками." },
-      { name: "author", content: "Паломник" },
-      { property: "og:title", content: "Православный календарь — Паломник" },
-      { property: "og:description", content: "Православный календарь: память святых, посты, праздники и связь с паломническими поездками." },
+      { title: "Calendar ortodox – Pelerin" },
+      { name: "description", content: "Sărbători ortodoxe, zile ale sfinților și posturile de peste an." },
+      { name: "author", content: "Pelerin" },
+      { property: "og:title", content: "Calendar ortodox – Pelerin" },
+      { property: "og:description", content: "Sărbători ortodoxe și zile ale sfinților." },
     ],
     links: hreflangLinks("/orthodox-calendar", "ro"),
   }),

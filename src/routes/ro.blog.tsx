@@ -5,14 +5,13 @@ import { hreflangLinks } from "@/lib/hreflang";
 import heroImg from "@/assets/hero-blog.jpg";
 
 export const Route = createFileRoute("/ro/blog")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "Православный блог — Паломник" },
-      { name: "description", content: "Истории паломников, практические советы, рассказы о святых местах." },
-      { name: "author", content: "Паломник" },
-      { property: "og:title", content: "Православный блог — Паломник" },
-      { property: "og:description", content: "Истории паломников и рассказы о святых местах." },
+      { title: "Blog ortodox – Pelerin" },
+      { name: "description", content: "Povești ale pelerinilor, sfaturi și relatări despre drumul către sfintele locuri." },
+      { name: "author", content: "Pelerin" },
+      { property: "og:title", content: "Blog ortodox – Pelerin" },
+      { property: "og:description", content: "Povești ale pelerinilor și sfaturi pentru drum." },
       { property: "og:image", content: heroImg },
     ],
     links: hreflangLinks("/blog", "ro"),

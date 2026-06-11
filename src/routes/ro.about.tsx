@@ -4,14 +4,13 @@ import { hreflangLinks } from "@/lib/hreflang";
 import annaHero from "@/assets/anna-hero.jpg";
 
 export const Route = createFileRoute("/ro/about")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
-      { title: "О нас — Паломник" },
-      { name: "description", content: "Анна Плотник — путешественница и паломница. Подразделение SRL Eldorado Tur." },
-      { name: "author", content: "Паломник" },
-      { property: "og:title", content: "О нас — Паломник" },
-      { property: "og:description", content: "Анна Плотник — путешественница и паломница." },
+      { title: "Despre noi – Pelerin" },
+      { name: "description", content: "Cine suntem și cum organizăm pelerinaje ortodoxe la sfintele locuri. Subdiviziune de pelerinaj a Eldorado Tur, Chișinău." },
+      { name: "author", content: "Pelerin" },
+      { property: "og:title", content: "Despre noi – Pelerin" },
+      { property: "og:description", content: "Cine suntem și cum organizăm pelerinaje ortodoxe la sfintele locuri." },
       { property: "og:image", content: annaHero },
     ],
     links: hreflangLinks("/about", "ro"),
