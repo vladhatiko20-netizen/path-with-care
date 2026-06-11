@@ -153,9 +153,8 @@ function formatDateRange(start: string, end: string, lang: "ru" | "ro") {
   return `${s.toLocaleDateString(locale)} – ${e.toLocaleDateString(locale)}`;
 }
 
-function DestinationPage() {
-  const { destination, pilgrimages, gallery, shrines, program, inclusions, faq } = Route.useLoaderData();
-  const { slug } = Route.useParams();
+export function Component({ data, slug }: { data: DestinationLoaderData; slug: string }) {
+  const { destination, pilgrimages, gallery, shrines, program, inclusions, faq } = data;
   const { t, lang } = useLang();
   const [prefill, setPrefill] = useState<string>("");
   const [shrineModal, setShrineModal] = useState<number | null>(null);
