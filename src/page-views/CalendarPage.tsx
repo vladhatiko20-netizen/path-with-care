@@ -1,48 +1,15 @@
-import { createFileRoute, Link, useNavigate, ErrorComponent, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-calendar.jpg";
 import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 
-const pilgrimagesQueryOptions = () =>
+export const pilgrimagesQueryOptions = () =>
   queryOptions({
     queryKey: ["pilgrimages-public"],
     queryFn: () => listPilgrimages(),
   });
-
-export const Route = createFileRoute("/calendar")({
-  head: () => ({
-    meta: [
-      { title: "Календарь поездок 2026 — Паломник" },
-      { name: "description", content: "Полный календарь паломнических поездок на 2026 год по месяцам и направлениям." },
-      { name: "author", content: "Паломник" },
-      { name: "twitter:title", content: "Паломник — паломнические поездки из Кишинёва" },
-      { name: "twitter:description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
-      { property: "og:title", content: "Календарь поездок 2026 — Паломник" },
-      { property: "og:description", content: "Полный календарь паломнических поездок на 2026 год." },
-      { property: "og:image", content: "https://path-with-care.lovable.app/assets/hero-calendar.jpg" },
-    ],
-    links: [{ rel: "canonical", href: "https://path-with-care.lovable.app/calendar" }],
-  }),
-  loader: ({ context }) => {
-    context.queryClient.ensureQueryData(pilgrimagesQueryOptions());
-  },
-  errorComponent: ({ error }) => {
-    const router = useRouter();
-    return (
-      <PageShell>
-        <div className="max-w-2xl mx-auto px-6 py-20 text-center">
-          <ErrorComponent error={error} />
-          <button onClick={() => router.invalidate()} className="mt-6 inline-flex items-center px-6 py-3 bg-accent text-primary-foreground text-sm font-serif rounded-sm">
-            Повторить
-          </button>
-        </div>
-      </PageShell>
-    );
-  },
-  component: Page,
-});
 
 const monthNames = {
   ru: ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
@@ -65,7 +32,7 @@ function durationDays(start: string, end: string) {
   return Math.max(1, Math.round(ms / 86_400_000) + 1);
 }
 
-function Page() {
+export function Component() {
   const { t, lang } = useLang();
   const navigate = useNavigate();
   const { data: trips } = useSuspenseQuery(pilgrimagesQueryOptions());
