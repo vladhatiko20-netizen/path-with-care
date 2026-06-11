@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import ReactMarkdown from "react-markdown";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import { getBlogPostBySlug, type BlogPostFull } from "@/lib/blog.functions";
 
 export const postQueryOptions = (slug: string) =>
@@ -13,6 +14,7 @@ export const postQueryOptions = (slug: string) =>
 
 export function Component({ slug }: { slug: string }) {
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
   const { data } = useSuspenseQuery(postQueryOptions(slug));
   const post = data as BlogPostFull;
 
@@ -27,7 +29,7 @@ export function Component({ slug }: { slug: string }) {
   return (
     <PageShell>
       <article className="max-w-2xl mx-auto px-6 py-14 md:py-20">
-        <Link to="/blog" className="text-sm text-accent font-serif italic hover:underline">
+        <Link to={localize("/blog") as "/blog"} className="text-sm text-accent font-serif italic hover:underline">
           {t("← Все статьи", "← Toate articolele")}
         </Link>
 

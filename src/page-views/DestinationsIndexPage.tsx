@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import heroImg from "@/assets/hero-destinations.jpg";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 
@@ -12,6 +13,7 @@ export const destinationsListQueryOptions = queryOptions({
 
 export function Component() {
   const { t, lang } = useLang();
+  const localize = useLocalizedTo();
   const { data: items } = useSuspenseQuery(destinationsListQueryOptions);
   return (
     <PageShell>
@@ -42,7 +44,7 @@ export function Component() {
               return (
                 <Link
                   key={d.slug}
-                  to="/destinations/$slug"
+                  to={localize("/destinations/$slug") as "/destinations/$slug"}
                   params={{ slug: d.slug }}
                   className="group block bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
                 >
