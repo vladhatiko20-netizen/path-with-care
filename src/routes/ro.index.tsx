@@ -8,7 +8,6 @@ import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/ro/")({
-  // TODO: RO meta — currently using RU strings as fallback
   head: () => ({
     meta: [
       { title: "Pelerin – Și împreună spre Hristos" },
