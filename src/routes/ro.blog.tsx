@@ -3,17 +3,17 @@ import { PageShell } from "@/components/site/PageShell";
 import { Component, blogListQueryOptions } from "@/page-views/BlogPage";
 import { hreflangLinks } from "@/lib/hreflang";
 import heroImg from "@/assets/hero-blog.jpg";
+import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/blog")({
   head: () => ({
-    meta: [
-      { title: "Blog ortodox – Pelerin" },
-      { name: "description", content: "Povești ale pelerinilor, sfaturi și relatări despre drumul către sfintele locuri." },
-      { name: "author", content: "Pelerin" },
-      { property: "og:title", content: "Blog ortodox – Pelerin" },
-      { property: "og:description", content: "Povești ale pelerinilor și sfaturi pentru drum." },
-      { property: "og:image", content: heroImg },
-    ],
+    meta: buildPageMeta({
+      lang: "ro",
+      title: "Blog ortodox – Pelerin",
+      description: "Povești ale pelerinilor, sfaturi și relatări despre drumul către sfintele locuri.",
+      ogDescription: "Povești ale pelerinilor și sfaturi pentru drum.",
+      ogImage: heroImg,
+    }),
     links: hreflangLinks("/blog", "ro"),
   }),
   loader: ({ context }) => {
