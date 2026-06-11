@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useLang } from "@/lib/i18n";
 import { PageShell } from "@/components/site/PageShell";
+import { useLocalizedTo } from "@/lib/use-localized-to";
 import { BLESSING_BY } from "@/lib/constants";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
@@ -101,13 +102,13 @@ export function Component() {
           </p>
           <div className="mt-7 md:mt-9 flex flex-wrap items-center justify-center gap-3 md:gap-4">
             <Link
-              to="/destinations"
+              to={localize("/destinations") as "/destinations"}
               className="inline-flex items-center px-6 md:px-7 py-3 bg-accent text-primary-foreground text-base md:text-lg font-serif tracking-wide hover:bg-accent/90 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm shadow-md"
             >
               {t("Посмотреть направления", "Vezi destinațiile")}
             </Link>
             <Link
-              to="/calendar"
+              to={localize("/calendar") as "/calendar"}
               className="inline-flex items-center px-6 md:px-7 py-3 border border-white/80 text-white text-base md:text-lg font-serif tracking-wide hover:bg-white/10 hover:scale-[1.03] transition-all duration-300 ease-out rounded-sm backdrop-blur-sm"
             >
               {t("Ближайшие поездки", "Călătoriile apropiate")}
@@ -144,7 +145,7 @@ export function Component() {
                 return (
                   <Link
                     key={d.slug}
-                    to="/destinations/$slug"
+                    to={localize("/destinations/$slug") as "/destinations/$slug"}
                     params={{ slug: d.slug }}
                     className="group flex flex-col h-full bg-card border border-gold/30 rounded-sm overflow-hidden md:hover:border-gold md:hover:shadow-[0_12px_30px_-15px_rgba(61,40,23,0.4)] md:hover:-translate-y-0.5 transition-all duration-200"
                   >
@@ -220,7 +221,7 @@ export function Component() {
 
           <div className="mt-8 text-center">
             <Link
-              to="/calendar"
+              to={localize("/calendar") as "/calendar"}
               className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 transition-colors rounded-sm shadow-md"
             >
               {t("Смотреть все поездки 2026", "Vezi toate călătoriile 2026")}
@@ -268,7 +269,7 @@ export function Component() {
 
       {/* PRIEST CONVERSATION TEASER */}
       <section className="py-6">
-        <Link to="/with-priest" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
+        <Link to={localize("/with-priest") as "/with-priest"} className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
           <div className="order-2 md:order-1">
             <p className="overline mb-3">{t("Беседы", "Conversații")}</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
@@ -305,7 +306,7 @@ export function Component() {
 
       {/* BLOG TEASER */}
       <section className="bg-secondary/50 py-6 md:py-10">
-        <Link to="/blog" className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
+        <Link to={localize("/blog") as "/blog"} className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
           <div className="max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
             <img
               src="https://images.pexels.com/photos/10618234/pexels-photo-10618234.jpeg"
@@ -343,7 +344,7 @@ export function Component() {
 
       {/* ICONS & RELICS */}
       <section className="bg-card/70 pt-0 pb-6 md:pb-20 border-t border-border/60">
-        <Link to="/catalog" className="block group">
+        <Link to={localize("/catalog") as "/catalog"} className="block group">
         <div className="aspect-[16/7] max-md:max-h-[250px] w-full overflow-hidden md:hidden">
           <img
             src={catalogHeroImg}
