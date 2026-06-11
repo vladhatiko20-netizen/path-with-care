@@ -4,7 +4,7 @@ import { Component, loadDestination, buildDestinationJsonLd } from "@/page-views
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
 
-export const Route = createFileRoute("/destinations/$slug")({
+export const Route = createFileRoute("/ro/destinations/$slug")({
   loader: async ({ params }) => {
     const data = await loadDestination(params.slug);
     if (!data) throw notFound();
@@ -13,9 +13,9 @@ export const Route = createFileRoute("/destinations/$slug")({
   head: ({ loaderData, params }) => {
     const d = loaderData?.destination;
     if (!d) return {};
-    const title = d.seo_title_ru || d.title_ru;
-    const desc = d.seo_description_ru || d.description_ru || "";
-    const url = `${SITE_ORIGIN}/destinations/${params.slug}`;
+    const title = d.seo_title_ro || d.title_ro;
+    const desc = d.seo_description_ro || d.description_ro || "";
+    const url = `${SITE_ORIGIN}/ro/destinations/${params.slug}`;
     const img = d.og_image || d.cover_image || undefined;
     return {
       meta: [
@@ -31,15 +31,15 @@ export const Route = createFileRoute("/destinations/$slug")({
         { name: "twitter:description", content: desc },
         ...(img ? [{ name: "twitter:image", content: img }] : []),
       ],
-      links: hreflangLinks(`/destinations/${params.slug}`, "ru"),
-      scripts: buildDestinationJsonLd(loaderData, url, "ru"),
+      links: hreflangLinks(`/destinations/${params.slug}`, "ro"),
+      scripts: buildDestinationJsonLd(loaderData, url, "ro"),
     };
   },
   notFoundComponent: () => (
     <PageShell>
       <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-        <h1 className="font-serif text-3xl mb-4">Страница не найдена</h1>
-        <Link to="/destinations" className="text-accent hover:underline font-serif">К направлениям</Link>
+        <h1 className="font-serif text-3xl mb-4">Pagina nu a fost găsită</h1>
+        <Link to="/ro/destinations" className="text-accent hover:underline font-serif">La destinații</Link>
       </div>
     </PageShell>
   ),
@@ -48,10 +48,10 @@ export const Route = createFileRoute("/destinations/$slug")({
     return (
       <PageShell>
         <div className="max-w-3xl mx-auto px-6 py-20 text-center font-serif">
-          <h1 className="text-3xl mb-3">Не удалось загрузить страницу</h1>
+          <h1 className="text-3xl mb-3">Pagina nu s-a putut încărca</h1>
           <p className="text-foreground/70 mb-6">{error.message}</p>
           <button onClick={() => { reset(); router.invalidate(); }} className="px-5 py-2 bg-accent text-primary-foreground rounded-sm">
-            Попробовать снова
+            Reîncearcă
           </button>
         </div>
       </PageShell>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, type ReactNode } from "react";
 
 export type Lang = "ru" | "ro";
 
@@ -14,27 +14,19 @@ const LangContext = createContext<Ctx>({
   t: (ru) => ru,
 });
 
-export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("ru");
-
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem("palomnik-lang");
-      if (stored === "ru" || stored === "ro") setLangState(stored);
-    } catch {}
-  }, []);
-
-  const setLang = (l: Lang) => {
-    setLangState(l);
-    try {
-      window.localStorage.setItem("palomnik-lang", l);
-      document.documentElement.lang = l;
-    } catch {}
-  };
-
+/**
+ * Language is determined by the route subtree, not by client state.
+ * `/ro/*` routes wrap children in `<LangProvider lang="ro">`, everything
+ * else inherits the default `lang="ru"` from the root. setLang is a no-op
+ * kept for API compatibility — callers should navigate to switch language.
+ */
+export function LangProvider({ children, lang = "ru" }: { children: ReactNode; lang?: Lang }) {
   const t = (ru: string, ro: string) => (lang === "ru" ? ru : ro);
-
-  return <LangContext.Provider value={{ lang, setLang, t }}>{children}</LangContext.Provider>;
+  return (
+    <LangContext.Provider value={{ lang, setLang: () => {}, t }}>
+      {children}
+    </LangContext.Provider>
+  );
 }
 
 export const useLang = () => useContext(LangContext);

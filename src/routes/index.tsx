@@ -5,6 +5,7 @@ import {
   upcomingPilgrimagesQueryOptions,
 } from "@/page-views/IndexPage";
 import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: "И вместе ко Христу. Поездки к святым местам с духовным сопровождением." },
       { property: "og:image", content: `${SITE_ORIGIN}/assets/hero-monastery.jpg` },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/` }],
+    links: hreflangLinks("/", "ru"),
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(destinationsListQueryOptions);
