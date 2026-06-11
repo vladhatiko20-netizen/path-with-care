@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/PublicOfferPage";
-import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/public-offer")({
   head: () => ({
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/public-offer")({
       { property: "og:title", content: "Публичная оферта — Паломник" },
       { property: "og:description", content: "Условия публичной оферты на услуги паломнических поездок Паломник." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/public-offer` }],
+    links: hreflangLinks("/public-offer", "ru"),
   }),
   component: Component,
 });

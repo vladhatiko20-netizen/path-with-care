@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/AboutPage";
-import { SITE_ORIGIN } from "@/lib/constants";
 import annaHero from "@/assets/anna-hero.jpg";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/about")({
       { property: "og:description", content: "Анна Плотник — путешественница и паломница." },
       { property: "og:image", content: annaHero },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/about` }],
+    links: hreflangLinks("/about", "ru"),
   }),
   component: Component,
 });

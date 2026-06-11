@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/ContactsPage";
 import { SITE_ORIGIN } from "@/lib/constants";
 import heroImg from "@/assets/hero-contacts.jpg";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/contacts")({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/contacts")({
       { property: "og:description", content: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв." },
       { property: "og:image", content: heroImg },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/contacts` }],
+    links: hreflangLinks("/contacts", "ru"),
     scripts: [
       {
         type: "application/ld+json",

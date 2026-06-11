@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/OrthodoxCalendarPage";
-import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/orthodox-calendar")({
   head: () => ({
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/orthodox-calendar")({
       { property: "og:title", content: "Православный календарь — Паломник" },
       { property: "og:description", content: "Православный календарь: память святых, посты, праздники и связь с паломническими поездками." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/orthodox-calendar` }],
+    links: hreflangLinks("/orthodox-calendar", "ru"),
   }),
   component: Component,
 });

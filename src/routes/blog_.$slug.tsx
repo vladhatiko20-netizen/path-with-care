@@ -3,6 +3,7 @@ import { PageShell } from "@/components/site/PageShell";
 import { Component, postQueryOptions } from "@/page-views/BlogPostPage";
 import { resolveBlogImage } from "@/lib/blog-images";
 import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/blog_/$slug")({
   loader: async ({ params, context }) => {
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/blog_/$slug")({
         { name: "twitter:description", content: post.excerpt_ru ?? post.title_ru },
         { name: "twitter:image", content: cover },
       ],
-      links: [{ rel: "canonical", href: `${SITE_ORIGIN}/blog/${post.slug}` }],
+      links: hreflangLinks(`/blog/${post.slug}`, "ru"),
     };
   },
   errorComponent: ({ error }) => {

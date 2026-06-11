@@ -1,8 +1,8 @@
 import { createFileRoute, Link, ErrorComponent, useRouter } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { Component, blogListQueryOptions } from "@/page-views/BlogPage";
-import { SITE_ORIGIN } from "@/lib/constants";
 import heroImg from "@/assets/hero-blog.jpg";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/blog")({
       { property: "og:description", content: "Истории паломников и рассказы о святых местах." },
       { property: "og:image", content: heroImg },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/blog` }],
+    links: hreflangLinks("/blog", "ru"),
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(blogListQueryOptions());

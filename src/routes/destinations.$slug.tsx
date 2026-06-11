@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter, notFound } from "@tanstack/react-rout
 import { PageShell } from "@/components/site/PageShell";
 import { Component, loadDestination, buildDestinationJsonLd } from "@/page-views/DestinationSlugPage";
 import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/destinations/$slug")({
   loader: async ({ params }) => {
@@ -30,7 +31,7 @@ export const Route = createFileRoute("/destinations/$slug")({
         { name: "twitter:description", content: desc },
         ...(img ? [{ name: "twitter:image", content: img }] : []),
       ],
-      links: [{ rel: "canonical", href: url }],
+      links: hreflangLinks(`/destinations/${params.slug}`, "ru"),
       scripts: buildDestinationJsonLd(loaderData, url, "ru"),
     };
   },

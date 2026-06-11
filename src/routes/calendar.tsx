@@ -2,6 +2,7 @@ import { createFileRoute, ErrorComponent, useRouter } from "@tanstack/react-rout
 import { PageShell } from "@/components/site/PageShell";
 import { Component, pilgrimagesQueryOptions } from "@/page-views/CalendarPage";
 import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/calendar")({
       { property: "og:description", content: "Полный календарь паломнических поездок на 2026 год." },
       { property: "og:image", content: `${SITE_ORIGIN}/assets/hero-calendar.jpg` },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/calendar` }],
+    links: hreflangLinks("/calendar", "ru"),
   }),
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(pilgrimagesQueryOptions());

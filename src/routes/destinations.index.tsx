@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell } from "@/components/site/PageShell";
 import { Component, destinationsListQueryOptions } from "@/page-views/DestinationsIndexPage";
 import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/destinations/")({
   head: () => ({
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/destinations/")({
       { property: "og:description", content: "Восемь направлений к православным святыням мира из Кишинёва." },
       { property: "og:image", content: `${SITE_ORIGIN}/assets/hero-destinations.jpg` },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/destinations` }],
+    links: hreflangLinks("/destinations", "ru"),
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(destinationsListQueryOptions),
   errorComponent: ({ error }) => (

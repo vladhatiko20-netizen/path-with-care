@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/PrivacyPage";
-import { SITE_ORIGIN } from "@/lib/constants";
+import { hreflangLinks } from "@/lib/hreflang";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/privacy")({
       { property: "og:title", content: "Политика конфиденциальности — Паломник" },
       { property: "og:description", content: "Политика конфиденциальности сайта Паломник: как мы обрабатываем персональные данные." },
     ],
-    links: [{ rel: "canonical", href: `${SITE_ORIGIN}/privacy` }],
+    links: hreflangLinks("/privacy", "ru"),
   }),
   component: Component,
 });
