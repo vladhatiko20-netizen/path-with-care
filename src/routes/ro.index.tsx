@@ -7,6 +7,7 @@ import {
 import { SITE_ORIGIN } from "@/lib/constants";
 import { hreflangLinks } from "@/lib/hreflang";
 import { buildPageMeta } from "@/lib/page-meta";
+import { clergyQueryOptions } from "@/page-views/WithPriestPage";
 
 export const Route = createFileRoute("/ro/")({
   head: () => ({
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/ro/")({
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(destinationsListQueryOptions);
     context.queryClient.ensureQueryData(upcomingPilgrimagesQueryOptions);
+    context.queryClient.ensureQueryData(clergyQueryOptions);
   },
   component: Component,
 });
