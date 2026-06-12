@@ -148,15 +148,15 @@ function Page() {
                     )}
                   </div>
                 </Link>
-                {r.phone && (
+                {(r.phone || r.email) && (
                 <div className="flex border-t border-border/60">
-                  <a
+                  {r.phone && <a
                     href={telLink(r.phone)}
                     className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-foreground hover:bg-gold/5"
                   >
                     <Phone className="w-3.5 h-3.5" /> Позвонить
-                  </a>
-                  {moldova && (
+                  </a>}
+                  {r.phone && moldova && (
                     <a
                       href={viberLink(r.phone)}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs border-l border-border/60 hover:opacity-80"
@@ -165,8 +165,6 @@ function Page() {
                       Viber
                     </a>
                   )}
-                </div>
-                )}
                   {r.email && (
                     <a
                       href={`mailto:${r.email}`}
@@ -176,6 +174,7 @@ function Page() {
                     </a>
                   )}
                 </div>
+                )}
               </li>
             );
           })}
