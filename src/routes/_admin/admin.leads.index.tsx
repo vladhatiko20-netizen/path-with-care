@@ -3,8 +3,17 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { Search, Phone, Mail, CheckCheck } from "lucide-react";
-import { adminListLeads, adminMarkAllLeadsRead } from "@/lib/admin.functions";
-import { sourceLabel, formatLeadDate, telLink, viberLink, isMoldovaPhone, SOURCE_LABELS } from "@/lib/leads-shared";
+import { adminListLeads, adminMarkAllLeadsRead, adminCountUnreadLeads } from "@/lib/admin.functions";
+import {
+  sourceLabel,
+  formatLeadDate,
+  telLink,
+  viberLink,
+  isMoldovaPhone,
+  leadCategory,
+  CATEGORY_LABELS,
+  type LeadCategory,
+} from "@/lib/leads-shared";
 
 export const Route = createFileRoute("/_admin/admin/leads/")({
   component: Page,
@@ -16,6 +25,7 @@ type Period = "all" | "week" | "month";
 function Page() {
   const list = useServerFn(adminListLeads);
   const markAll = useServerFn(adminMarkAllLeadsRead);
+  const countUnread = useServerFn(adminCountUnreadLeads);
   const router = useRouter();
   const qc = useQueryClient();
 
@@ -23,10 +33,16 @@ function Page() {
   const [status, setStatus] = useState<Status>("all");
   const [source, setSource] = useState<string>("");
   const [period, setPeriod] = useState<Period>("all");
+  const [category, setCategory] = useState<LeadCategory>("pilgrimage");
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["admin-leads", { search, status, source, period }],
-    queryFn: () => list({ data: { search, status, source: source || undefined, period } }),
+    queryKey: ["admin-leads", { search, status, source, period, category }],
+    queryFn: () => list({ data: { search, status, source: source || undefined, period, category } }),
+  });
+
+  const { data: unread } = useQuery({
+    queryKey: ["admin-leads-unread-count"],
+    queryFn: () => countUnread({}),
   });
 
   const rows = data ?? [];
@@ -47,6 +63,12 @@ function Page() {
 
   const hasUnread = rows.some((r) => !r.is_read);
 
+  const tabs: Array<{ v: LeadCategory; l: string; n: number }> = [
+    { v: "pilgrimage", l: CATEGORY_LABELS.pilgrimage, n: unread?.pilgrimage ?? 0 },
+    { v: "priest", l: CATEGORY_LABELS.priest, n: unread?.priest ?? 0 },
+    { v: "other", l: CATEGORY_LABELS.other, n: unread?.other ?? 0 },
+  ];
+
   return (
     <div className="p-4 md:p-8 max-w-4xl">
       <div className="flex items-center justify-between gap-3 mb-6">
@@ -59,6 +81,38 @@ function Page() {
             <CheckCheck className="w-4 h-4" /> Отметить все
           </button>
         )}
+      </div>
+
+      {/* Category tabs */}
+      <div className="flex flex-wrap gap-1 mb-5 border-b border-border">
+        {tabs.map((t) => {
+          const active = category === t.v;
+          const isPilg = t.v === "pilgrimage";
+          return (
+            <button
+              key={t.v}
+              onClick={() => setCategory(t.v)}
+              className={`relative px-4 py-2 text-sm font-medium transition-colors -mb-px border-b-2 ${
+                active
+                  ? isPilg
+                    ? "border-accent text-accent"
+                    : "border-gold text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {t.l}
+              {t.n > 0 && (
+                <span
+                  className={`ml-2 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-semibold rounded-full ${
+                    isPilg ? "bg-accent text-primary-foreground" : "bg-gold/25 text-foreground"
+                  }`}
+                >
+                  {t.n > 99 ? "99+" : t.n}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       <div className="space-y-3 mb-6">
@@ -98,7 +152,7 @@ function Page() {
             >
               <option value="">Все источники</option>
               {sourceOptions.map((s) => (
-                <option key={s} value={s}>{SOURCE_LABELS[s] ?? s}</option>
+                <option key={s} value={s}>{sourceLabel(s)}</option>
               ))}
             </select>
           )}
@@ -116,16 +170,53 @@ function Page() {
           {rows.map((r) => {
             const moldova = isMoldovaPhone(r.phone);
             const preview = (r.message ?? "").trim().slice(0, 90);
+            const cat = leadCategory(r.source);
+            const isPilg = cat === "pilgrimage";
             return (
               <li
                 key={r.id}
-                className={`relative bg-card border rounded-sm transition-colors ${r.is_read ? "border-border" : "border-border border-l-2 border-l-gold"}`}
+                className={`relative bg-card border rounded-sm transition-colors ${
+                  isPilg
+                    ? `border-accent/40 border-l-4 border-l-accent ${r.is_read ? "" : "bg-accent/[0.04]"}`
+                    : r.is_read
+                      ? "border-border"
+                      : "border-border border-l-2 border-l-gold"
+                }`}
               >
                 <Link
                   to="/admin/leads/$id"
                   params={{ id: r.id }}
-                  className="block p-4 hover:bg-gold/5"
+                  className={`block p-4 ${isPilg ? "hover:bg-accent/5" : "hover:bg-gold/5"}`}
                 >
+                  {isPilg ? (
+                    <>
+                      <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          {!r.is_read && (
+                            <span className="inline-block w-2 h-2 rounded-full bg-accent shrink-0" aria-label="Непрочитано" />
+                          )}
+                          <h2 className="font-serif text-xl md:text-2xl text-accent font-medium truncate">
+                            {sourceLabel(r.source)}
+                          </h2>
+                        </div>
+                        <span className="shrink-0 text-[10px] tracking-[0.18em] uppercase font-medium text-accent bg-accent/10 px-2 py-0.5 rounded-sm">
+                          Заявка
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3 mb-1">
+                        <span className="text-sm text-foreground/80 truncate">{r.name}</span>
+                        <span className="text-xs text-muted-foreground shrink-0">{formatLeadDate(r.created_at)}</span>
+                      </div>
+                      {r.phone && <div className="text-sm text-accent font-medium">{r.phone}</div>}
+                      {r.email && <div className="text-sm text-muted-foreground truncate">{r.email}</div>}
+                      {preview && (
+                        <div className="mt-2 text-xs text-muted-foreground truncate">
+                          «{preview}{(r.message ?? "").length > 90 ? "…" : ""}»
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
                   <div className="flex items-start justify-between gap-3 mb-1">
                     <div className="flex items-center gap-2 min-w-0">
                       {!r.is_read && (
@@ -147,12 +238,14 @@ function Page() {
                       <span className="text-muted-foreground truncate">«{preview}{(r.message ?? "").length > 90 ? "…" : ""}»</span>
                     )}
                   </div>
+                    </>
+                  )}
                 </Link>
                 {(r.phone || r.email) && (
                 <div className="flex border-t border-border/60">
                   {r.phone && <a
                     href={telLink(r.phone)}
-                    className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-foreground hover:bg-gold/5"
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-foreground ${isPilg ? "hover:bg-accent/5" : "hover:bg-gold/5"}`}
                   >
                     <Phone className="w-3.5 h-3.5" /> Позвонить
                   </a>}
@@ -168,7 +261,7 @@ function Page() {
                   {r.email && (
                     <a
                       href={`mailto:${r.email}`}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-foreground hover:bg-gold/5 border-l border-border/60"
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs text-foreground border-l border-border/60 ${isPilg ? "hover:bg-accent/5" : "hover:bg-gold/5"}`}
                     >
                       <Mail className="w-3.5 h-3.5" /> Email
                     </a>

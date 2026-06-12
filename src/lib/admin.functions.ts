@@ -310,9 +310,20 @@ export const adminReorderGallery = createServerFn({ method: "POST" })
 const leadsListInput = z.object({
   search: z.string().trim().max(200).optional().default(""),
   status: z.enum(["all", "new", "read"]).optional().default("all"),
-  source: z.string().trim().max(50).regex(/^[a-z0-9_\-]+$/).optional(),
+  source: z.string().trim().max(80).regex(/^[a-z0-9_:\-]+$/).optional(),
+  category: z.enum(["all", "pilgrimage", "priest", "other"]).optional().default("all"),
   period: z.enum(["all", "week", "month"]).optional().default("all"),
 });
+
+function applyCategoryFilter<T extends { like: any; eq: any; or: any }>(q: T, category: "all" | "pilgrimage" | "priest" | "other"): T {
+  if (category === "pilgrimage") return q.like("source", "destination:%");
+  if (category === "priest") return q.eq("source", "with-priest");
+  if (category === "other") {
+    // NULL-safe: NOT LIKE / <> on NULL → NULL → row excluded. Include explicit IS NULL branch.
+    return q.or("source.is.null,and(source.not.like.destination:%,source.neq.with-priest)");
+  }
+  return q;
+}
 
 export const adminListLeads = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -327,6 +338,7 @@ export const adminListLeads = createServerFn({ method: "POST" })
     if (data.status === "new") q = q.eq("is_read", false);
     if (data.status === "read") q = q.eq("is_read", true);
     if (data.source) q = q.eq("source", data.source);
+    q = applyCategoryFilter(q, data.category);
     if (data.period !== "all") {
       const days = data.period === "week" ? 7 : 30;
       const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
@@ -395,12 +407,23 @@ export const adminDeleteLead = createServerFn({ method: "POST" })
 export const adminCountUnreadLeads = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { count, error } = await context.supabase
-      .from("leads")
-      .select("id", { count: "exact", head: true })
-      .eq("is_read", false);
-    if (error) throw new Error(error.message);
-    return { count: count ?? 0 };
+    async function countFor(category: "all" | "pilgrimage" | "priest" | "other"): Promise<number> {
+      let q = context.supabase
+        .from("leads")
+        .select("id", { count: "exact", head: true })
+        .eq("is_read", false);
+      q = applyCategoryFilter(q as any, category);
+      const { count, error } = await q;
+      if (error) throw new Error(error.message);
+      return count ?? 0;
+    }
+    const [total, pilgrimage, priest, other] = await Promise.all([
+      countFor("all"),
+      countFor("pilgrimage"),
+      countFor("priest"),
+      countFor("other"),
+    ]);
+    return { count: total, total, pilgrimage, priest, other };
   });
 
 // ============================================================
