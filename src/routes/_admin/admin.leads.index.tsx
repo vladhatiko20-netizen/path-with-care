@@ -137,7 +137,7 @@ function Page() {
                     </div>
                     <span className="text-xs text-muted-foreground shrink-0">{formatLeadDate(r.created_at)}</span>
                   </div>
-                  <div className="text-sm text-accent font-medium">{r.phone}</div>
+                  {r.phone && <div className="text-sm text-accent font-medium">{r.phone}</div>}
                   {r.email && <div className="text-sm text-muted-foreground truncate">{r.email}</div>}
                   <div className="mt-2 flex items-center gap-2 text-xs">
                     <span className="px-2 py-0.5 bg-secondary text-muted-foreground rounded-sm">
@@ -148,6 +148,7 @@ function Page() {
                     )}
                   </div>
                 </Link>
+                {r.phone && (
                 <div className="flex border-t border-border/60">
                   <a
                     href={telLink(r.phone)}
@@ -164,6 +165,8 @@ function Page() {
                       Viber
                     </a>
                   )}
+                </div>
+                )}
                   {r.email && (
                     <a
                       href={`mailto:${r.email}`}
