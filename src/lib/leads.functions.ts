@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const leadSchema = z.object({
   name: z.string().trim().min(1).max(100),
-  phone: z.string().trim().min(5).max(30).regex(/^[+\d\s()\-]+$/),
+  phone: z.string().trim().max(30).regex(/^[+\d\s()\-]*$/).optional().or(z.literal("")),
   email: z.string().trim().email().max(255).optional().or(z.literal("")),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
   source: z.string().trim().min(1).max(50).regex(/^[a-z0-9_\-]+$/),
@@ -15,7 +15,7 @@ export const createLead = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const payload = {
       name: data.name,
-      phone: data.phone,
+      phone: data.phone && data.phone.trim().length >= 5 ? data.phone : null,
       email: data.email ? data.email : null,
       message: data.message ? data.message : null,
       source: data.source,

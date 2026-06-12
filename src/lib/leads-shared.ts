@@ -2,7 +2,7 @@ export const SOURCE_LABELS: Record<string, string> = {
   bari: "Бари",
   index: "Главная",
   home: "Главная",
-  "with-priest": "Со священником",
+  "with-priest": "Диалог со священником",
   contacts: "Контакты",
   about: "О нас",
   calendar: "Календарь",
