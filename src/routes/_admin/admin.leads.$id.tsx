@@ -85,6 +85,7 @@ function Page() {
       </header>
 
       <div className="space-y-3 mb-6">
+        {lead.phone && (
         {/* Phone row */}
         <div className="flex items-stretch bg-card border-l-2 border-l-gold border-y border-r border-border/40 rounded-sm overflow-hidden">
           <a href={telLink(lead.phone)} className="flex items-center gap-3 flex-1 min-w-0 py-3 pl-4 pr-2 hover:bg-gold/5">
@@ -103,6 +104,7 @@ function Page() {
             </a>
           )}
         </div>
+        )}
 
         {/* Email row */}
         {lead.email && (
