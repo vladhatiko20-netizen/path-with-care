@@ -10,7 +10,6 @@ import {
   telLink,
   viberLink,
   isMoldovaPhone,
-  SOURCE_LABELS,
   leadCategory,
   CATEGORY_LABELS,
   type LeadCategory,
