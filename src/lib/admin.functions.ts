@@ -1385,3 +1385,66 @@ export const adminImportDestinationsBulk = createServerFn({ method: "POST" })
       errors,
     };
   });
+
+// ===== Clergy =====
+
+const clergySchema = z.object({
+  id: z.string().uuid().optional(),
+  name_ru: z.string().min(1).max(255),
+  name_ro: z.string().min(1).max(255),
+  title_ru: z.string().max(500).nullable().optional(),
+  title_ro: z.string().max(500).nullable().optional(),
+  bio_ru: z.string().max(5000).nullable().optional(),
+  bio_ro: z.string().max(5000).nullable().optional(),
+  photo_url: z.string().max(1000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000),
+  is_published: z.boolean(),
+});
+
+export const adminListClergy = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("clergy")
+      .select("id, name_ru, name_ro, title_ru, title_ro, photo_url, sort_order, is_published")
+      .order("sort_order", { ascending: true })
+      .order("name_ru", { ascending: true });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const adminGetClergy = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("clergy").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminSaveClergy = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => clergySchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("clergy").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const { data: row, error } = await context.supabase
+      .from("clergy").insert(payload).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteClergy = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("clergy").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
