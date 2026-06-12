@@ -62,6 +62,51 @@ export type Database = {
         }
         Relationships: []
       }
+      clergy: {
+        Row: {
+          bio_ro: string | null
+          bio_ru: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+          name_ro: string
+          name_ru: string
+          photo_url: string | null
+          sort_order: number
+          title_ro: string | null
+          title_ru: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio_ro?: string | null
+          bio_ru?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          name_ro: string
+          name_ru: string
+          photo_url?: string | null
+          sort_order?: number
+          title_ro?: string | null
+          title_ru?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio_ro?: string | null
+          bio_ru?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          name_ro?: string
+          name_ru?: string
+          photo_url?: string | null
+          sort_order?: number
+          title_ro?: string | null
+          title_ru?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       destination_faq: {
         Row: {
           answer_ro: string | null
