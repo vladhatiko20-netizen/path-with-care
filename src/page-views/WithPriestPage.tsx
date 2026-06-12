@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { User } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-priest.jpg";
 import { listPublishedClergy } from "@/lib/clergy.functions";
+import { createLead } from "@/lib/leads.functions";
 
 export const clergyQueryOptions = queryOptions({
   queryKey: ["clergy", "published"],
@@ -30,6 +33,8 @@ export function Component() {
   const { t, lang } = useLang();
   const [form, setForm] = useState({ name: "", email: "", question: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const submit = useServerFn(createLead);
   const { data: priests } = useSuspenseQuery(clergyQueryOptions);
   return (
     <PageShell>
@@ -109,12 +114,36 @@ export function Component() {
             {t("Спасибо, ваш вопрос отправлен.", "Mulțumim, întrebarea a fost trimisă.")}
           </div>
         ) : (
-          <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-4">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (sending) return;
+              setSending(true);
+              try {
+                await submit({
+                  data: {
+                    name: form.name,
+                    email: form.email,
+                    message: form.question,
+                    source: "with-priest",
+                  },
+                });
+                setSent(true);
+                toast.success(t("Вопрос отправлен", "Întrebarea a fost trimisă"));
+              } catch (err) {
+                console.error(err);
+                toast.error(t("Не удалось отправить. Попробуйте позже.", "Nu s-a putut trimite. Încercați mai târziu."));
+              } finally {
+                setSending(false);
+              }
+            }}
+            className="space-y-4"
+          >
             <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold" />
             <input required type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold" />
             <textarea required maxLength={1000} rows={5} placeholder={t("Ваш вопрос", "Întrebarea dumneavoastră")} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold resize-none" />
-            <button type="submit" className="px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md">
-              {t("Отправить", "Trimite")}
+            <button type="submit" disabled={sending} className="px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
+              {sending ? t("Отправляем…", "Se trimite…") : t("Отправить", "Trimite")}
             </button>
           </form>
         )}
