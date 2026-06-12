@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Component } from "@/page-views/WithPriestPage";
+import { Component, clergyQueryOptions } from "@/page-views/WithPriestPage";
 import { hreflangLinks } from "@/lib/hreflang";
 import heroImg from "@/assets/hero-priest.jpg";
 import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/with-priest")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(clergyQueryOptions),
   head: () => ({
     meta: buildPageMeta({
       lang: "ro",
