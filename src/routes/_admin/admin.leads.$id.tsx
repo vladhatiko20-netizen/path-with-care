@@ -86,6 +86,7 @@ function Page() {
 
       <div className="space-y-3 mb-6">
         {/* Phone row */}
+        {lead.phone && (
         <div className="flex items-stretch bg-card border-l-2 border-l-gold border-y border-r border-border/40 rounded-sm overflow-hidden">
           <a href={telLink(lead.phone)} className="flex items-center gap-3 flex-1 min-w-0 py-3 pl-4 pr-2 hover:bg-gold/5">
             <span className="w-9 h-9 rounded-full bg-gold/15 inline-flex items-center justify-center shrink-0">
@@ -103,6 +104,7 @@ function Page() {
             </a>
           )}
         </div>
+        )}
 
         {/* Email row */}
         {lead.email && (

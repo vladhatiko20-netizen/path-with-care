@@ -6,12 +6,13 @@ import { useLocalizedTo } from "@/lib/use-localized-to";
 import { BLESSING_BY } from "@/lib/constants";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
-import priestImg from "@/assets/orthodox-priest.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 import { listPilgrimages } from "@/lib/pilgrimages.functions";
+import { clergyQueryOptions } from "@/page-views/WithPriestPage";
+import { User } from "lucide-react";
 
 export const destinationsListQueryOptions = queryOptions({
   queryKey: ["destinations", "public-list"],
@@ -59,6 +60,8 @@ export function Component() {
   });
   const { data: publishedDestinations } = useSuspenseQuery(destinationsListQueryOptions);
   const { data: allPilgrimages } = useSuspenseQuery(upcomingPilgrimagesQueryOptions);
+  const { data: clergy } = useSuspenseQuery(clergyQueryOptions);
+  const featuredPriest = clergy[0];
   const dbDestinations = publishedDestinations.filter((d) => !!d.cover_image);
   const todayIso = new Date().toISOString().slice(0, 10);
   const upcoming = allPilgrimages
@@ -269,6 +272,7 @@ export function Component() {
       </section>
 
       {/* PRIEST CONVERSATION TEASER */}
+      {featuredPriest && (
       <section className="py-6">
         <Link to={localize("/with-priest") as "/with-priest"} className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
           <div className="order-2 md:order-1">
@@ -276,6 +280,14 @@ export function Component() {
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
               {t("Диалог со священником", "Dialog cu preotul")}
             </h2>
+            <p className="font-serif text-lg text-accent italic mb-1">
+              {lang === "ru" ? featuredPriest.name_ru : featuredPriest.name_ro}
+            </p>
+            {(featuredPriest.title_ru || featuredPriest.title_ro) && (
+              <p className="text-sm text-foreground/70 italic font-serif mb-5">
+                {lang === "ru" ? featuredPriest.title_ru : featuredPriest.title_ro}
+              </p>
+            )}
             <p className="text-foreground/80 leading-relaxed mb-6 max-w-prose">
               {t(
                 "Вопросы о подготовке к паломничеству, исповеди, духовной жизни. Отвечают батюшки Кишинёва и духовники, сопровождающие наши группы.",
@@ -292,18 +304,23 @@ export function Component() {
               {t("Перейти к беседам", "Treci la conversații")} →
             </span>
           </div>
-          <div className="order-1 md:order-2 max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
-            <img
-              src={priestImg}
-              alt=""
-              loading="lazy"
-              width={1024}
-              height={1024}
-              className="w-full h-full object-cover"
-            />
+          <div className="order-1 md:order-2 max-md:max-h-[320px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)] bg-secondary/40 flex items-center justify-center">
+            {featuredPriest.photo_url ? (
+              <img
+                src={featuredPriest.photo_url}
+                alt={lang === "ru" ? featuredPriest.name_ru : featuredPriest.name_ro}
+                loading="lazy"
+                width={1024}
+                height={1024}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User className="w-24 h-24 text-muted-foreground" />
+            )}
           </div>
         </Link>
       </section>
+      )}
 
       {/* BLOG TEASER */}
       <section className="bg-secondary/50 py-6 md:py-10">

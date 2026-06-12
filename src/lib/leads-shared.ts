@@ -2,7 +2,7 @@ export const SOURCE_LABELS: Record<string, string> = {
   bari: "Бари",
   index: "Главная",
   home: "Главная",
-  "with-priest": "Со священником",
+  "with-priest": "Диалог со священником",
   contacts: "Контакты",
   about: "О нас",
   calendar: "Календарь",
@@ -30,16 +30,19 @@ export function formatLeadDate(iso: string): string {
   return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" });
 }
 
-export function isMoldovaPhone(phone: string): boolean {
+export function isMoldovaPhone(phone: string | null | undefined): boolean {
+  if (!phone) return false;
   const digits = phone.replace(/\D/g, "");
   return digits.startsWith("373");
 }
 
-export function viberLink(phone: string): string {
+export function viberLink(phone: string | null | undefined): string {
+  if (!phone) return "#";
   const digits = phone.replace(/\D/g, "");
   return `viber://chat?number=%2B${digits}`;
 }
 
-export function telLink(phone: string): string {
+export function telLink(phone: string | null | undefined): string {
+  if (!phone) return "#";
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
 }
