@@ -7,7 +7,7 @@ const leadSchema = z.object({
   phone: z.string().trim().max(30).regex(/^[+\d\s()\-]*$/).optional().or(z.literal("")),
   email: z.string().trim().email().max(255).optional().or(z.literal("")),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
-  source: z.string().trim().min(1).max(50).regex(/^[a-z0-9_\-]+$/),
+  source: z.string().trim().min(1).max(80).regex(/^[a-z0-9_:\-]+$/),
 });
 
 export const createLead = createServerFn({ method: "POST" })
