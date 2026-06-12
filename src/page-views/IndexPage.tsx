@@ -6,12 +6,13 @@ import { useLocalizedTo } from "@/lib/use-localized-to";
 import { BLESSING_BY } from "@/lib/constants";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
-import priestImg from "@/assets/orthodox-priest.jpg";
 import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 import { listPilgrimages } from "@/lib/pilgrimages.functions";
+import { clergyQueryOptions } from "@/page-views/WithPriestPage";
+import { User } from "lucide-react";
 
 export const destinationsListQueryOptions = queryOptions({
   queryKey: ["destinations", "public-list"],
