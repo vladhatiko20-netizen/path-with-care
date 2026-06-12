@@ -34,7 +34,8 @@ function Page() {
       </div>
 
       {isLoading ? <p className="text-muted-foreground">Загрузка…</p> : (
-        <div className="border border-border rounded-sm bg-card overflow-hidden">
+        <>
+        <div className="hidden sm:block border border-border rounded-sm bg-card overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-secondary/40 text-left">
               <tr>
@@ -82,6 +83,42 @@ function Page() {
             </tbody>
           </table>
         </div>
+
+        <div className="sm:hidden space-y-3">
+          {(data ?? []).length === 0 && (
+            <p className="text-center text-muted-foreground py-8">Пока нет записей.</p>
+          )}
+          {(data ?? []).map((c) => (
+            <div key={c.id} className="border border-border rounded-sm bg-card p-4 flex gap-3">
+              {c.photo_url ? (
+                <img src={c.photo_url} alt="" className="w-14 h-14 rounded-full object-cover border border-border shrink-0" />
+              ) : (
+                <div className="w-14 h-14 rounded-full bg-secondary flex items-center justify-center text-muted-foreground shrink-0">
+                  <User className="w-5 h-5" />
+                </div>
+              )}
+              <div className="flex-1 min-w-0">
+                <div className="font-serif text-base truncate">{c.name_ru}</div>
+                {c.title_ru && <div className="text-xs text-muted-foreground truncate">{c.title_ru}</div>}
+                <div className="flex items-center gap-2 mt-2">
+                  <span className={`px-2 py-0.5 rounded-sm text-xs ${c.is_published ? "bg-green-100 text-green-800" : "bg-muted text-muted-foreground"}`}>
+                    {c.is_published ? "Опубликовано" : "Черновик"}
+                  </span>
+                  <span className="text-xs text-muted-foreground">№ {c.sort_order}</span>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <Link to="/admin/clergy/$id" params={{ id: c.id }} className="inline-flex items-center gap-1.5 px-3 py-2 border border-border rounded-sm text-sm font-serif">
+                    <Pencil className="w-4 h-4" /> Редактировать
+                  </Link>
+                  <button onClick={() => handleDelete(c.id, c.name_ru)} className="inline-flex items-center gap-1.5 px-3 py-2 border border-destructive/40 text-destructive rounded-sm text-sm font-serif">
+                    <Trash2 className="w-4 h-4" /> Удалить
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        </>
       )}
     </div>
   );

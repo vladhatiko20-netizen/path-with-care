@@ -1,85 +1,54 @@
-## Комментарий к сообщению Claude
+# Plan: fix mobile admin + publish clergy on the public page
 
-Сообщение по сути верное — структура таблицы хорошая. Но несколько технических уточнений по нашему стеку:
+## Problem 1 — mobile admin: no pencil/edit on the clergy row
 
-1. **«Lovable Cloud database» — это и есть Supabase под капотом.** Никакого «нового проекта» создавать не нужно; работаем с уже подключённой БД через migration-инструмент. Существующих таблиц не трогаем.
-2. **`has_role` уже существует** в БД (`SECURITY DEFINER`, `search_path=public`) и уже используется другими политиками (blog_posts, destinations, leads и т.д.). Дополнительный `GRANT EXECUTE ... TO anon, authenticated` не нужен — функция объявлена корректно и работает в политиках. Лишний grant на `anon` даже нежелателен (anon не пишет).
-3. **Server-функции, не Edge Functions.** Админ читает/пишет через `createServerFn` + `requireSupabaseAuth` (как `adminListBlogPosts` и т.д. в `src/lib/admin.functions.ts`). Публичный список священников будет позже читаться публичной server-fn (без auth-middleware, RLS отдаст только `is_published=true`).
-4. **Фото.** Уже есть `ImageUpload` + бакет `public-images` — переиспользуем 1-в-1, без новой инфраструктуры.
-5. **Поля.** Структура подходит. Предлагаю одно небольшое расширение, чтобы потом не делать вторую миграцию: добавить `title_ru` / `title_ro` (сан/должность — «Иеромонах», «Părintele», «храм свв. Константина и Елены»), потому что на текущей странице это отдельная строка под именем. Если не хочешь — уберём, скажи.
+On `/admin/clergy` the list is a wide `<table>` with the action buttons (pencil + trash) in the **last column**. On a narrow viewport the table overflows horizontally and the actions column is clipped off-screen, so on mobile there is no way to open a row for editing. Other admin lists (blog, pilgrimages) have the same pattern but the user hit it here first.
 
-## План (Шаг 1 — только данные + админка)
+**Fix:** make the list responsive. On `sm` and up keep the current table. On mobile render a stacked card list with the same data and the same `Pencil` / `Trash2` controls clearly visible.
 
-### 1. Миграция БД
+- File: `src/routes/_admin/admin.clergy.index.tsx`
+  - Wrap current `<table>` in `<div class="hidden sm:block">`.
+  - Add a `<div class="sm:hidden space-y-3">` list of cards. Each card shows: thumbnail (or `User` icon fallback), `name_ru`, `title_ru`, status badge, sort order, and a row with **Edit** (`Link` to `/admin/clergy/$id`) and **Delete** buttons sized for touch (min ~40px).
+  - Keep all existing handlers / queries — pure presentation change.
 
-Таблица `public.clergy`:
+No changes to other admin sections in this step (user only flagged clergy; we'll mirror the pattern there in a follow-up if they ask).
 
-| поле | тип | примечание |
-|---|---|---|
-| `id` | uuid pk, default `gen_random_uuid()` | |
-| `name_ru`, `name_ro` | text not null | |
-| `title_ru`, `title_ro` | text | сан/место служения, опционально |
-| `bio_ru`, `bio_ro` | text | 2–4 предложения |
-| `photo_url` | text | nullable |
-| `sort_order` | int not null default 0 | |
-| `is_published` | bool not null default false | |
-| `created_at`, `updated_at` | timestamptz, авто | + триггер `set_updated_at` |
+## Problem 2 — show published clergy on the public "Dialog with priest" page
 
-GRANTs (по нашему стандарту):
-- `GRANT SELECT ON public.clergy TO anon, authenticated;` — публичное чтение
-- `GRANT INSERT, UPDATE, DELETE ON public.clergy TO authenticated;`
-- `GRANT ALL ON public.clergy TO service_role;`
+Currently `src/page-views/WithPriestPage.tsx` renders a hardcoded `priests` array (3 entries, local image imports). We need to replace it with data from `public.clergy` where `is_published = true`, ordered by `sort_order, created_at`.
 
-RLS политики:
-- `SELECT` для `anon, authenticated`: `USING (is_published = true)`
-- `SELECT` для `authenticated` (админ видит всё): `USING (has_role(auth.uid(), 'admin'::app_role))`
-- `INSERT/UPDATE/DELETE` для `authenticated`: `USING/WITH CHECK (has_role(auth.uid(), 'admin'::app_role))`
+### Data layer
+- New file `src/lib/clergy.functions.ts`:
+  - `listPublishedClergy = createServerFn({ method: "GET" }).handler(...)` — public, no auth middleware. Uses `supabaseAdmin` loaded **inside** the handler (per server-fn import rules) to select only safe columns: `id, name_ru, name_ro, title_ru, title_ro, bio_ru, bio_ro, photo_url, sort_order` where `is_published = true` ordered by `sort_order asc, created_at asc`. Returns plain DTO array.
+  - (Admin-elevated read is fine here even though RLS already permits anon read of published rows — keeps the public-route SSR path uniform with the rest of the site and avoids relying on anon grants.)
 
-Индекс: `(is_published, sort_order)`.
+### Route loaders (RU + RO)
+- `src/routes/with-priest.tsx` and `src/routes/ro.with-priest.tsx`: add a `loader` that primes a React Query cache entry via `context.queryClient.ensureQueryData(...)` with `queryKey: ["clergy", "published"]`.
 
-SQL покажу в момент вызова migration-инструмента — он спросит подтверждение перед выполнением, ничего не выполнится без твоего «да».
+### Page view
+- `src/page-views/WithPriestPage.tsx`:
+  - Remove the hardcoded `priests` array and the 3 local `team-priest*.jpg` imports.
+  - `useSuspenseQuery` to read the list.
+  - Render cards using DB fields. Per language pick `name_ru/ro`, `title_ru/ro`, `bio_ru/ro`. Use `photo_url` if present, else a neutral placeholder block with the `User` icon (no broken image).
+  - Keep the rest of the page (hero, FAQ, contact form) unchanged.
+  - Grid: keep `md:grid-cols-3` when >= 3, but render whatever count exists (1 priest shows centered single card, 2 priests show 2-up). Use `md:grid-cols-3` with `justify-items-center` and a `max-w-sm` on each card so a single card doesn't stretch full width.
+  - Section heading stays as is. If the query returns `[]`, hide the entire priests section (don't show an empty grid).
 
-### 2. Server-функции (`src/lib/admin.functions.ts`)
+### What is NOT in this step
+- No changes to the homepage. (User can ask next; current homepage priest section is in `IndexPage.tsx` and uses different hardcoded data — keeping scope tight.)
+- No edits to other admin list pages.
+- No changes to the FAQ or contact form on the priest page.
 
-Дописать (тем же шаблоном, что blog/destinations):
-- `adminListClergy()` — все записи, отсортированы по `sort_order, name_ru`
-- `adminGetClergy({ id })`
-- `adminUpsertClergy({ ...fields })` — create или update
-- `adminDeleteClergy({ id })`
+## Files touched
 
-Все с `.middleware([requireSupabaseAuth])` + проверкой `has_role(..., 'admin')`.
+- `src/routes/_admin/admin.clergy.index.tsx` — add mobile card layout
+- `src/lib/clergy.functions.ts` — new public server fn
+- `src/routes/with-priest.tsx` — add loader
+- `src/routes/ro.with-priest.tsx` — add loader
+- `src/page-views/WithPriestPage.tsx` — replace hardcoded list with DB-driven render
 
-### 3. Админ-страницы
+## Verification
 
-Маршруты (как у блога):
-- `src/routes/_admin/admin.clergy.index.tsx` — список (таблица: фото-миниатюра, имя RU, статус, кнопки edit/delete, кнопка «Новый»)
-- `src/routes/_admin/admin.clergy.new.tsx` — создание
-- `src/routes/_admin/admin.clergy.$id.tsx` — редактирование
-
-Форма `ClergyForm` (новый компонент `src/components/admin/ClergyForm.tsx`): имя RU/RO, сан/место RU/RO, био RU/RO (обычный textarea, не rich-editor — короткий текст), `ImageUpload` (folder=`clergy`), `sort_order` (number), `is_published` (checkbox), кнопки «Сохранить» / «Удалить».
-
-В `src/routes/_admin.tsx` добавить в массив `nav` пункт `{ to: "/admin/clergy", label: "Священники", icon: Users }` (иконка lucide `Users`). И карточку на `/admin` дашборде.
-
-### 4. Что НЕ делаем в этом шаге
-
-- Никаких изменений на публичной странице `/with-priest`, `/ro/with-priest`, на главной — данные ещё хардкод, переключим в Шаге 2.
-- Не трогаем существующие таблицы, политики, server-функции.
-- Никаких Edge Functions, никаких изменений в `supabase/config.toml`.
-
-### 5. Проверка
-
-- `bunx tsc --noEmit` зелёный
-- Логин под админом → `/admin/clergy` → создать запись с фото → опубликовать → запись видна в списке, фото загружается в `public-images/clergy/...`
-- В БД: `select * from clergy` отдаёт запись; под anon-ключом видны только published.
-
-## Шаг 2 (отдельным заходом, после approve Шага 1)
-
-Заменить хардкод массива `priests` в `src/page-views/WithPriestPage.tsx` и блока на главной на чтение из БД через публичную server-fn `listPublishedClergy()` + loader. Это короткая, изолированная правка — сделаем когда скажешь.
-
-## Что мне нужно от тебя, чтобы стартовать
-
-1. Добавлять ли `title_ru`/`title_ro` (сан/место)? Я за «да», иначе на странице не из чего собрать вторую строку.
-2. Нужны ли цитаты/контакт священника отдельными полями, или это часть `bio`? По умолчанию — часть `bio`.
-3. Подтвердить: иконка `Users` в сайдбаре, пункт меню «Священники», порядок — между «Блог» и «Паломничества». Ок?
-
-После твоего «да» я в build-режиме сделаю миграцию (покажет SQL и попросит подтверждение), затем server-fn, затем три admin-страницы и форму — одним заходом.
+- Typecheck green.
+- Manual: `/admin/clergy` on mobile viewport shows edit/delete per row; tapping pencil opens the edit page.
+- `/with-priest` and `/ro/with-priest` show the newly added priest in the correct language; if nothing is published, the priests block is hidden.

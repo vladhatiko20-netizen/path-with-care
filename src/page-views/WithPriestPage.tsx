@@ -1,19 +1,15 @@
 import { useState } from "react";
+import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
+import { User } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-priest.jpg";
-import p1 from "@/assets/team-priest1.jpg";
-import p2 from "@/assets/team-priest2.jpg";
-import p3 from "@/assets/team-priest3.jpg";
+import { listPublishedClergy } from "@/lib/clergy.functions";
 
-const priests = [
-  { img: p1, ru: { name: "Отец Михаил", place: "храм свв. Константина и Елены, Кишинёв", desc: "Сопровождает группы в Иерусалим и Грецию более десяти лет." },
-    ro: { name: "Părintele Mihail", place: "biserica Sf. Constantin și Elena, Chișinău", desc: "Însoțește grupuri în Ierusalim și Grecia de peste zece ani." } },
-  { img: p2, ru: { name: "Отец Андрей", place: "монастырь Куркь", desc: "Духовник многих паломников из Молдовы. Поездки в Бари, Афон, Грузию." },
-    ro: { name: "Părintele Andrei", place: "mănăstirea Curchi", desc: "Duhovnicul multor pelerini din Moldova. Călătorii la Bari, Athos, Georgia." } },
-  { img: p3, ru: { name: "Отец Иоанн", place: "известный батюшка Кишинёва", desc: "Сопровождает паломников в Святую Землю и на Корфу. Беседы и исповедь в дороге." },
-    ro: { name: "Părintele Ioan", place: "preot cunoscut din Chișinău", desc: "Însoțește pelerinii în Țara Sfântă și la Corfu." } },
-];
+export const clergyQueryOptions = queryOptions({
+  queryKey: ["clergy", "published"],
+  queryFn: () => listPublishedClergy(),
+});
 
 const faq = [
   { ru: { q: "Как готовиться к паломничеству?", a: "Готовиться лучше всего исповедью и причастием перед поездкой, чтением утренних и вечерних молитв, чтением о святынях, к которым едете. Душа должна быть спокойна и открыта." },
@@ -34,6 +30,7 @@ export function Component() {
   const { t, lang } = useLang();
   const [form, setForm] = useState({ name: "", email: "", question: "" });
   const [sent, setSent] = useState(false);
+  const { data: priests } = useSuspenseQuery(clergyQueryOptions);
   return (
     <PageShell>
       <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
@@ -47,28 +44,36 @@ export function Component() {
         </div>
       </section>
 
+      {priests.length > 0 && (
       <section className="max-w-5xl mx-auto px-6 py-10 md:py-10">
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-10">
           {t("Священники, сопровождающие наши группы", "Preoții care însoțesc grupurile noastre")}
         </h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 justify-items-center">
           {priests.map((p, i) => {
-            const c = lang === "ru" ? p.ru : p.ro;
+            const name = lang === "ru" ? p.name_ru : p.name_ro;
+            const place = lang === "ru" ? p.title_ru : p.title_ro;
+            const desc = lang === "ru" ? p.bio_ru : p.bio_ro;
             return (
-              <div key={i} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
-                <div className="aspect-[4/5] overflow-hidden">
-                  <img src={p.img} alt={c.name} loading="lazy" width={800} height={1000} className="w-full h-full object-cover" />
+              <div key={p.id ?? i} className="bg-card border border-gold/30 rounded-sm overflow-hidden w-full max-w-sm">
+                <div className="aspect-[4/5] overflow-hidden bg-secondary/40 flex items-center justify-center">
+                  {p.photo_url ? (
+                    <img src={p.photo_url} alt={name} loading="lazy" width={800} height={1000} className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-16 h-16 text-muted-foreground" />
+                  )}
                 </div>
                 <div className="p-5">
-                  <h3 className="font-serif text-xl text-foreground mb-1">{c.name}</h3>
-                  <p className="text-sm text-accent italic font-serif mb-3">{c.place}</p>
-                  <p className="text-sm text-foreground/75 leading-relaxed">{c.desc}</p>
+                  <h3 className="font-serif text-xl text-foreground mb-1">{name}</h3>
+                  {place && <p className="text-sm text-accent italic font-serif mb-3">{place}</p>}
+                  {desc && <p className="text-sm text-foreground/75 leading-relaxed">{desc}</p>}
                 </div>
               </div>
             );
           })}
         </div>
       </section>
+      )}
 
       <section className="bg-secondary/60 py-10 md:py-10">
         <div className="max-w-3xl mx-auto px-6">
