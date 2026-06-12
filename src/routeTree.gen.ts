@@ -51,6 +51,8 @@ import { Route as AdminAdminLeadsIdRouteImport } from './routes/_admin/admin.lea
 import { Route as AdminAdminDestinationsNewRouteImport } from './routes/_admin/admin.destinations.new'
 import { Route as AdminAdminDestinationsImportRouteImport } from './routes/_admin/admin.destinations.import'
 import { Route as AdminAdminDestinationsIdRouteImport } from './routes/_admin/admin.destinations.$id'
+import { Route as AdminAdminClergyNewRouteImport } from './routes/_admin/admin.clergy.new'
+import { Route as AdminAdminClergyIdRouteImport } from './routes/_admin/admin.clergy.$id'
 import { Route as AdminAdminBlogNewRouteImport } from './routes/_admin/admin.blog.new'
 import { Route as AdminAdminBlogIdRouteImport } from './routes/_admin/admin.blog.$id'
 
@@ -269,6 +271,16 @@ const AdminAdminDestinationsIdRoute =
     path: '/admin/destinations/$id',
     getParentRoute: () => AdminRoute,
   } as any)
+const AdminAdminClergyNewRoute = AdminAdminClergyNewRouteImport.update({
+  id: '/admin/clergy/new',
+  path: '/admin/clergy/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminClergyIdRoute = AdminAdminClergyIdRouteImport.update({
+  id: '/admin/clergy/$id',
+  path: '/admin/clergy/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminBlogNewRoute = AdminAdminBlogNewRouteImport.update({
   id: '/admin/blog/new',
   path: '/admin/blog/new',
@@ -313,6 +325,8 @@ export interface FileRoutesByFullPath {
   '/ro/destinations/': typeof RoDestinationsIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/admin/clergy/$id': typeof AdminAdminClergyIdRoute
+  '/admin/clergy/new': typeof AdminAdminClergyNewRoute
   '/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
   '/admin/destinations/import': typeof AdminAdminDestinationsImportRoute
   '/admin/destinations/new': typeof AdminAdminDestinationsNewRoute
@@ -357,6 +371,8 @@ export interface FileRoutesByTo {
   '/ro/destinations': typeof RoDestinationsIndexRoute
   '/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/admin/clergy/$id': typeof AdminAdminClergyIdRoute
+  '/admin/clergy/new': typeof AdminAdminClergyNewRoute
   '/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
   '/admin/destinations/import': typeof AdminAdminDestinationsImportRoute
   '/admin/destinations/new': typeof AdminAdminDestinationsNewRoute
@@ -404,6 +420,8 @@ export interface FileRoutesById {
   '/ro/destinations/': typeof RoDestinationsIndexRoute
   '/_admin/admin/blog/$id': typeof AdminAdminBlogIdRoute
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
+  '/_admin/admin/clergy/$id': typeof AdminAdminClergyIdRoute
+  '/_admin/admin/clergy/new': typeof AdminAdminClergyNewRoute
   '/_admin/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
   '/_admin/admin/destinations/import': typeof AdminAdminDestinationsImportRoute
   '/_admin/admin/destinations/new': typeof AdminAdminDestinationsNewRoute
@@ -451,6 +469,8 @@ export interface FileRouteTypes {
     | '/ro/destinations/'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/clergy/$id'
+    | '/admin/clergy/new'
     | '/admin/destinations/$id'
     | '/admin/destinations/import'
     | '/admin/destinations/new'
@@ -495,6 +515,8 @@ export interface FileRouteTypes {
     | '/ro/destinations'
     | '/admin/blog/$id'
     | '/admin/blog/new'
+    | '/admin/clergy/$id'
+    | '/admin/clergy/new'
     | '/admin/destinations/$id'
     | '/admin/destinations/import'
     | '/admin/destinations/new'
@@ -541,6 +563,8 @@ export interface FileRouteTypes {
     | '/ro/destinations/'
     | '/_admin/admin/blog/$id'
     | '/_admin/admin/blog/new'
+    | '/_admin/admin/clergy/$id'
+    | '/_admin/admin/clergy/new'
     | '/_admin/admin/destinations/$id'
     | '/_admin/admin/destinations/import'
     | '/_admin/admin/destinations/new'
@@ -870,6 +894,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminDestinationsIdRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/clergy/new': {
+      id: '/_admin/admin/clergy/new'
+      path: '/admin/clergy/new'
+      fullPath: '/admin/clergy/new'
+      preLoaderRoute: typeof AdminAdminClergyNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/clergy/$id': {
+      id: '/_admin/admin/clergy/$id'
+      path: '/admin/clergy/$id'
+      fullPath: '/admin/clergy/$id'
+      preLoaderRoute: typeof AdminAdminClergyIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/blog/new': {
       id: '/_admin/admin/blog/new'
       path: '/admin/blog/new'
@@ -891,6 +929,8 @@ interface AdminRouteChildren {
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
   AdminAdminBlogIdRoute: typeof AdminAdminBlogIdRoute
   AdminAdminBlogNewRoute: typeof AdminAdminBlogNewRoute
+  AdminAdminClergyIdRoute: typeof AdminAdminClergyIdRoute
+  AdminAdminClergyNewRoute: typeof AdminAdminClergyNewRoute
   AdminAdminDestinationsIdRoute: typeof AdminAdminDestinationsIdRoute
   AdminAdminDestinationsImportRoute: typeof AdminAdminDestinationsImportRoute
   AdminAdminDestinationsNewRoute: typeof AdminAdminDestinationsNewRoute
@@ -908,6 +948,8 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminIndexRoute: AdminAdminIndexRoute,
   AdminAdminBlogIdRoute: AdminAdminBlogIdRoute,
   AdminAdminBlogNewRoute: AdminAdminBlogNewRoute,
+  AdminAdminClergyIdRoute: AdminAdminClergyIdRoute,
+  AdminAdminClergyNewRoute: AdminAdminClergyNewRoute,
   AdminAdminDestinationsIdRoute: AdminAdminDestinationsIdRoute,
   AdminAdminDestinationsImportRoute: AdminAdminDestinationsImportRoute,
   AdminAdminDestinationsNewRoute: AdminAdminDestinationsNewRoute,
