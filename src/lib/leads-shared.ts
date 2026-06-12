@@ -11,7 +11,11 @@ export const SOURCE_LABELS: Record<string, string> = {
 
 export function sourceLabel(s: string | null | undefined): string {
   if (!s) return "—";
-  return SOURCE_LABELS[s] ?? s;
+  if (SOURCE_LABELS[s]) return SOURCE_LABELS[s];
+  if (s.startsWith("destination:")) {
+    return `Паломничество: ${s.slice("destination:".length)}`;
+  }
+  return s;
 }
 
 export function formatLeadDate(iso: string): string {
