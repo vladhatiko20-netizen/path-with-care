@@ -206,7 +206,7 @@ export function Component() {
                   <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Направление", "Destinație")}</th>
                   <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden md:table-cell">{t("Длительность", "Durată")}</th>
                   <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Цена", "Preț")}</th>
-                  <th className="py-2.5 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden sm:table-cell">{t("Места", "Locuri")}</th>
+                  <th className="py-2.5 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden sm:table-cell">{t("Сопровождение", "Însoțire")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -233,7 +233,7 @@ export function Component() {
                     <td className="py-2.5 pr-3 text-foreground text-[15px]">{lang === "ru" ? row.destination_ru : row.destination_ro}</td>
                     <td className="py-2.5 pr-3 text-foreground/70 text-[14px] hidden md:table-cell">{formatTripDuration(row.start_date, row.end_date, lang)}</td>
                     <td className="py-2.5 pr-3 text-gold font-medium text-[15px]">{row.price_eur != null ? `€${row.price_eur}` : ""}</td>
-                    <td className="py-2.5 italic text-sm hidden sm:table-cell text-muted-foreground"></td>
+                    <td className="py-2.5 italic text-sm hidden sm:table-cell text-muted-foreground">{row.with_priest ? t("Со священником", "Cu preot") : t("С сопровождающим", "Cu însoțitor")}</td>
                   </tr>
                   );
                 })}
