@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { adminSavePilgrimage } from "@/lib/admin.functions";
+import { useQuery } from "@tanstack/react-query";
+import { adminSavePilgrimage, adminListDestinations } from "@/lib/admin.functions";
 import { ImageUpload } from "./ImageUpload";
 
 type Initial = {
@@ -11,6 +12,7 @@ type Initial = {
   end_date: string;
   destination_ru: string;
   destination_ro: string;
+  destination_slug: string | null;
   title_ru: string;
   title_ro: string;
   description_ru: string | null;
@@ -23,6 +25,11 @@ type Initial = {
 
 export function PilgrimageForm({ initial }: { initial: Initial }) {
   const save = useServerFn(adminSavePilgrimage);
+  const listDest = useServerFn(adminListDestinations);
+  const { data: destinations } = useQuery({
+    queryKey: ["admin-destinations-list"],
+    queryFn: () => listDest(),
+  });
   const navigate = useNavigate();
   const [form, setForm] = useState<Initial>(initial);
   const [busy, setBusy] = useState(false);
@@ -37,7 +44,7 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
     setError(null);
     setBusy(true);
     try {
-      await save({ data: { ...form, cover_image: form.cover_image || null, price_eur: form.price_eur ?? null } });
+      await save({ data: { ...form, cover_image: form.cover_image || null, price_eur: form.price_eur ?? null, destination_slug: form.destination_slug || null } });
       navigate({ to: "/admin/pilgrimages" });
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Ошибка");
@@ -74,6 +81,20 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
         <div>
           <label className="block text-sm font-serif mb-1">Направление (RO) *</label>
           <input className={cls} value={form.destination_ro} onChange={(e) => set("destination_ro", e.target.value)} required maxLength={500} />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="block text-sm font-serif mb-1">Направление (каталог)</label>
+          <select
+            className={cls}
+            value={form.destination_slug ?? ""}
+            onChange={(e) => set("destination_slug", e.target.value || null)}
+          >
+            <option value="">— не выбрано —</option>
+            {(destinations ?? []).map((d) => (
+              <option key={d.slug} value={d.slug}>{d.title_ru}</option>
+            ))}
+          </select>
+          <p className="text-xs text-muted-foreground mt-1">Связывает поездку с карточкой направления — клик по строке в календаре ведёт на /destinations/{`{slug}`}.</p>
         </div>
         <div>
           <label className="block text-sm font-serif mb-1">Название (RU) *</label>

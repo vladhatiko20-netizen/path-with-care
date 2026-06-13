@@ -14,6 +14,7 @@ function Page() {
       <PilgrimageForm initial={{
         slug: "", start_date: today, end_date: today,
         destination_ru: "", destination_ro: "", title_ru: "", title_ro: "",
+        destination_slug: null,
         description_ru: null, description_ro: null, cover_image: null,
         price_eur: null, with_priest: false, is_published: false,
       }} />

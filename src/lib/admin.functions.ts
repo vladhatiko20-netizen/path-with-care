@@ -23,6 +23,7 @@ const pilgSchema = z.object({
   end_date: z.string().min(1),
   destination_ru: z.string().min(1).max(500),
   destination_ro: z.string().min(1).max(500),
+  destination_slug: z.string().max(255).nullable().optional(),
   title_ru: z.string().min(1).max(500),
   title_ro: z.string().min(1).max(500),
   description_ru: z.string().max(5000).nullable().optional(),

@@ -84,8 +84,25 @@ export function Component() {
                 <div className="overflow-x-auto -mx-6 px-6">
                   <table className="w-full font-serif">
                     <tbody>
-                      {m.trips.map((row) => (
-                        <tr key={row.id} onClick={() => navigate({ to: localize("/contacts") as "/contacts" })} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
+                      {m.trips.map((row) => {
+                        const hasLink = !!row.destination_slug;
+                        const go = hasLink
+                          ? () =>
+                              navigate({
+                                to: localize("/destinations/$slug") as "/destinations/$slug",
+                                params: { slug: row.destination_slug! },
+                                hash: "lead",
+                              })
+                          : undefined;
+                        return (
+                        <tr
+                          key={row.id}
+                          onClick={go}
+                          role={hasLink ? "link" : undefined}
+                          tabIndex={hasLink ? 0 : undefined}
+                          onKeyDown={hasLink ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go!(); } } : undefined}
+                          className={`border-b border-gold/15 transition-colors ${hasLink ? "hover:bg-secondary/40 cursor-pointer" : ""}`}
+                        >
                           <td className="py-3 pr-3 text-accent text-lg leading-none align-middle w-8">{row.with_priest ? "☦" : "•"}</td>
                           <td className="py-3 pr-3 text-foreground/85 text-[15px] whitespace-nowrap">
                             {formatDateRange(row.start_date, row.end_date, lang)}
@@ -100,7 +117,8 @@ export function Component() {
                             {row.price_eur ? `€${row.price_eur}` : "—"}
                           </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -110,8 +128,8 @@ export function Component() {
         )}
 
         <div className="mt-14 text-center">
-          <Link to={localize("/contacts") as "/contacts"} className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md">
-            {t("Оставить заявку", "Lasă o cerere")}
+          <Link to={localize("/destinations") as "/destinations"} className="inline-flex items-center px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md">
+            {t("Смотреть направления", "Vezi destinațiile")}
           </Link>
         </div>
       </section>

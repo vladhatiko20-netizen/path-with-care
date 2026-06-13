@@ -469,6 +469,7 @@ export type Database = {
           description_ru: string | null
           destination_ro: string
           destination_ru: string
+          destination_slug: string | null
           end_date: string
           id: string
           is_published: boolean
@@ -487,6 +488,7 @@ export type Database = {
           description_ru?: string | null
           destination_ro: string
           destination_ru: string
+          destination_slug?: string | null
           end_date: string
           id?: string
           is_published?: boolean
@@ -505,6 +507,7 @@ export type Database = {
           description_ru?: string | null
           destination_ro?: string
           destination_ru?: string
+          destination_slug?: string | null
           end_date?: string
           id?: string
           is_published?: boolean
@@ -516,7 +519,15 @@ export type Database = {
           updated_at?: string
           with_priest?: boolean
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "pilgrimages_destination_slug_fkey"
+            columns: ["destination_slug"]
+            isOneToOne: false
+            referencedRelation: "destinations"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       user_roles: {
         Row: {
