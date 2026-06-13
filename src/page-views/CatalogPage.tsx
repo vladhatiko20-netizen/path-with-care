@@ -106,13 +106,39 @@ export function Component() {
             {sent ? (
               <p className="text-foreground/85 italic font-serif">{t("Спасибо, предзаказ принят. Анна свяжется с вами.", "Mulțumim, pre-comanda a fost primită.")}</p>
             ) : (
-              <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-3">
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (sending || !order) return;
+                  setSending(true);
+                  try {
+                    const prefix = `Предзаказ: ${order.ru} / ${order.ro}\n\n`;
+                    await submit({
+                      data: {
+                        name: form.name,
+                        phone: form.phone,
+                        email: form.email,
+                        message: prefix + form.message,
+                        source: "catalog",
+                      },
+                    });
+                    setSent(true);
+                    toast.success(t("Предзаказ отправлен", "Pre-comanda a fost trimisă"));
+                  } catch (err) {
+                    console.error(err);
+                    toast.error(t("Не удалось отправить. Попробуйте позже.", "Nu s-a putut trimite. Încercați mai târziu."));
+                  } finally {
+                    setSending(false);
+                  }
+                }}
+                className="space-y-3"
+              >
                 <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-2.5 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold" />
-                <input required maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-2.5 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold" />
+                <input maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-2.5 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold" />
                 <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-2.5 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold" />
                 <textarea maxLength={500} rows={3} placeholder={t("Сообщение", "Mesaj")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-2.5 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold resize-none" />
                 <div className="flex gap-3 pt-2">
-                  <button type="submit" className="flex-1 px-5 py-2.5 bg-accent text-primary-foreground text-sm font-serif rounded-sm">{t("Оставить предзаказ", "Pre-comandă")}</button>
+                  <button type="submit" disabled={sending} className="flex-1 px-5 py-2.5 bg-accent text-primary-foreground text-sm font-serif rounded-sm disabled:opacity-60">{t("Оставить предзаказ", "Pre-comandă")}</button>
                   <button type="button" onClick={() => setOrder(null)} className="px-5 py-2.5 border border-gold/40 text-foreground text-sm font-serif rounded-sm">{t("Отмена", "Anulează")}</button>
                 </div>
               </form>
