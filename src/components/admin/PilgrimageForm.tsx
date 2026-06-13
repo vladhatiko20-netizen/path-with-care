@@ -3,7 +3,6 @@ import { useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { adminSavePilgrimage, adminListDestinations } from "@/lib/admin.functions";
-import { ImageUpload } from "./ImageUpload";
 
 type Initial = {
   id?: string;
@@ -44,7 +43,21 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
     setError(null);
     setBusy(true);
     try {
-      await save({ data: { ...form, cover_image: form.cover_image || null, price_eur: form.price_eur ?? null, destination_slug: form.destination_slug || null } });
+      await save({
+        data: {
+          ...form,
+          // title_ru/title_ro are required by the schema but no longer edited in the UI —
+          // fall back to the free-text destination fields so existing records keep their titles
+          // and new records get a sensible default.
+          title_ru: (form.title_ru?.trim() || form.destination_ru).slice(0, 500),
+          title_ro: (form.title_ro?.trim() || form.destination_ro).slice(0, 500),
+          description_ru: form.description_ru,
+          description_ro: form.description_ro,
+          cover_image: form.cover_image || null,
+          price_eur: form.price_eur ?? null,
+          destination_slug: form.destination_slug || null,
+        },
+      });
       navigate({ to: "/admin/pilgrimages" });
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Ошибка");
@@ -96,31 +109,7 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
           </select>
           <p className="text-xs text-muted-foreground mt-1">Связывает поездку с карточкой направления — клик по строке в календаре ведёт на /destinations/{`{slug}`}.</p>
         </div>
-        <div>
-          <label className="block text-sm font-serif mb-1">Название (RU) *</label>
-          <input className={cls} value={form.title_ru} onChange={(e) => set("title_ru", e.target.value)} required maxLength={500} />
-        </div>
-        <div>
-          <label className="block text-sm font-serif mb-1">Название (RO) *</label>
-          <input className={cls} value={form.title_ro} onChange={(e) => set("title_ro", e.target.value)} required maxLength={500} />
-        </div>
       </div>
-
-      <div>
-        <label className="block text-sm font-serif mb-1">Описание (RU)</label>
-        <textarea className={cls} rows={4} value={form.description_ru ?? ""} onChange={(e) => set("description_ru", e.target.value || null)} maxLength={5000} />
-      </div>
-      <div>
-        <label className="block text-sm font-serif mb-1">Описание (RO)</label>
-        <textarea className={cls} rows={4} value={form.description_ro ?? ""} onChange={(e) => set("description_ro", e.target.value || null)} maxLength={5000} />
-      </div>
-
-      <ImageUpload
-        value={form.cover_image}
-        onChange={(url) => set("cover_image", url)}
-        folder="pilgrimages"
-        label="Обложка паломничества"
-      />
 
       <div className="flex flex-wrap gap-6">
         <label className="flex items-center gap-2 text-sm">
