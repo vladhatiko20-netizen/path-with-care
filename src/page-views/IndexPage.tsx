@@ -197,16 +197,16 @@ export function Component() {
             </h2>
           </div>
 
-          <div className="overflow-x-auto -mx-6 px-6">
+          <div className="overflow-x-auto md:-mx-6 md:px-6">
             <table className="w-full font-serif">
               <thead>
                 <tr className="border-b border-gold/50 text-left">
-                  <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium w-8"></th>
-                  <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Дата", "Data")}</th>
-                  <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Направление", "Destinație")}</th>
-                  <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden md:table-cell">{t("Длительность", "Durată")}</th>
-                  <th className="py-2.5 pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Цена", "Preț")}</th>
-                  <th className="py-2.5 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden sm:table-cell">{t("Сопровождение", "Însoțire")}</th>
+                  <th className="py-2 pr-1 md:py-2.5 md:pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium w-5 md:w-8"></th>
+                  <th className="py-2 pr-2 md:py-2.5 md:pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Дата", "Data")}</th>
+                  <th className="py-2 pr-2 md:py-2.5 md:pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium">{t("Направление", "Destinație")}</th>
+                  <th className="py-2 pr-2 md:py-2.5 md:pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden md:table-cell">{t("Длительность", "Durată")}</th>
+                  <th className="py-2 pr-0 md:py-2.5 md:pr-3 text-[11px] uppercase tracking-widest text-muted-foreground font-medium text-right md:text-left">{t("Цена", "Preț")}</th>
+                  <th className="py-2 md:py-2.5 text-[11px] uppercase tracking-widest text-muted-foreground font-medium hidden sm:table-cell">{t("Сопровождение", "Însoțire")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -228,12 +228,15 @@ export function Component() {
                     tabIndex={hasLink ? 0 : undefined}
                     onKeyDown={hasLink ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go!(); } } : undefined}
                   >
-                    <td className="py-2.5 pr-3 text-accent text-lg leading-none align-middle">☦</td>
-                    <td className="py-2.5 pr-3 text-foreground/85 text-[15px]">{formatTripDate(row.start_date, lang)}</td>
-                    <td className="py-2.5 pr-3 text-foreground text-[15px]">{lang === "ru" ? row.destination_ru : row.destination_ro}</td>
-                    <td className="py-2.5 pr-3 text-foreground/70 text-[14px] hidden md:table-cell">{formatTripDuration(row.start_date, row.end_date, lang)}</td>
-                    <td className="py-2.5 pr-3 text-gold font-medium text-[15px]">{row.price_eur != null ? `€${row.price_eur}` : ""}</td>
-                    <td className="py-2.5 italic text-sm hidden sm:table-cell text-muted-foreground">{row.with_priest ? t("Со священником", "Cu preot") : t("С сопровождающим", "Cu însoțitor")}</td>
+                    <td className="py-2 pr-1 md:py-2.5 md:pr-3 text-gold text-lg leading-none align-middle">✦</td>
+                    <td className="py-2 pr-2 md:py-2.5 md:pr-3 text-foreground/85 text-[15px] whitespace-nowrap">{formatTripDate(row.start_date, lang)}</td>
+                    <td className="py-2 pr-2 md:py-2.5 md:pr-3 text-foreground text-[15px]">
+                      {lang === "ru" ? row.destination_ru : row.destination_ro}
+                      <span className="md:hidden text-xs text-muted-foreground whitespace-nowrap"> · {formatTripDuration(row.start_date, row.end_date, lang)}</span>
+                    </td>
+                    <td className="py-2 pr-2 md:py-2.5 md:pr-3 text-foreground/70 text-[14px] hidden md:table-cell">{formatTripDuration(row.start_date, row.end_date, lang)}</td>
+                    <td className="py-2 pr-0 md:py-2.5 md:pr-3 text-gold font-medium text-[15px] text-right md:text-left whitespace-nowrap">{row.price_eur != null ? `€${row.price_eur}` : ""}</td>
+                    <td className="py-2 md:py-2.5 italic text-sm hidden sm:table-cell text-muted-foreground">{row.with_priest ? t("Со священником", "Cu preot") : t("С сопровождающим", "Cu însoțitor")}</td>
                   </tr>
                   );
                 })}
