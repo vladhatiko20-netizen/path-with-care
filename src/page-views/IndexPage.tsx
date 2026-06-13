@@ -171,7 +171,7 @@ export function Component() {
                         <p className="text-sm text-foreground/65 leading-snug mb-3">{caption}</p>
                       )}
                       <div className="mt-auto flex items-center justify-between pt-2 border-t border-border/60">
-                        <span className="text-base text-muted-foreground font-serif">{duration ?? ""}</span>
+                        <span className="text-base font-semibold text-muted-foreground font-serif">{duration ?? ""}</span>
                         {price && (
                           <span className="text-base text-gold font-serif font-medium">{price}</span>
                         )}
