@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { createLead } from "@/lib/leads.functions";
 import heroImg from "@/assets/hero-contacts.jpg";
 
 export function Component() {
   const { t } = useLang();
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const submit = useServerFn(createLead);
   return (
     <PageShell>
       <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
