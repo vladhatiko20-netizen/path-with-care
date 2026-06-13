@@ -81,12 +81,37 @@ export function Component() {
               {t("Спасибо, сообщение отправлено.", "Mulțumim, mesajul a fost trimis.")}
             </div>
           ) : (
-            <form onSubmit={(e) => { e.preventDefault(); setSent(true); }} className="space-y-4">
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (sending) return;
+                setSending(true);
+                try {
+                  await submit({
+                    data: {
+                      name: form.name,
+                      phone: form.phone,
+                      email: form.email,
+                      message: form.message,
+                      source: "contacts",
+                    },
+                  });
+                  setSent(true);
+                  toast.success(t("Сообщение отправлено", "Mesajul a fost trimis"));
+                } catch (err) {
+                  console.error(err);
+                  toast.error(t("Не удалось отправить. Попробуйте позже.", "Nu s-a putut trimite. Încercați mai târziu."));
+                } finally {
+                  setSending(false);
+                }
+              }}
+              className="space-y-4"
+            >
               <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
-              <input required maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
+              <input maxLength={30} placeholder={t("Телефон", "Telefon")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
               <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
               <textarea required maxLength={1000} rows={5} placeholder={t("Сообщение", "Mesaj")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
-              <button type="submit" className="px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md">
+              <button type="submit" disabled={sending} className="px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
                 {t("Отправить", "Trimite")}
               </button>
             </form>

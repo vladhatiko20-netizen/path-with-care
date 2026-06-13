@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
+import { createLead } from "@/lib/leads.functions";
 import heroImg from "@/assets/catalog-hero.jpg";
 import iNikolay from "@/assets/cat-nikolay.jpg";
 import iJer from "@/assets/cat-jerusalem.jpg";
@@ -31,6 +34,8 @@ export function Component() {
   const [order, setOrder] = useState<Item | null>(null);
   const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const submit = useServerFn(createLead);
 
   const cats: { key: "all" | Cat; ru: string; ro: string }[] = [
     { key: "all", ru: "Все", ro: "Toate" },
