@@ -81,7 +81,7 @@ export function Component() {
                 <h2 className="font-serif text-2xl md:text-3xl text-foreground font-light mb-4 pb-2 border-b border-gold/40">
                   {monthNames[lang][m.month]} {m.year}
                 </h2>
-                <div className="overflow-x-auto -mx-6 px-6">
+                <div className="overflow-x-auto md:-mx-6 md:px-6">
                   <table className="w-full font-serif">
                     <tbody>
                       {m.trips.map((row) => {
@@ -103,27 +103,27 @@ export function Component() {
                           onKeyDown={hasLink ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go!(); } } : undefined}
                           className={`border-b border-gold/15 transition-colors ${hasLink ? "hover:bg-secondary/40 cursor-pointer" : ""}`}
                         >
-                          <td className="py-3 pr-3 text-accent text-lg leading-none align-middle w-8">{row.with_priest ? "☦" : "•"}</td>
-                          <td className="py-3 pr-3 text-foreground/85 text-[15px] whitespace-nowrap">
+                          <td className="py-2.5 pr-1 md:py-3 md:pr-3 text-gold text-lg leading-none align-middle w-5 md:w-8">✦</td>
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground/85 text-[15px] whitespace-nowrap">
                             {formatDateRange(row.start_date, row.end_date, lang)}
                           </td>
-                          <td className="py-3 pr-3 text-foreground text-[15px]">
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground text-[15px]">
                             {lang === "ru" ? row.destination_ru : row.destination_ro}
                           </td>
-                          <td className="py-3 pr-3 text-foreground/70 text-[14px] hidden md:table-cell whitespace-nowrap">
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground/70 text-[14px] hidden md:table-cell whitespace-nowrap">
                             {durationDays(row.start_date, row.end_date)} {t("дн.", "zile")}
                           </td>
-                          <td className="py-3 pr-3 text-gold font-medium text-[15px] whitespace-nowrap">
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-gold font-medium text-[15px] whitespace-nowrap">
                             {row.price_eur ? `€${row.price_eur}` : "—"}
                           </td>
-                          <td className="py-3 text-right">
+                          <td className="py-2.5 pl-1 md:py-3 md:pl-0 text-right">
                             {hasLink && (
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   go!();
                                 }}
-                                className="px-3 py-1.5 text-xs md:text-sm font-serif border border-gold/50 text-foreground hover:bg-gold/10 transition-colors rounded-sm cursor-pointer whitespace-nowrap"
+                                className="px-2 py-1 text-xs md:px-3 md:py-1.5 md:text-sm font-serif border border-gold/50 text-foreground hover:bg-gold/10 transition-colors rounded-sm cursor-pointer whitespace-nowrap"
                               >
                                 {t("Подать заявку", "Depune cerere")}
                               </button>
