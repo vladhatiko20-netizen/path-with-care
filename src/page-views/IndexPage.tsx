@@ -54,6 +54,7 @@ function formatTripDuration(start: string, end: string, lang: "ru" | "ro") {
 export function Component() {
   const { t, lang } = useLang();
   const localize = useLocalizedTo();
+  const navigate = useNavigate();
   const { data: blogPosts } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: () => listBlogPosts(),
@@ -209,8 +210,25 @@ export function Component() {
                 </tr>
               </thead>
               <tbody>
-                {upcoming.map((row) => (
-                  <tr key={row.id} className="border-b border-gold/15 hover:bg-secondary/40 transition-colors cursor-pointer">
+                {upcoming.map((row) => {
+                  const hasLink = !!row.destination_slug;
+                  const go = hasLink
+                    ? () =>
+                        navigate({
+                          to: localize("/destinations/$slug") as "/destinations/$slug",
+                          params: { slug: row.destination_slug! },
+                          hash: "lead",
+                        })
+                    : undefined;
+                  return (
+                  <tr
+                    key={row.id}
+                    className={`border-b border-gold/15 transition-colors ${hasLink ? "hover:bg-secondary/40 cursor-pointer" : ""}`}
+                    onClick={go}
+                    role={hasLink ? "link" : undefined}
+                    tabIndex={hasLink ? 0 : undefined}
+                    onKeyDown={hasLink ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go!(); } } : undefined}
+                  >
                     <td className="py-2.5 pr-3 text-accent text-lg leading-none align-middle">☦</td>
                     <td className="py-2.5 pr-3 text-foreground/85 text-[15px]">{formatTripDate(row.start_date, lang)}</td>
                     <td className="py-2.5 pr-3 text-foreground text-[15px]">{lang === "ru" ? row.destination_ru : row.destination_ro}</td>
@@ -218,7 +236,8 @@ export function Component() {
                     <td className="py-2.5 pr-3 text-gold font-medium text-[15px]">{row.price_eur != null ? `€${row.price_eur}` : ""}</td>
                     <td className="py-2.5 italic text-sm hidden sm:table-cell text-muted-foreground"></td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
