@@ -31,6 +31,7 @@ function Page() {
         end_date: data.end_date,
         destination_ru: data.destination_ru,
         destination_ro: data.destination_ro,
+        destination_slug: data.destination_slug ?? null,
         title_ru: data.title_ru,
         title_ro: data.title_ro,
         description_ru: data.description_ru,
