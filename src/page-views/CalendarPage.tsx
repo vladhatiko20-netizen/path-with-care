@@ -116,6 +116,19 @@ export function Component() {
                           <td className="py-3 pr-3 text-gold font-medium text-[15px] whitespace-nowrap">
                             {row.price_eur ? `€${row.price_eur}` : "—"}
                           </td>
+                          <td className="py-3 text-right">
+                            {hasLink && (
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  go!();
+                                }}
+                                className="px-3 py-1.5 text-xs md:text-sm font-serif border border-gold/50 text-foreground hover:bg-gold/10 transition-colors rounded-sm cursor-pointer whitespace-nowrap"
+                              >
+                                {t("Подать заявку", "Depune cerere")}
+                              </button>
+                            )}
+                          </td>
                         </tr>
                         );
                       })}

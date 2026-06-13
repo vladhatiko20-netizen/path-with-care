@@ -217,7 +217,6 @@ export function Component() {
                         navigate({
                           to: localize("/destinations/$slug") as "/destinations/$slug",
                           params: { slug: row.destination_slug! },
-                          hash: "lead",
                         })
                     : undefined;
                   return (
