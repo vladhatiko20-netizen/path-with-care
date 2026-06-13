@@ -103,17 +103,17 @@ export function Component() {
                           onKeyDown={hasLink ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go!(); } } : undefined}
                           className={`border-b border-gold/15 transition-colors ${hasLink ? "hover:bg-secondary/40 cursor-pointer" : ""}`}
                         >
-                          <td className="py-2.5 pr-1 md:py-3 md:pr-3 text-gold text-lg leading-none align-middle w-5 md:w-8">✦</td>
-                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground/85 text-[15px] whitespace-nowrap">
+                          <td className="py-2.5 pl-0 pr-0.5 md:py-3 md:pr-3 text-gold text-lg leading-none align-middle w-4 md:w-8">✦</td>
+                          <td className="py-2.5 pl-0 pr-1 md:py-3 md:pr-3 text-foreground/85 text-[15px] md:text-base whitespace-nowrap">
                             {formatDateRange(row.start_date, row.end_date, lang)}
                           </td>
-                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground text-[15px]">
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground text-[15px] md:text-base md:font-semibold">
                             {lang === "ru" ? row.destination_ru : row.destination_ro}
                           </td>
-                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground/70 text-[14px] hidden md:table-cell whitespace-nowrap">
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-foreground/70 text-[14px] md:text-base hidden md:table-cell whitespace-nowrap">
                             {durationDays(row.start_date, row.end_date)} {t("дн.", "zile")}
                           </td>
-                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-gold font-medium text-[15px] whitespace-nowrap">
+                          <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-gold font-medium text-[15px] md:text-base whitespace-nowrap">
                             {row.price_eur ? `€${row.price_eur}` : "—"}
                           </td>
                           <td className="py-2.5 pl-1 md:py-3 md:pl-0 text-right">
