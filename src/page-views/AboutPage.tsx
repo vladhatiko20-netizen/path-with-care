@@ -46,7 +46,7 @@ export function Component() {
   const introParagraphs = introText.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
   const videoEmbed = page?.video_url ? youtubeEmbed(page.video_url) : null;
 
-  const visibleTeam = team.filter((m) => m.photo_url && m.is_published);
+  const visibleTeam = team.filter((m) => m.photo_url);
   const visibleClergy = clergyList.filter((c) => c.photo_url);
 
   return (
