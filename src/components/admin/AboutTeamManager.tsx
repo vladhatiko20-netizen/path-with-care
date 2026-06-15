@@ -123,11 +123,11 @@ export function AboutTeamManager() {
   ) {
     return (
       <div className="border border-border rounded-sm p-4 space-y-3">
-        <div className="flex gap-4">
-          <div className="w-40 shrink-0">
+        <div className="grid gap-4 md:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
+          <div className="min-w-0">
             <ImageUpload value={val.photo_url} onChange={onPhoto} folder="about-team" label="Фото" />
           </div>
-          <div className="flex-1 grid sm:grid-cols-2 gap-3">
+          <div className="min-w-0 grid sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-serif mb-1">Имя (RU) *</label>
               <input className={cls} value={val.name_ru} onChange={(e) => onField("name_ru", e.target.value)} maxLength={255} />
@@ -149,7 +149,7 @@ export function AboutTeamManager() {
               <input type="number" min={0} className={cls} value={val.sort_order}
                 onChange={(e) => onField("sort_order", Number(e.target.value) || 0)} />
             </div>
-            <label className="flex items-end gap-2 text-sm pb-2">
+            <label className="flex items-center gap-2 text-sm mt-6">
               <input type="checkbox" checked={val.is_published} onChange={(e) => onField("is_published", e.target.checked)} />
               Опубликовать
             </label>

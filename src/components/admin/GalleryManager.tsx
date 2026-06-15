@@ -149,9 +149,10 @@ export function GalleryManager({ destinationSlug }: { destinationSlug: string })
       ) : (
         <div className="space-y-4">
           {rows.map((row, idx) => (
-            <div key={row.id} className="border border-border rounded-sm p-4 flex gap-4">
-              <img src={row.image_url} alt="" className="w-32 h-32 object-cover rounded-sm border border-border flex-shrink-0" />
-              <div className="flex-1 space-y-3">
+            <div key={row.id} className="border border-border rounded-sm p-4">
+              <div className="grid gap-4 md:grid-cols-[8rem_minmax(0,1fr)]">
+                <img src={row.image_url} alt="" className="w-32 h-32 object-cover rounded-sm border border-border flex-shrink-0" />
+                <div className="min-w-0 space-y-3">
                 <div className="grid sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-serif mb-1">Подпись (RU)</label>
@@ -187,6 +188,7 @@ export function GalleryManager({ destinationSlug }: { destinationSlug: string })
                   <button type="button" disabled={busyId === row.id} onClick={() => handleDelete(row.id)} className="px-3 py-1 border border-destructive text-destructive rounded-sm text-sm font-serif disabled:opacity-50 ml-auto">
                     Удалить
                   </button>
+                </div>
                 </div>
               </div>
             </div>
