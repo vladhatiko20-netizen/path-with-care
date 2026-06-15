@@ -1,36 +1,51 @@
 import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { useLocalizedTo } from "@/lib/use-localized-to";
 import annaHero from "@/assets/anna-hero.jpg";
-import annaJerusalem from "@/assets/anna-jerusalem.jpg";
-import annaCorfu from "@/assets/anna-corfu.jpg";
-import annaBari from "@/assets/anna-bari.jpg";
-import annaGeorgia from "@/assets/anna-georgia.jpg";
-import annaAthos from "@/assets/anna-athos.jpg";
-import annaRomania from "@/assets/anna-romania.jpg";
-import priest1 from "@/assets/team-priest1.jpg";
-import priest2 from "@/assets/team-priest2.jpg";
-import natalia from "@/assets/team-natalia.jpg";
+import { getAboutPageData } from "@/lib/about.functions";
+import { listPublishedClergy } from "@/lib/clergy.functions";
+
+function youtubeEmbed(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+    if (u.hostname.includes("youtube.com")) {
+      const v = u.searchParams.get("v");
+      if (v) return `https://www.youtube.com/embed/${v}`;
+      if (u.pathname.startsWith("/embed/")) return url;
+    }
+    if (u.hostname.includes("vimeo.com")) {
+      const id = u.pathname.split("/").filter(Boolean).pop();
+      if (id) return `https://player.vimeo.com/video/${id}`;
+    }
+  } catch { /* ignore */ }
+  return null;
+}
 
 export function Component() {
   const { t, lang } = useLang();
   const localize = useLocalizedTo();
 
-  const gallery = [
-    { img: annaJerusalem, ru: "Иерусалим, 2024 — у Гроба Господня", ro: "Ierusalim, 2024 — la Sfântul Mormânt" },
-    { img: annaCorfu, ru: "Корфу — у мощей Святителя Спиридона", ro: "Corfu — la moaștele Sf. Spiridon" },
-    { img: annaBari, ru: "Бари — у мощей Святителя Николая", ro: "Bari — la moaștele Sf. Nicolae" },
-    { img: annaGeorgia, ru: "Грузия — Мцхета, Светицховели", ro: "Georgia — Mțheta, Svetițhoveli" },
-    { img: annaAthos, ru: "Афон — Уранополь, перед паломничеством", ro: "Athos — Ouranopoli, înainte de pelerinaj" },
-    { img: annaRomania, ru: "Румыния — монастырь Путна", ro: "România — mănăstirea Putna" },
-  ];
+  const getAbout = useServerFn(getAboutPageData);
+  const getClergy = useServerFn(listPublishedClergy);
+  const { data: about } = useQuery({ queryKey: ["about-page"], queryFn: () => getAbout() });
+  const { data: clergy } = useQuery({ queryKey: ["clergy-published"], queryFn: () => getClergy() });
 
-  const team = [
-    { img: natalia, ru: { name: "Наталия", role: "Менеджер групп, координация поездок" }, ro: { name: "Natalia", role: "Manager grupuri, coordonare călătorii" } },
-    { img: priest1, ru: { name: "Отец Иоанн", role: "Сопровождает паломнические группы" }, ro: { name: "Părintele Ioan", role: "Însoțește grupurile de pelerini" } },
-    { img: priest2, ru: { name: "Отец Серафим", role: "Духовник, беседы со священником" }, ro: { name: "Părintele Serafim", role: "Duhovnic, dialog cu preotul" } },
-  ];
+  const page = about?.page ?? null;
+  const gallery = about?.gallery ?? [];
+  const team = about?.team ?? [];
+  const clergyList = clergy ?? [];
+
+  const heroPhoto = page?.hero_photo_url || annaHero;
+  const heroTitle = (lang === "ru" ? page?.hero_title_ru : page?.hero_title_ro)
+    || t("Анна Плотник – путешественница и паломница", "Anna Plotnik – călătoare și pelerină");
+  const heroSubtitle = (lang === "ru" ? page?.hero_subtitle_ru : page?.hero_subtitle_ro) || "";
+  const introText = (lang === "ru" ? page?.intro_text_ru : page?.intro_text_ro) || "";
+  const introParagraphs = introText.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
+  const videoEmbed = page?.video_url ? youtubeEmbed(page.video_url) : null;
 
   return (
     <PageShell>
@@ -39,7 +54,7 @@ export function Component() {
         <div className="grid md:grid-cols-2 gap-0 items-stretch">
           <div className="aspect-[4/3] md:aspect-auto md:min-h-[520px] overflow-hidden">
             <img
-              src={annaHero}
+              src={heroPhoto}
               alt={t("Анна Плотник", "Anna Plotnik")}
               width={1600}
               height={1024}
@@ -50,14 +65,11 @@ export function Component() {
             <div>
               <p className="overline mb-4">{t("О нас", "Despre noi")}</p>
               <h1 className="font-serif text-3xl md:text-[44px] lg:text-5xl font-light text-foreground leading-[1.1] mb-6">
-                {t("Анна Плотник — путешественница и паломница", "Anna Plotnik — călătoare și pelerină")}
+                {heroTitle}
               </h1>
-              <p className="font-serif italic text-lg text-foreground/80 leading-relaxed">
-                {t(
-                  "Здравствуйте. Меня зовут Анна. Здесь — несколько слов о нашем общем деле.",
-                  "Bună ziua. Mă numesc Anna. Aici — câteva cuvinte despre lucrarea noastră comună."
-                )}
-              </p>
+              {heroSubtitle && (
+                <p className="font-serif italic text-lg text-foreground/80 leading-relaxed">{heroSubtitle}</p>
+              )}
             </div>
           </div>
         </div>
@@ -67,20 +79,11 @@ export function Component() {
 
       {/* PERSONAL ADDRESS */}
       <section className="max-w-3xl mx-auto px-6 pb-16">
-        <div className="space-y-5 text-foreground/85 text-[17px] leading-[1.85]">
-          <p>{t(
-            "Я Анна. Уже несколько лет я организую поездки к святым местам. Сама бываю в Иерусалиме, на Корфу, в Бари. Мне дорого это служение — помогать людям прийти к святыням, помолиться, вернуться домой с тихой радостью в сердце.",
-            "Sunt Anna. De câțiva ani organizez călătorii la locurile sfinte. Eu însămi merg la Ierusalim, pe Corfu, la Bari. Această slujire îmi este dragă — să ajut oamenii să ajungă la sanctuare, să se roage, să se întoarcă acasă cu o bucurie liniștită în inimă."
-          )}</p>
-          <p>{t(
-            "Этот сайт — продолжение работы нашего туристического агентства Eldorado Tur, но с фокусом на паломничество. Здесь — поездки, которые я готовлю с особенным вниманием. Здесь — люди, которые сопровождают группы: батюшки, экскурсоводы, паломники со стажем.",
-            "Acest site este o continuare a activității agenției noastre Eldorado Tur, dar cu accent pe pelerinaj. Aici sunt călătoriile pe care le pregătesc cu o atenție deosebită. Aici sunt oamenii care însoțesc grupurile: preoți, ghizi, pelerini cu experiență."
-          )}</p>
-          <p>{t(
-            "Если у вас есть вопросы — звоните, пишите. Я отвечу лично.",
-            "Dacă aveți întrebări — sunați, scrieți. Vă voi răspunde personal."
-          )}</p>
-        </div>
+        {introParagraphs.length > 0 && (
+          <div className="space-y-5 text-foreground/85 text-[17px] leading-[1.85]">
+            {introParagraphs.map((p, i) => (<p key={i}>{p}</p>))}
+          </div>
+        )}
         <div className="mt-8 flex flex-wrap gap-4 font-serif">
           <a href="tel:+37368778676" className="inline-flex items-center px-6 py-2.5 bg-accent text-primary-foreground hover:bg-accent/90 transition-colors rounded-sm text-sm tracking-wide">
             +373 68 77 86 76
@@ -94,6 +97,7 @@ export function Component() {
       <div className="text-center text-2xl text-gold pb-4" aria-hidden>☦</div>
 
       {/* GALLERY */}
+      {gallery.length > 0 && (
       <section className="bg-secondary/50 py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-10">
@@ -103,37 +107,47 @@ export function Component() {
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {gallery.map((g, i) => (
-              <figure key={i} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img src={g.img} alt={t(g.ru, g.ro)} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
-                </div>
-                <figcaption className="p-3 text-sm font-serif italic text-foreground/75 text-center">
-                  {t(g.ru, g.ro)}
-                </figcaption>
-              </figure>
-            ))}
+            {gallery.map((g) => {
+              const cap = (lang === "ru" ? g.caption_ru : g.caption_ro) ?? "";
+              return (
+                <figure key={g.id} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img src={g.image_url} alt={cap} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
+                  </div>
+                  {cap && (
+                    <figcaption className="p-3 text-sm font-serif italic text-foreground/75 text-center">
+                      {cap}
+                    </figcaption>
+                  )}
+                </figure>
+              );
+            })}
           </div>
-          <p className="mt-8 text-center text-xs text-muted-foreground italic font-serif">
-            {t("Личные фотографии Анны будут добавлены в ближайшее время.", "Fotografiile personale ale Annei vor fi adăugate în curând.")}
-          </p>
         </div>
       </section>
+      )}
 
       {/* VIDEO */}
+      {videoEmbed && (
       <section className="py-12 md:py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <p className="overline mb-3">{t("Видео", "Video")}</p>
           <h2 className="font-serif text-2xl md:text-3xl font-light text-foreground mb-6">
             {t("Видеоприветствие Анны", "Mesaj video de la Anna")}
           </h2>
-          <div className="aspect-video bg-card border border-dashed border-gold/50 rounded-sm flex items-center justify-center">
-            <p className="font-serif italic text-muted-foreground">
-              {t("Видеоприветствие — будет добавлено", "Mesaj video — va fi adăugat")}
-            </p>
+          <div className="aspect-video bg-card border border-gold/30 rounded-sm overflow-hidden">
+            <iframe
+              src={videoEmbed}
+              title={t("Видеоприветствие Анны", "Mesaj video de la Anna")}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            />
           </div>
         </div>
       </section>
+      )}
 
       <div className="text-center text-2xl text-gold pb-4" aria-hidden>☦</div>
 
@@ -143,7 +157,7 @@ export function Component() {
           <p className="overline mb-3">{t("Часть агентства", "Parte din agenție")}</p>
           <p className="text-foreground/85 leading-relaxed mb-6 font-serif text-lg">
             {t(
-              "Сайт «Паломник» — направление туристического агентства SRL Eldorado Tur. Лицензия Министерства культуры РМ. Работаем с 2015 года.",
+              "Сайт «Паломник» – направление туристического агентства SRL Eldorado Tur. Лицензия Министерства культуры РМ. Работаем с 2015 года.",
               "Site-ul „Pelerin” este o direcție a agenției turistice SRL Eldorado Tur. Licență a Ministerului Culturii al RM. Activăm din 2015."
             )}
           </p>
@@ -159,6 +173,7 @@ export function Component() {
       </section>
 
       {/* TEAM */}
+      {(team.length > 0 || clergyList.length > 0) && (
       <section className="py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-10 text-center">
@@ -168,38 +183,44 @@ export function Component() {
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* Anna card */}
-            <article className="bg-card border border-gold/30 rounded-sm overflow-hidden">
-              <div className="aspect-[4/5] overflow-hidden">
-                <img src={annaHero} alt="Anna" loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-4">
-                <h3 className="font-serif text-lg text-foreground">{t("Анна Плотник", "Anna Plotnik")}</h3>
-                <p className="text-sm text-muted-foreground italic font-serif mt-1">
-                  {t("Организатор поездок", "Organizator de călătorii")}
-                </p>
-              </div>
-            </article>
-            {team.map((m, i) => {
-              const c = lang === "ru" ? m.ru : m.ro;
+            {team.map((m) => {
+              const name = lang === "ru" ? m.name_ru : m.name_ro;
+              const role = lang === "ru" ? m.role_ru : m.role_ro;
               return (
-                <article key={i} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
-                  <div className="aspect-[4/5] overflow-hidden">
-                    <img src={m.img} alt={c.name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
+                <article key={m.id} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
+                  <div className="aspect-[4/5] overflow-hidden bg-secondary">
+                    {m.photo_url && (
+                      <img src={m.photo_url} alt={name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
+                    )}
                   </div>
                   <div className="p-4">
-                    <h3 className="font-serif text-lg text-foreground">{c.name}</h3>
-                    <p className="text-sm text-muted-foreground italic font-serif mt-1">{c.role}</p>
+                    <h3 className="font-serif text-lg text-foreground">{name}</h3>
+                    {role && <p className="text-sm text-muted-foreground italic font-serif mt-1">{role}</p>}
+                  </div>
+                </article>
+              );
+            })}
+            {clergyList.map((c) => {
+              const name = lang === "ru" ? c.name_ru : c.name_ro;
+              const role = lang === "ru" ? c.title_ru : c.title_ro;
+              return (
+                <article key={c.id} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
+                  <div className="aspect-[4/5] overflow-hidden bg-secondary">
+                    {c.photo_url && (
+                      <img src={c.photo_url} alt={name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-serif text-lg text-foreground">{name}</h3>
+                    {role && <p className="text-sm text-muted-foreground italic font-serif mt-1">{role}</p>}
                   </div>
                 </article>
               );
             })}
           </div>
-          <p className="mt-8 text-center text-xs text-muted-foreground italic font-serif">
-            {t("Имена и фотографии священников будут уточнены перед каждой поездкой.", "Numele și fotografiile preoților vor fi confirmate înainte de fiecare călătorie.")}
-          </p>
         </div>
       </section>
+      )}
 
       {/* COMPANY DETAILS */}
       <section className="bg-secondary/60 py-12 border-t border-border/60">
