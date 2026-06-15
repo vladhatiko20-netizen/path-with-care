@@ -1,29 +1,28 @@
-We will implement the three requested fixes precisely as described, targetting only `src/page-views/IndexPage.tsx` and `src/page-views/CalendarPage.tsx`.
+# План правок
 
-### Fix 1 — Mobile layout on Calendar Page (`CalendarPage.tsx`)
-- On the first column (star icon `✦`), we will reduce the right padding on mobile from `pr-1` to `pr-0.5` and explicitly add `pl-0` to ensure it is tight to the left edge. We will also reduce its width class from `w-5` to `w-4` on mobile.
-- On the second column (date range), we will reduce the right padding on mobile from `pr-2` to `pr-1` and explicitly add `pl-0` to maximize space for the destination name on narrow screens.
+## 1. `src/page-views/AboutPage.tsx`
 
-### Fix 2 — Desktop typography on Homepage Upcoming Trips (`IndexPage.tsx`)
-In the "Upcoming Trips" block, for screen widths `md:` and up:
-- Table headers: We will change `text-[11px]` to `md:text-sm` for all columns (Date, Destination, Duration, Price, Escort).
-- Row cells: We will increase the font size of row contents from `text-[14px]` / `text-[15px]` / `text-sm` to `md:text-base` for:
-  - Date (`text-[15px] md:text-base`)
-  - Destination (`text-[15px] md:text-base`)
-  - Duration (`text-[14px] md:text-base`)
-  - Price (`text-[15px] md:text-base`)
-  - Escort/Accompaniment (`text-sm md:text-base`)
+**Hero без fallback:**
+- Удалить `import annaHero from "@/assets/anna-hero.jpg"`.
+- Заменить `const heroPhoto = page?.hero_photo_url || annaHero` на `const heroPhoto = page?.hero_photo_url || null`.
+- Обернуть `<img>` в hero в условие `{heroPhoto && (...)}`. Если фото нет — `<div>` остаётся пустым (нейтральный фон уже задаёт сетка/card справа), без захардкоженной картинки и без мелькания.
 
-### Fix 3 — Desktop typography on Calendar Page (`CalendarPage.tsx`)
-For screen widths `md:` and up:
-- Row cells: We will increase the font size from `text-sm` equivalents to `md:text-base` for:
-  - Date (`text-[15px] md:text-base`)
-  - Duration (`text-[14px] md:text-base`)
-  - Price (`text-[15px] md:text-base`)
-- Destination name: We will make it larger and bold (`text-[15px] md:text-base md:font-semibold`).
-- The "Подать заявку" button text size remains untouched (`text-xs md:text-sm`).
+**Удалить декоративные разделители ☦:**
+- Удалить три блока `<div className="text-center text-2xl text-gold ..." aria-hidden>☦</div>` (строки 78, 97, 152). Полностью, ничем не заменять. Логотип в шапке (Header.tsx) не трогаем.
 
----
+**Команда — скрывать без фото или без публикации:**
+- В `team.map` рендерить карточку только если `m.photo_url && m.is_published`. Иначе `return null`.
+- В `clergyList.map` рендерить только если `c.photo_url` (список уже отфильтрован по `is_published` на сервере).
+- Условие показа всей секции «Команда» учитывает отфильтрованные списки: вычислить `visibleTeam` и `visibleClergy` заранее и оборачивать секцию в `{(visibleTeam.length > 0 || visibleClergy.length > 0) && (...)}`, чтобы не получить пустой заголовок.
 
-### Technical Details
-All changes will be applied using targeted Tailwind classes (`md:text-sm`, `md:text-base`, `md:font-semibold`) ensuring desktop screens display the larger font size (approx. 1.5x increase) while mobile screens remain exactly as they are.
+## 2. `src/routes/_admin/admin.index.tsx`
+
+Добавить две карточки в той же сетке `grid sm:grid-cols-2 gap-4`, тем же стилем:
+
+- **О нас** → `/admin/about`, иконка `Info` (lucide-react), описание: «Hero, галерея и команда страницы “О нас”.»
+- **Священники** → `/admin/clergy`, иконка `Users`, описание: «Профили священников, сопровождающих поездки.»
+
+Добавить `Info, Users` в импорт из `lucide-react`.
+
+## Область
+Только `src/page-views/AboutPage.tsx` и `src/routes/_admin/admin.index.tsx`. Другие файлы не трогаем.

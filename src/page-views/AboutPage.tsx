@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { useLocalizedTo } from "@/lib/use-localized-to";
-import annaHero from "@/assets/anna-hero.jpg";
 import { getAboutPageData } from "@/lib/about.functions";
 import { listPublishedClergy } from "@/lib/clergy.functions";
 
@@ -39,7 +38,7 @@ export function Component() {
   const team = about?.team ?? [];
   const clergyList = clergy ?? [];
 
-  const heroPhoto = page?.hero_photo_url || annaHero;
+  const heroPhoto = page?.hero_photo_url || null;
   const heroTitle = (lang === "ru" ? page?.hero_title_ru : page?.hero_title_ro)
     || t("Анна Плотник – путешественница и паломница", "Anna Plotnik – călătoare și pelerină");
   const heroSubtitle = (lang === "ru" ? page?.hero_subtitle_ru : page?.hero_subtitle_ro) || "";
@@ -47,19 +46,24 @@ export function Component() {
   const introParagraphs = introText.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
   const videoEmbed = page?.video_url ? youtubeEmbed(page.video_url) : null;
 
+  const visibleTeam = team.filter((m) => m.photo_url && m.is_published);
+  const visibleClergy = clergyList.filter((c) => c.photo_url);
+
   return (
     <PageShell>
       {/* HERO */}
       <section className="relative">
         <div className="grid md:grid-cols-2 gap-0 items-stretch">
           <div className="aspect-[4/3] md:aspect-auto md:min-h-[520px] overflow-hidden">
-            <img
-              src={heroPhoto}
-              alt={t("Анна Плотник", "Anna Plotnik")}
-              width={1600}
-              height={1024}
-              className="w-full h-full object-cover"
-            />
+            {heroPhoto && (
+              <img
+                src={heroPhoto}
+                alt={t("Анна Плотник", "Anna Plotnik")}
+                width={1600}
+                height={1024}
+                className="w-full h-full object-cover"
+              />
+            )}
           </div>
           <div className="bg-card flex items-center px-6 md:px-12 py-10 md:py-10">
             <div>
@@ -74,8 +78,6 @@ export function Component() {
           </div>
         </div>
       </section>
-
-      <div className="text-center text-2xl text-gold py-8" aria-hidden>☦</div>
 
       {/* PERSONAL ADDRESS */}
       <section className="max-w-3xl mx-auto px-6 pb-16">
@@ -93,8 +95,6 @@ export function Component() {
           </a>
         </div>
       </section>
-
-      <div className="text-center text-2xl text-gold pb-4" aria-hidden>☦</div>
 
       {/* GALLERY */}
       {gallery.length > 0 && (
@@ -149,8 +149,6 @@ export function Component() {
       </section>
       )}
 
-      <div className="text-center text-2xl text-gold pb-4" aria-hidden>☦</div>
-
       {/* ELDORADO LINK */}
       <section className="bg-card/70 border-y border-border/60 py-10">
         <div className="max-w-3xl mx-auto px-6 text-center">
@@ -173,7 +171,7 @@ export function Component() {
       </section>
 
       {/* TEAM */}
-      {(team.length > 0 || clergyList.length > 0) && (
+      {(visibleTeam.length > 0 || visibleClergy.length > 0) && (
       <section className="py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="mb-10 text-center">
@@ -183,15 +181,13 @@ export function Component() {
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((m) => {
+            {visibleTeam.map((m) => {
               const name = lang === "ru" ? m.name_ru : m.name_ro;
               const role = lang === "ru" ? m.role_ru : m.role_ro;
               return (
                 <article key={m.id} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
                   <div className="aspect-[4/5] overflow-hidden bg-secondary">
-                    {m.photo_url && (
-                      <img src={m.photo_url} alt={name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
-                    )}
+                    <img src={m.photo_url!} alt={name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
                   </div>
                   <div className="p-4">
                     <h3 className="font-serif text-lg text-foreground">{name}</h3>
@@ -200,15 +196,13 @@ export function Component() {
                 </article>
               );
             })}
-            {clergyList.map((c) => {
+            {visibleClergy.map((c) => {
               const name = lang === "ru" ? c.name_ru : c.name_ro;
               const role = lang === "ru" ? c.title_ru : c.title_ro;
               return (
                 <article key={c.id} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
                   <div className="aspect-[4/5] overflow-hidden bg-secondary">
-                    {c.photo_url && (
-                      <img src={c.photo_url} alt={name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
-                    )}
+                    <img src={c.photo_url!} alt={name} loading="lazy" width={640} height={800} className="w-full h-full object-cover" />
                   </div>
                   <div className="p-4">
                     <h3 className="font-serif text-lg text-foreground">{name}</h3>
