@@ -40,6 +40,7 @@ import { Route as RoDestinationsIndexRouteImport } from './routes/ro.destination
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as RoDestinationsSlugRouteImport } from './routes/ro.destinations.$slug'
 import { Route as RoBlogSlugRouteImport } from './routes/ro.blog_.$slug'
+import { Route as AdminAdminAboutRouteImport } from './routes/_admin/admin.about'
 import { Route as AdminAdminPilgrimagesIndexRouteImport } from './routes/_admin/admin.pilgrimages.index'
 import { Route as AdminAdminLeadsIndexRouteImport } from './routes/_admin/admin.leads.index'
 import { Route as AdminAdminDestinationsIndexRouteImport } from './routes/_admin/admin.destinations.index'
@@ -210,6 +211,11 @@ const RoBlogSlugRoute = RoBlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => RoRoute,
 } as any)
+const AdminAdminAboutRoute = AdminAdminAboutRouteImport.update({
+  id: '/admin/about',
+  path: '/admin/about',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminPilgrimagesIndexRoute =
   AdminAdminPilgrimagesIndexRouteImport.update({
     id: '/admin/pilgrimages/',
@@ -319,6 +325,7 @@ export interface FileRoutesByFullPath {
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
+  '/admin/about': typeof AdminAdminAboutRoute
   '/ro/blog/$slug': typeof RoBlogSlugRoute
   '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/admin/': typeof AdminAdminIndexRoute
@@ -365,6 +372,7 @@ export interface FileRoutesByTo {
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations': typeof DestinationsIndexRoute
   '/ro': typeof RoIndexRoute
+  '/admin/about': typeof AdminAdminAboutRoute
   '/ro/blog/$slug': typeof RoBlogSlugRoute
   '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/admin': typeof AdminAdminIndexRoute
@@ -414,6 +422,7 @@ export interface FileRoutesById {
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
+  '/_admin/admin/about': typeof AdminAdminAboutRoute
   '/ro/blog_/$slug': typeof RoBlogSlugRoute
   '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
@@ -463,6 +472,7 @@ export interface FileRouteTypes {
     | '/ro/with-priest'
     | '/destinations/'
     | '/ro/'
+    | '/admin/about'
     | '/ro/blog/$slug'
     | '/ro/destinations/$slug'
     | '/admin/'
@@ -509,6 +519,7 @@ export interface FileRouteTypes {
     | '/ro/with-priest'
     | '/destinations'
     | '/ro'
+    | '/admin/about'
     | '/ro/blog/$slug'
     | '/ro/destinations/$slug'
     | '/admin'
@@ -557,6 +568,7 @@ export interface FileRouteTypes {
     | '/ro/with-priest'
     | '/destinations/'
     | '/ro/'
+    | '/_admin/admin/about'
     | '/ro/blog_/$slug'
     | '/ro/destinations/$slug'
     | '/_admin/admin/'
@@ -817,6 +829,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoBlogSlugRouteImport
       parentRoute: typeof RoRoute
     }
+    '/_admin/admin/about': {
+      id: '/_admin/admin/about'
+      path: '/admin/about'
+      fullPath: '/admin/about'
+      preLoaderRoute: typeof AdminAdminAboutRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/pilgrimages/': {
       id: '/_admin/admin/pilgrimages/'
       path: '/admin/pilgrimages'
@@ -926,6 +945,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAdminAboutRoute: typeof AdminAdminAboutRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
   AdminAdminBlogIdRoute: typeof AdminAdminBlogIdRoute
   AdminAdminBlogNewRoute: typeof AdminAdminBlogNewRoute
@@ -945,6 +965,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminAboutRoute: AdminAdminAboutRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
   AdminAdminBlogIdRoute: AdminAdminBlogIdRoute,
   AdminAdminBlogNewRoute: AdminAdminBlogNewRoute,
