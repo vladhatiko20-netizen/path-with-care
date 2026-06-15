@@ -14,6 +14,120 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_gallery: {
+        Row: {
+          caption_ro: string | null
+          caption_ru: string | null
+          created_at: string
+          id: string
+          image_url: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          caption_ro?: string | null
+          caption_ru?: string | null
+          created_at?: string
+          id?: string
+          image_url: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          caption_ro?: string | null
+          caption_ru?: string | null
+          created_at?: string
+          id?: string
+          image_url?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      about_page: {
+        Row: {
+          created_at: string
+          hero_photo_url: string | null
+          hero_subtitle_ro: string | null
+          hero_subtitle_ru: string | null
+          hero_title_ro: string | null
+          hero_title_ru: string | null
+          id: string
+          intro_text_ro: string | null
+          intro_text_ru: string | null
+          singleton: boolean
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          hero_photo_url?: string | null
+          hero_subtitle_ro?: string | null
+          hero_subtitle_ru?: string | null
+          hero_title_ro?: string | null
+          hero_title_ru?: string | null
+          id?: string
+          intro_text_ro?: string | null
+          intro_text_ru?: string | null
+          singleton?: boolean
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          hero_photo_url?: string | null
+          hero_subtitle_ro?: string | null
+          hero_subtitle_ru?: string | null
+          hero_title_ro?: string | null
+          hero_title_ru?: string | null
+          id?: string
+          intro_text_ro?: string | null
+          intro_text_ru?: string | null
+          singleton?: boolean
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      about_team: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          name_ro: string
+          name_ru: string
+          photo_url: string | null
+          role_ro: string | null
+          role_ru: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          name_ro: string
+          name_ru: string
+          photo_url?: string | null
+          role_ro?: string | null
+          role_ru?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          name_ro?: string
+          name_ru?: string
+          photo_url?: string | null
+          role_ro?: string | null
+          role_ru?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           body_ro: string | null
