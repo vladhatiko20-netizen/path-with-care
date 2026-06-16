@@ -1,11 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { useLocalizedTo } from "@/lib/use-localized-to";
 import { getAboutPageData } from "@/lib/about.functions";
 import { listPublishedClergy } from "@/lib/clergy.functions";
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/plugins/captions.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 
 function youtubeEmbed(url: string): string | null {
   try {
@@ -48,6 +55,13 @@ export function Component() {
   const visibleTeam = team.filter((m) => m.photo_url);
   const visibleClergy = clergyList.filter((c) => c.photo_url);
 
+  const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
+  const galleryPhotos = gallery.map((g) => {
+    const cap = (lang === "ru" ? g.caption_ru : g.caption_ro) ?? "";
+    return { src: g.image_url, alt: cap, description: cap };
+  });
+  const openLightbox = (i: number) => setLightbox({ open: true, index: i });
+
   return (
     <PageShell>
       {/* HERO */}
@@ -64,9 +78,9 @@ export function Component() {
               />
             )}
           </div>
-          <div className="bg-card flex md:items-start px-6 md:px-10 py-10 md:py-8">
+          <div className="bg-card flex md:items-start px-6 md:px-10 pt-4 pb-10 md:pt-8 md:pb-8">
             <div className="w-full">
-              <h1 className="font-serif text-3xl md:text-[28px] lg:text-[32px] font-light text-foreground leading-[1.15] mb-5">
+              <h1 className="font-serif text-3xl md:text-[28px] lg:text-[32px] font-light text-foreground leading-[1.15] mb-3 md:mb-5">
                 {heroTitle}
               </h1>
               {/* Desktop-only: intro + contacts inside the right hero column */}
@@ -112,29 +126,48 @@ export function Component() {
       <section className="bg-secondary/50 py-12 md:py-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-10">
-            <p className="overline mb-3">{t("Из поездок", "Din călătorii")}</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground">
-              {t("Святые места, в которых я была", "Locurile sfinte unde am fost")}
+              {t("Моя фотогалерея", "Galeria mea foto")}
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {gallery.map((g) => {
-              const cap = (lang === "ru" ? g.caption_ru : g.caption_ro) ?? "";
-              return (
-                <figure key={g.id} className="bg-card border border-gold/30 rounded-sm overflow-hidden">
-                  <div className="aspect-[4/3] overflow-hidden">
-                    <img src={g.image_url} alt={cap} loading="lazy" width={800} height={600} className="w-full h-full object-cover" />
-                  </div>
-                  {cap && (
-                    <figcaption className="p-3 text-sm font-serif italic text-foreground/75 text-center">
-                      {cap}
-                    </figcaption>
-                  )}
-                </figure>
-              );
-            })}
+          {/* Mobile: horizontal strip */}
+          <div className="md:hidden -mx-6">
+            <div className="flex gap-3 overflow-x-auto px-6 snap-x snap-mandatory scrollbar-none">
+              {galleryPhotos.map((p, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => openLightbox(i)}
+                  className="relative shrink-0 w-[45vw] aspect-square overflow-hidden rounded-sm ring-1 ring-gold/30 snap-start cursor-zoom-in"
+                  aria-label={t("Открыть фото", "Deschide fotografia")}
+                >
+                  <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+          {/* Desktop: grid */}
+          <div className="hidden md:grid grid-cols-4 gap-2 max-w-[70%] mx-auto">
+            {galleryPhotos.map((p, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => openLightbox(i)}
+                className="relative aspect-square overflow-hidden rounded-sm ring-1 ring-gold/30 hover:ring-gold transition-all duration-200 cursor-zoom-in group"
+                aria-label={t("Открыть фото", "Deschide fotografia")}
+              >
+                <img src={p.src} alt={p.alt} loading="lazy" className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300" />
+              </button>
+            ))}
           </div>
         </div>
+        <Lightbox
+          open={lightbox.open}
+          index={lightbox.index}
+          close={() => setLightbox({ open: false, index: 0 })}
+          slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
+          plugins={[Thumbnails, Captions, Zoom]}
+        />
       </section>
       )}
 
