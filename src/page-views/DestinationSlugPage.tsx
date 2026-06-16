@@ -45,6 +45,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import { useLightboxCaptionProps, useLightboxPlugins } from "@/components/site/LightboxCaption";
 
 /** Shared loader. Both RU `/destinations/$slug` and RO `/ro/destinations/$slug` call this. */
 export async function loadDestination(slug: string) {
@@ -158,6 +159,8 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
   const { destination, pilgrimages, gallery, shrines, program, inclusions, faq } = data;
   const { t, lang } = useLang();
   const localize = useLocalizedTo();
+  const captionProps = useLightboxCaptionProps();
+  const lightboxPlugins = useLightboxPlugins([Thumbnails, Captions, Zoom], Captions);
   const [prefill, setPrefill] = useState<string>("");
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
@@ -675,9 +678,8 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
           index={lightbox.index}
           close={() => setLightbox({ open: false, index: 0 })}
           slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
-          plugins={[Thumbnails, Captions, Zoom]}
-          captions={{ descriptionTextAlign: "center", showToggle: false }}
-          className="lb-caption-below"
+          plugins={lightboxPlugins}
+          {...captionProps}
           zoom={{
             maxZoomPixelRatio: 3,
             zoomInMultiplier: 2,

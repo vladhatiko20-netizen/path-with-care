@@ -13,6 +13,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Captions from "yet-another-react-lightbox/plugins/captions";
 import "yet-another-react-lightbox/plugins/captions.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import { useLightboxCaptionProps, useLightboxPlugins } from "@/components/site/LightboxCaption";
 
 function youtubeEmbed(url: string): string | null {
   try {
@@ -34,6 +35,8 @@ function youtubeEmbed(url: string): string | null {
 export function Component() {
   const { t, lang } = useLang();
   const localize = useLocalizedTo();
+  const captionProps = useLightboxCaptionProps();
+  const lightboxPlugins = useLightboxPlugins([Thumbnails, Captions, Zoom], Captions);
 
   const getAbout = useServerFn(getAboutPageData);
   const getClergy = useServerFn(listPublishedClergy);
@@ -166,9 +169,8 @@ export function Component() {
           index={lightbox.index}
           close={() => setLightbox({ open: false, index: 0 })}
           slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
-          plugins={[Thumbnails, Captions, Zoom]}
-          captions={{ descriptionTextAlign: "center", showToggle: false }}
-          className="lb-caption-below"
+          plugins={lightboxPlugins}
+          {...captionProps}
         />
       </section>
       )}
