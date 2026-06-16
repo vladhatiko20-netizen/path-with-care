@@ -89,7 +89,7 @@ export function Component() {
               {/* Desktop-only: intro + contacts inside the right hero column */}
               <div className="hidden md:block">
                 {introParagraphs.length > 0 && (
-                  <div className="space-y-3 text-foreground/85 text-[15px] leading-[1.7]">
+                  <div className="space-y-3 text-foreground/85 text-[18px] leading-[1.7]">
                     {introParagraphs.map((p, i) => (<p key={i}>{p}</p>))}
                   </div>
                 )}
