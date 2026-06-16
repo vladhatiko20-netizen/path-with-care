@@ -113,14 +113,16 @@ export function useLightboxCaptionProps(): CaptionProps {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          paddingBottom: "120px",
+          boxSizing: "border-box",
         },
       },
       // Constrain image height through YARL's own image-prop channel so our
       // sizing isn't fighting library inline styles. Generous reservation so
-      // long captions + the thumbnails strip fit below the centered image
-      // without colliding.
+      // long captions (e.g. St. Catherine's monastery, 4-5 lines) + the
+      // thumbnails strip fit below the image without colliding.
       carousel: {
-        imageProps: { style: { maxHeight: "calc(100vh - 280px)" } },
+        imageProps: { style: { maxHeight: "calc(100vh - 200px)" } },
       },
       render: {
         slideFooter: ({ slide }) => {
