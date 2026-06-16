@@ -41,7 +41,6 @@ export function Component() {
   const heroPhoto = page?.hero_photo_url || null;
   const heroTitle = (lang === "ru" ? page?.hero_title_ru : page?.hero_title_ro)
     || t("Анна Плотник – путешественница и паломница", "Anna Plotnik – călătoare și pelerină");
-  const heroSubtitle = (lang === "ru" ? page?.hero_subtitle_ru : page?.hero_subtitle_ro) || "";
   const introText = (lang === "ru" ? page?.intro_text_ru : page?.intro_text_ro) || "";
   const introParagraphs = introText.split(/\n\s*\n/).map((s) => s.trim()).filter(Boolean);
   const videoEmbed = page?.video_url ? youtubeEmbed(page.video_url) : null;
@@ -65,22 +64,34 @@ export function Component() {
               />
             )}
           </div>
-          <div className="bg-card flex items-center px-6 md:px-12 py-10 md:py-10">
-            <div>
-              <p className="overline mb-4">{t("О нас", "Despre noi")}</p>
-              <h1 className="font-serif text-3xl md:text-[44px] lg:text-5xl font-light text-foreground leading-[1.1] mb-6">
+          <div className="bg-card flex md:items-start px-6 md:px-10 py-10 md:py-8">
+            <div className="w-full">
+              <h1 className="font-serif text-3xl md:text-[28px] lg:text-[32px] font-light text-foreground leading-[1.15] mb-5">
                 {heroTitle}
               </h1>
-              {heroSubtitle && (
-                <p className="font-serif italic text-lg text-foreground/80 leading-relaxed">{heroSubtitle}</p>
-              )}
+              {/* Desktop-only: intro + contacts inside the right hero column */}
+              <div className="hidden md:block">
+                {introParagraphs.length > 0 && (
+                  <div className="space-y-3 text-foreground/85 text-[15px] leading-[1.7]">
+                    {introParagraphs.map((p, i) => (<p key={i}>{p}</p>))}
+                  </div>
+                )}
+                <div className="mt-5 flex flex-wrap gap-3 font-serif">
+                  <a href="tel:+37368778676" className="inline-flex items-center px-5 py-2 bg-accent text-primary-foreground hover:bg-accent/90 transition-colors rounded-sm text-sm tracking-wide">
+                    +373 68 77 86 76
+                  </a>
+                  <a href="mailto:palomnik.moldova@gmail.com" className="inline-flex items-center px-5 py-2 border border-gold text-foreground hover:bg-secondary transition-colors rounded-sm text-sm tracking-wide">
+                    palomnik.moldova@gmail.com
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* PERSONAL ADDRESS */}
-      <section className="max-w-3xl mx-auto px-6 pb-16">
+      {/* PERSONAL ADDRESS — mobile only (desktop shows it inside hero right column) */}
+      <section className="md:hidden max-w-3xl mx-auto px-6 pb-16">
         {introParagraphs.length > 0 && (
           <div className="space-y-5 text-foreground/85 text-[17px] leading-[1.85]">
             {introParagraphs.map((p, i) => (<p key={i}>{p}</p>))}
