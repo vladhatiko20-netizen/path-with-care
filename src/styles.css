@@ -182,8 +182,8 @@
     max-width: var(--lb-img-w, min(90vw, 1100px));
     margin: 0;
     color: #fff;
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 21px;
+    line-height: 1.4;
     text-align: center;
     word-wrap: break-word;
     background: transparent;
