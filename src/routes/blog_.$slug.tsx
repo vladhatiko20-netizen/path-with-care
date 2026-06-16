@@ -16,13 +16,14 @@ export const Route = createFileRoute("/blog_/$slug")({
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Статья не найдена — Паломник" }] };
     const cover = resolveBlogImage(post.cover_image);
-    const desc = post.excerpt_ru ?? post.title_ru;
+    const baseTitle = post.seo_title_ru || post.title_ru;
+    const desc = post.seo_description_ru || post.excerpt_ru || post.title_ru;
     return {
       meta: buildPageMeta({
         lang: "ru",
-        title: `${post.title_ru} — Паломник`,
+        title: `${baseTitle} — Паломник`,
         description: desc,
-        ogTitle: post.title_ru,
+        ogTitle: baseTitle,
         ogType: "article",
         ogImage: cover,
         ogUrl: `${SITE_ORIGIN}/blog/${post.slug}`,

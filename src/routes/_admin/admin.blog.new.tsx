@@ -14,7 +14,10 @@ function Page() {
       <BlogPostForm initial={{
         slug: "", published_at: today, cover_image: null,
         title_ru: "", title_ro: "", excerpt_ru: null, excerpt_ro: null,
-        body_ru: "", body_ro: "", is_published: false,
+        body_ru: "", body_ro: "",
+        seo_title_ru: null, seo_title_ro: null,
+        seo_description_ru: null, seo_description_ro: null,
+        is_published: false,
       }} />
     </div>
   );

@@ -15,6 +15,10 @@ export type BlogPostSummary = {
 export type BlogPostFull = BlogPostSummary & {
   body_ru: string | null;
   body_ro: string | null;
+  seo_title_ru: string | null;
+  seo_title_ro: string | null;
+  seo_description_ru: string | null;
+  seo_description_ro: string | null;
 };
 
 export const listBlogPosts = createServerFn({ method: "GET" }).handler(
@@ -39,7 +43,7 @@ export const getBlogPostBySlug = createServerFn({ method: "GET" })
     const { data: row, error } = await supabaseAdmin
       .from("blog_posts")
       .select(
-        "slug, published_at, cover_image, title_ru, title_ro, excerpt_ru, excerpt_ro, body_ru, body_ro",
+        "slug, published_at, cover_image, title_ru, title_ro, excerpt_ru, excerpt_ro, body_ru, body_ro, seo_title_ru, seo_title_ro, seo_description_ru, seo_description_ro",
       )
       .eq("slug", data.slug)
       .eq("is_published", true)
