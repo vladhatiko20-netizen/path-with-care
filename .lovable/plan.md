@@ -1,28 +1,54 @@
-# План правок
+## Контекст
 
-## 1. `src/page-views/AboutPage.tsx`
+Галерея направлений (`src/page-views/DestinationSlugPage.tsx`) — это **не отдельный компонент**, а inline-разметка, использующая библиотеку `yet-another-react-lightbox` (плагины Thumbnails, Captions, Zoom). Та же библиотека уже подключена в проекте.
 
-**Hero без fallback:**
-- Удалить `import annaHero from "@/assets/anna-hero.jpg"`.
-- Заменить `const heroPhoto = page?.hero_photo_url || annaHero` на `const heroPhoto = page?.hero_photo_url || null`.
-- Обернуть `<img>` в hero в условие `{heroPhoto && (...)}`. Если фото нет — `<div>` остаётся пустым (нейтральный фон уже задаёт сетка/card справа), без захардкоженной картинки и без мелькания.
+Паттерн:
+- **Mobile (`md:hidden`)** — горизонтальная прокрутка, плитки `w-[45vw] aspect-square`, snap-scroll, клик → лайтбокс.
+- **Desktop (`hidden md:block`)** — сетка `grid-cols-4 gap-2`, квадратные превью, hover-зум, клик → лайтбокс.
+- Один общий `<Lightbox>` со слайдами `{src, alt, description}`.
 
-**Удалить декоративные разделители ☦:**
-- Удалить три блока `<div className="text-center text-2xl text-gold ..." aria-hidden>☦</div>` (строки 78, 97, 152). Полностью, ничем не заменять. Логотип в шапке (Header.tsx) не трогаем.
+Поскольку это inline-разметка (≈40 строк), переиспользовать = либо вынести в новый общий компонент, либо скопировать тот же паттерн в AboutPage. Чтобы не трогать `DestinationSlugPage` и не плодить регрессий, делаю **вариант 2: тот же код в AboutPage**, с теми же классами и той же библиотекой — визуально и функционально идентично.
 
-**Команда — скрывать без фото или без публикации:**
-- В `team.map` рендерить карточку только если `m.photo_url && m.is_published`. Иначе `return null`.
-- В `clergyList.map` рендерить только если `c.photo_url` (список уже отфильтрован по `is_published` на сервере).
-- Условие показа всей секции «Команда» учитывает отфильтрованные списки: вычислить `visibleTeam` и `visibleClergy` заранее и оборачивать секцию в `{(visibleTeam.length > 0 || visibleClergy.length > 0) && (...)}`, чтобы не получить пустой заголовок.
+## Изменения в `src/page-views/AboutPage.tsx`
 
-## 2. `src/routes/_admin/admin.index.tsx`
+1. **Импорты** — добавить:
+   ```ts
+   import { useState } from "react";
+   import Lightbox from "yet-another-react-lightbox";
+   import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+   import "yet-another-react-lightbox/plugins/thumbnails.css";
+   import Captions from "yet-another-react-lightbox/plugins/captions";
+   import "yet-another-react-lightbox/plugins/captions.css";
+   import Zoom from "yet-another-react-lightbox/plugins/zoom";
+   ```
 
-Добавить две карточки в той же сетке `grid sm:grid-cols-2 gap-4`, тем же стилем:
+2. **State и слайды** в `Component()`:
+   ```ts
+   const [lightbox, setLightbox] = useState({ open: false, index: 0 });
+   const galleryPhotos = gallery.map((g) => ({
+     src: g.image_url,
+     alt: (lang === "ru" ? g.caption_ru : g.caption_ro) ?? "",
+     description: (lang === "ru" ? g.caption_ru : g.caption_ro) ?? "",
+   }));
+   const openLightbox = (i: number) => setLightbox({ open: true, index: i });
+   ```
 
-- **О нас** → `/admin/about`, иконка `Info` (lucide-react), описание: «Hero, галерея и команда страницы “О нас”.»
-- **Священники** → `/admin/clergy`, иконка `Users`, описание: «Профили священников, сопровождающих поездки.»
+3. **Заменить блок GALLERY** (строки 110–139). Заголовок — `«Моя фотогалерея» / «Galeria mea foto»`, overline `«Из поездок»` убрать.
+   - Mobile: горизонтальный strip с теми же классами, что в DestinationSlugPage (`flex gap-3 overflow-x-auto px-6 snap-x snap-mandatory`, плитки `w-[45vw] aspect-square`).
+   - Desktop: `grid grid-cols-4 gap-2 max-w-[70%] mx-auto` с теми же hover-классами и `cursor-zoom-in`.
+   - В конце секции — `<Lightbox open=... slides={galleryPhotos} plugins={[Thumbnails, Captions, Zoom]} />`.
 
-Добавить `Info, Users` в импорт из `lucide-react`.
+4. **Mobile: уменьшить отступ между фото и заголовком.**
+   В правой колонке hero (строка 67):
+   - `py-10 md:py-8` → `pt-4 pb-10 md:pt-8 md:pb-8`
+   - `mb-5` у H1 (строка 69) оставить как есть на десктопе, но через `mb-3 md:mb-5`.
+   Это сокращает воздух между низом фото и заголовком только на мобайле, десктоп не меняется.
 
-## Область
-Только `src/page-views/AboutPage.tsx` и `src/routes/_admin/admin.index.tsx`. Другие файлы не трогаем.
+## Файлы
+
+- `src/page-views/AboutPage.tsx` — единственный изменяемый файл.
+- `DestinationSlugPage.tsx`, админ-менеджеры галереи, схема БД — не трогаем.
+
+## Уточнение по вопросу
+
+Готовый общий компонент `<DestinationGallery>` в проекте отсутствует — у направлений это inline JSX + библиотека `yet-another-react-lightbox`. Переиспользую ту же библиотеку и ту же разметку 1:1, без выноса в отдельный компонент (вынос потребовал бы рефакторить DestinationSlugPage, что выходит за рамки задачи). Если хотите — могу следующим шагом извлечь общий компонент `PhotoGallery` и подключить его в обоих местах.
