@@ -655,6 +655,54 @@ export type Database = {
           },
         ]
       }
+      priest_faq: {
+        Row: {
+          answer_ro: string
+          answer_ru: string
+          author_name_ro: string | null
+          author_name_ru: string | null
+          author_title_ro: string | null
+          author_title_ru: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+          question_ro: string
+          question_ru: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          answer_ro?: string
+          answer_ru: string
+          author_name_ro?: string | null
+          author_name_ru?: string | null
+          author_title_ro?: string | null
+          author_title_ru?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          question_ro?: string
+          question_ru: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          answer_ro?: string
+          answer_ru?: string
+          author_name_ro?: string | null
+          author_name_ru?: string | null
+          author_title_ro?: string | null
+          author_title_ru?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          question_ro?: string
+          question_ru?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
