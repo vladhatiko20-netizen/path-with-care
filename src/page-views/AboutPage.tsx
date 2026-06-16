@@ -167,6 +167,8 @@ export function Component() {
           close={() => setLightbox({ open: false, index: 0 })}
           slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
           plugins={[Thumbnails, Captions, Zoom]}
+          captions={{ descriptionTextAlign: "center", showToggle: false }}
+          className="lb-caption-below"
         />
       </section>
       )}

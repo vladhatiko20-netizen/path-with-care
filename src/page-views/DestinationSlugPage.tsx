@@ -677,6 +677,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
           slides={galleryPhotos.map((p) => ({ src: p.src, alt: p.alt, description: p.description }))}
           plugins={[Thumbnails, Captions, Zoom]}
           captions={{ descriptionTextAlign: "center", showToggle: false }}
+          className="lb-caption-below"
           zoom={{
             maxZoomPixelRatio: 3,
             zoomInMultiplier: 2,

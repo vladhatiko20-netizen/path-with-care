@@ -162,3 +162,15 @@
 .yarl__thumbnails_thumbnail_active {
   border-color: oklch(0.72 0.085 80) !important;
 }
+
+@media (min-width: 768px) {
+  .lb-caption-below .yarl__slide {
+    padding-bottom: 72px;
+  }
+  .lb-caption-below .yarl__slide_description {
+    background: transparent;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 16px;
+  }
+}
