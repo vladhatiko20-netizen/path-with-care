@@ -113,8 +113,8 @@ export function useLightboxCaptionProps(): CaptionProps {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "16px",
-          paddingBottom: "24px",
+          paddingBottom: "120px",
+          boxSizing: "border-box",
         },
       },
       // Constrain image height through YARL's own image-prop channel so our
