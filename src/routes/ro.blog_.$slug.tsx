@@ -16,14 +16,18 @@ export const Route = createFileRoute("/ro/blog_/$slug")({
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Articol negăsit — Pelerin" }] };
     const cover = resolveBlogImage(post.cover_image);
-    const title = post.title_ro || post.title_ru;
-    const desc = post.excerpt_ro ?? post.excerpt_ru ?? title;
+    const baseTitle = post.seo_title_ro || post.title_ro || post.title_ru;
+    const desc =
+      post.seo_description_ro ||
+      post.excerpt_ro ||
+      post.excerpt_ru ||
+      baseTitle;
     return {
       meta: buildPageMeta({
         lang: "ro",
-        title: `${title} — Pelerin`,
+        title: `${baseTitle} — Pelerin`,
         description: desc,
-        ogTitle: title,
+        ogTitle: baseTitle,
         ogType: "article",
         ogImage: cover,
         ogUrl: `${SITE_ORIGIN}/ro/blog/${post.slug}`,

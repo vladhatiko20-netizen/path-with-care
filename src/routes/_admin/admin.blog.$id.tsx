@@ -35,6 +35,10 @@ function Page() {
         excerpt_ro: data.excerpt_ro,
         body_ru: data.body_ru,
         body_ro: data.body_ro,
+        seo_title_ru: data.seo_title_ru ?? null,
+        seo_title_ro: data.seo_title_ro ?? null,
+        seo_description_ru: data.seo_description_ru ?? null,
+        seo_description_ro: data.seo_description_ro ?? null,
         is_published: data.is_published,
       }} />
     </div>

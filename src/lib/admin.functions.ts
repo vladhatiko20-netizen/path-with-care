@@ -13,6 +13,10 @@ const blogSchema = z.object({
   excerpt_ro: z.string().max(1000).nullable().optional(),
   body_ru: z.string().max(200000).nullable().optional(),
   body_ro: z.string().max(200000).nullable().optional(),
+  seo_title_ru: z.string().max(255).nullable().optional(),
+  seo_title_ro: z.string().max(255).nullable().optional(),
+  seo_description_ru: z.string().max(500).nullable().optional(),
+  seo_description_ro: z.string().max(500).nullable().optional(),
   is_published: z.boolean(),
 });
 

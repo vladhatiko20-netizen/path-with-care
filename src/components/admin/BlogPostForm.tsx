@@ -16,6 +16,10 @@ type Initial = {
   excerpt_ro: string | null;
   body_ru: string | null;
   body_ro: string | null;
+  seo_title_ru: string | null;
+  seo_title_ro: string | null;
+  seo_description_ru: string | null;
+  seo_description_ro: string | null;
   is_published: boolean;
 };
 
@@ -46,6 +50,16 @@ export function BlogPostForm({ initial }: { initial: Initial }) {
   }
 
   const cls = "w-full px-3 py-2 border border-border rounded-sm bg-background text-sm";
+
+  function CharCounter({ value, recommended }: { value: string | null; recommended: number }) {
+    const len = (value ?? "").length;
+    const over = len > recommended;
+    return (
+      <p className={`mt-1 text-xs ${over ? "text-destructive" : "text-muted-foreground"}`}>
+        {len} / {recommended} символов{over ? " — Google может обрезать" : ""}
+      </p>
+    );
+  }
 
   return (
     <form onSubmit={onSubmit} className="space-y-5 max-w-4xl">
@@ -112,6 +126,35 @@ export function BlogPostForm({ initial }: { initial: Initial }) {
         <input type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} />
         Опубликовать
       </label>
+
+      <section className="space-y-4">
+        <h2 className="font-serif text-xl border-b border-border pb-2">SEO</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO заголовок (RU)</label>
+            <input className={cls} value={form.seo_title_ru ?? ""} onChange={(e) => set("seo_title_ru", e.target.value || null)} maxLength={255} placeholder="До 60 символов" />
+            <CharCounter value={form.seo_title_ru} recommended={60} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO заголовок (RO)</label>
+            <input className={cls} value={form.seo_title_ro ?? ""} onChange={(e) => set("seo_title_ro", e.target.value || null)} maxLength={255} placeholder="До 60 символов" />
+            <CharCounter value={form.seo_title_ro} recommended={60} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO описание (RU)</label>
+            <textarea className={cls} rows={3} value={form.seo_description_ru ?? ""} onChange={(e) => set("seo_description_ru", e.target.value || null)} maxLength={500} placeholder="До 160 символов" />
+            <CharCounter value={form.seo_description_ru} recommended={160} />
+          </div>
+          <div>
+            <label className="block text-sm font-serif mb-1">SEO описание (RO)</label>
+            <textarea className={cls} rows={3} value={form.seo_description_ro ?? ""} onChange={(e) => set("seo_description_ro", e.target.value || null)} maxLength={500} placeholder="До 160 символов" />
+            <CharCounter value={form.seo_description_ro} recommended={160} />
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Если поля не заполнены — используются заголовок и краткое описание статьи.
+        </p>
+      </section>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
