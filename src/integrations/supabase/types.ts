@@ -139,6 +139,10 @@ export type Database = {
           id: string
           is_published: boolean
           published_at: string
+          seo_description_ro: string | null
+          seo_description_ru: string | null
+          seo_title_ro: string | null
+          seo_title_ru: string | null
           slug: string
           title_ro: string
           title_ru: string
@@ -154,6 +158,10 @@ export type Database = {
           id?: string
           is_published?: boolean
           published_at?: string
+          seo_description_ro?: string | null
+          seo_description_ru?: string | null
+          seo_title_ro?: string | null
+          seo_title_ru?: string | null
           slug: string
           title_ro: string
           title_ru: string
@@ -169,6 +177,10 @@ export type Database = {
           id?: string
           is_published?: boolean
           published_at?: string
+          seo_description_ro?: string | null
+          seo_description_ru?: string | null
+          seo_title_ro?: string | null
+          seo_title_ru?: string | null
           slug?: string
           title_ro?: string
           title_ru?: string
