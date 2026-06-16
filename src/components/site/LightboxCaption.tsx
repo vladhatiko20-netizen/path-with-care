@@ -122,7 +122,7 @@ export function useLightboxCaptionProps(): CaptionProps {
       // long captions (e.g. St. Catherine's monastery, 4-5 lines) + the
       // thumbnails strip fit below the image without colliding.
       carousel: {
-        imageProps: { style: { maxHeight: "calc(100vh - 320px)" } },
+        imageProps: { style: { maxHeight: "calc(100vh - 200px)" } },
       },
       render: {
         slideFooter: ({ slide }) => {
