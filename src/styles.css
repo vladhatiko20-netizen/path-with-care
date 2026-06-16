@@ -164,26 +164,19 @@
 }
 
 @media (min-width: 768px) {
-  /* Reserve room under the image for caption + thumbnails */
-  .yarl__slide_image {
-    max-height: calc(100vh - 240px) !important;
-  }
   /* Belt-and-suspenders: even if the Captions plugin briefly mounts during
      the hydration flip from mobile->desktop, suppress its overlay. */
   .yarl__slide_description {
     display: none !important;
   }
-  /* Our footer-rendered caption: sits in the black band, width = image width */
+  /* Our footer-rendered caption: in-flow, sits BELOW the image inside the
+     column-layout slide. Width is bound to the live image width via the
+     --lb-img-w CSS variable set by the React ResizeObserver. */
   .lb-desktop-caption {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 96px;
     display: flex;
     justify-content: center;
     padding: 0 16px;
-    pointer-events: none;
-    z-index: 1;
+    width: 100%;
   }
   .lb-desktop-caption p {
     max-width: var(--lb-img-w, min(90vw, 1100px));
@@ -193,7 +186,6 @@
     line-height: 1.5;
     text-align: center;
     word-wrap: break-word;
-    pointer-events: auto;
     background: transparent;
   }
 }

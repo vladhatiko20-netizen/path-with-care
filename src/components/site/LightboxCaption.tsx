@@ -3,6 +3,9 @@ import type { ComponentProps } from "react";
 import type Lightbox from "yet-another-react-lightbox";
 
 type LightboxProps = ComponentProps<typeof Lightbox>;
+type CaptionProps = Partial<
+  Pick<LightboxProps, "className" | "render" | "captions" | "styles" | "carousel">
+>;
 
 /**
  * Live matchMedia hook. Re-evaluates on viewport changes (resize, rotation),
@@ -97,11 +100,30 @@ function DesktopSlideFooter({ description }: { description: string }) {
  * (≥768px) while keeping the Captions overlay plugin on mobile.
  * Spread onto <Lightbox {...captionProps} />.
  */
-export function useLightboxCaptionProps(): Pick<LightboxProps, "className" | "render" | "captions"> {
+export function useLightboxCaptionProps(): CaptionProps {
   const isDesktop = useIsDesktop();
   if (isDesktop) {
     return {
       className: "lb-caption-below",
+      // Make the slide a vertical stack: image on top, caption (slideFooter)
+      // below in normal document flow. No absolute positioning -> no overlap.
+      styles: {
+        slide: {
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "16px",
+          paddingBottom: "24px",
+        },
+      },
+      // Constrain image height through YARL's own image-prop channel so our
+      // sizing isn't fighting library inline styles. Generous reservation so
+      // long captions (e.g. St. Catherine's monastery, 4-5 lines) + the
+      // thumbnails strip fit below the image without colliding.
+      carousel: {
+        imageProps: { style: { maxHeight: "calc(100vh - 320px)" } },
+      },
       render: {
         slideFooter: ({ slide }) => {
           const desc = (slide as { description?: string }).description;
