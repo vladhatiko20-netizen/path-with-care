@@ -164,13 +164,35 @@
 }
 
 @media (min-width: 768px) {
-  .lb-caption-below .yarl__slide {
-    padding-bottom: 72px;
+  /* Reserve room under the image for caption + thumbnails */
+  .lb-caption-below.lb-desktop .yarl__slide_image {
+    max-height: calc(100vh - 240px) !important;
   }
-  .lb-caption-below .yarl__slide_description {
-    background: transparent;
-    text-align: center;
+  /* On desktop the Captions plugin is removed; hide overlay just in case */
+  .lb-caption-below.lb-desktop .yarl__slide_description {
+    display: none !important;
+  }
+  /* Our footer-rendered caption: sits in the black band, width = image width */
+  .lb-desktop-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 96px;
+    display: flex;
     justify-content: center;
-    padding-bottom: 16px;
+    padding: 0 16px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .lb-desktop-caption p {
+    max-width: var(--lb-img-w, min(90vw, 1100px));
+    margin: 0;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    word-wrap: break-word;
+    pointer-events: auto;
+    background: transparent;
   }
 }
