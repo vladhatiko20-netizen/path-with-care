@@ -15,7 +15,6 @@ function useIsDesktop(query = "(min-width: 768px)") {
     if (typeof window === "undefined" || !window.matchMedia) return;
     const mql = window.matchMedia(query);
     const update = () => {
-      console.log("[lb] useIsDesktop ->", mql.matches, "innerWidth=", window.innerWidth);
       setMatch(mql.matches);
     };
     update();
@@ -38,14 +37,10 @@ function DesktopSlideFooter({ description }: { description: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    console.log("[lb] slideFooter mounted, desc=", description.slice(0, 60));
     const node = ref.current;
     if (!node) return;
     const slide = node.closest(".yarl__slide");
-    if (!slide) {
-      console.log("[lb] slideFooter: no .yarl__slide ancestor");
-      return;
-    }
+    if (!slide) return;
 
     let img: HTMLImageElement | null = null;
     let ro: ResizeObserver | null = null;
@@ -57,7 +52,6 @@ function DesktopSlideFooter({ description }: { description: string }) {
       const w = img.getBoundingClientRect().width;
       if (w > 0) {
         node.style.setProperty("--lb-img-w", `${Math.round(w)}px`);
-        console.log("[lb] slideFooter img width =", Math.round(w));
       }
     };
 
@@ -105,23 +99,9 @@ function DesktopSlideFooter({ description }: { description: string }) {
  */
 export function useLightboxCaptionProps(): Pick<LightboxProps, "className" | "render" | "captions"> {
   const isDesktop = useIsDesktop();
-  useEffect(() => {
-    console.log("[lb] captionProps branch =", isDesktop ? "desktop" : "mobile");
-    if (!isDesktop) return;
-    const id = window.requestAnimationFrame(() => {
-      const root = document.querySelector(".yarl__root, .yarl__portal") as HTMLElement | null;
-      const desc = document.querySelector(".yarl__slide_description") as HTMLElement | null;
-      const img = document.querySelector(".yarl__slide_image") as HTMLElement | null;
-      console.log("[lb] DOM probe: root=", root?.className ?? "(none)",
-        "descExists=", !!desc,
-        "descDisplay=", desc ? getComputedStyle(desc).display : "n/a",
-        "imgMaxH=", img ? getComputedStyle(img).maxHeight : "n/a");
-    });
-    return () => window.cancelAnimationFrame(id);
-  }, [isDesktop]);
   if (isDesktop) {
     return {
-      className: "lb-caption-below lb-desktop",
+      className: "lb-caption-below",
       render: {
         slideFooter: ({ slide }) => {
           const desc = (slide as { description?: string }).description;
@@ -142,7 +122,5 @@ export function useLightboxCaptionProps(): Pick<LightboxProps, "className" | "re
  */
 export function useLightboxPlugins<T>(allPlugins: T[], captionsPlugin: T): T[] {
   const isDesktop = useIsDesktop();
-  const result = isDesktop ? allPlugins.filter((p) => p !== captionsPlugin) : allPlugins;
-  console.log("[lb] plugins isDesktop=", isDesktop, "count=", result.length, "capRemoved=", allPlugins.length !== result.length);
-  return result;
+  return isDesktop ? allPlugins.filter((p) => p !== captionsPlugin) : allPlugins;
 }
