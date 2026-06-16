@@ -1,11 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Component, clergyQueryOptions } from "@/page-views/WithPriestPage";
+import { Component, clergyQueryOptions, priestFaqQueryOptions } from "@/page-views/WithPriestPage";
 import { hreflangLinks } from "@/lib/hreflang";
 import heroImg from "@/assets/hero-priest.jpg";
 import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/with-priest")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(clergyQueryOptions),
+  loader: async ({ context }) => {
+    await Promise.all([
+      context.queryClient.ensureQueryData(clergyQueryOptions),
+      context.queryClient.ensureQueryData(priestFaqQueryOptions),
+    ]);
+  },
   head: () => ({
     meta: buildPageMeta({
       lang: "ro",

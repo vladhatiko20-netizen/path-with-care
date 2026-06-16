@@ -2,7 +2,7 @@ import { createFileRoute, Link, useRouter, useNavigate } from "@tanstack/react-r
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { ArrowLeft, Phone, Mail, Trash2 } from "lucide-react";
+import { ArrowLeft, Phone, Mail, Trash2, MessageCircleQuestion } from "lucide-react";
 import { adminGetLead, adminMarkLeadRead, adminDeleteLead } from "@/lib/admin.functions";
 import { sourceLabel, formatLeadDate, telLink, viberLink, isMoldovaPhone, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
 
@@ -70,6 +70,7 @@ function Page() {
   const moldova = isMoldovaPhone(lead.phone);
   const cat = leadCategory(lead.source);
   const isPilg = cat === "pilgrimage";
+  const isPriest = cat === "priest";
 
   return (
     <div className="p-4 md:p-8 max-w-2xl">
@@ -153,6 +154,15 @@ function Page() {
         >
           {lead.is_read ? "Отметить непрочитанной" : "Отметить прочитанной"}
         </button>
+        {isPriest && (
+          <Link
+            to="/admin/priest-faq/new"
+            search={{ question: lead.message ?? "", from_lead: lead.id }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border border-accent/40 text-accent rounded-sm hover:bg-accent/10"
+          >
+            <MessageCircleQuestion className="w-4 h-4" /> Опубликовать как вопрос-ответ
+          </Link>
+        )}
         <button
           onClick={handleDelete}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-destructive border border-destructive/30 rounded-sm hover:bg-destructive/10 ml-auto"

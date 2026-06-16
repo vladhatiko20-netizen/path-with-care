@@ -1476,3 +1476,67 @@ export const adminDeleteClergy = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// ===== Priest FAQ =====
+
+const priestFaqSchema = z.object({
+  id: z.string().uuid().optional(),
+  question_ru: z.string().min(1).max(2000),
+  question_ro: z.string().max(2000).optional().default(""),
+  answer_ru: z.string().min(1).max(10000),
+  answer_ro: z.string().max(10000).optional().default(""),
+  author_name_ru: z.string().max(255).nullable().optional(),
+  author_name_ro: z.string().max(255).nullable().optional(),
+  author_title_ru: z.string().max(500).nullable().optional(),
+  author_title_ro: z.string().max(500).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000),
+  is_published: z.boolean(),
+});
+
+export const adminListPriestFaq = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("priest_faq")
+      .select("id, question_ru, question_ro, sort_order, is_published")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const adminGetPriestFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("priest_faq").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminSavePriestFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => priestFaqSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("priest_faq").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const { data: row, error } = await context.supabase
+      .from("priest_faq").insert(payload).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeletePriestFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("priest_faq").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

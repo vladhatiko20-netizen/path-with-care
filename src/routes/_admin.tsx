@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/use-auth";
-import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Users, Info } from "lucide-react";
+import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Users, Info, MessageCircleQuestion } from "lucide-react";
 import { adminCountUnreadLeads } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin")({
@@ -53,11 +53,14 @@ function AdminLayout() {
     );
   }
 
-  const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; badge?: number }> = [
+  const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; badge?: number; children?: Array<{ to: string; label: string; icon: typeof LayoutDashboard }> }> = [
     { to: "/admin", label: "Обзор", icon: LayoutDashboard },
     { to: "/admin/leads", label: "Заявки", icon: Inbox, badge: unreadCount },
     { to: "/admin/blog", label: "Блог", icon: FileText },
-    { to: "/admin/clergy", label: "Священники", icon: Users },
+    {
+      to: "/admin/clergy", label: "Священники", icon: Users,
+      children: [{ to: "/admin/priest-faq", label: "Вопросы священнику", icon: MessageCircleQuestion }],
+    },
     { to: "/admin/pilgrimages", label: "Паломничества", icon: Calendar },
     { to: "/admin/destinations", label: "Направления", icon: MapPin },
     { to: "/admin/about", label: "О нас", icon: Info },
@@ -82,12 +85,14 @@ function AdminLayout() {
         {nav.map((item) => {
           const active = item.to === "/admin" ? path === "/admin" : path.startsWith(item.to);
           const Icon = item.icon;
+          const childActive = item.children?.some((c) => path.startsWith(c.to)) ?? false;
+          const showChildren = !!item.children && (active || childActive);
           return (
+            <div key={item.to}>
             <Link
-              key={item.to}
               to={item.to}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-2 px-3 py-2 rounded-sm text-sm font-serif transition-colors ${active ? "bg-accent text-primary-foreground" : "text-foreground hover:bg-secondary"}`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-sm text-sm font-serif transition-colors ${active && !childActive ? "bg-accent text-primary-foreground" : "text-foreground hover:bg-secondary"}`}
             >
               <Icon className="w-4 h-4" />
               <span className="flex-1">{item.label}</span>
@@ -100,6 +105,18 @@ function AdminLayout() {
                 </span>
               ) : null}
             </Link>
+            {showChildren && item.children!.map((c) => {
+              const cActive = path.startsWith(c.to);
+              const CIcon = c.icon;
+              return (
+                <Link key={c.to} to={c.to} onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2 pl-9 pr-3 py-2 mt-1 rounded-sm text-sm font-serif transition-colors ${cActive ? "bg-accent text-primary-foreground" : "text-foreground hover:bg-secondary"}`}>
+                  <CIcon className="w-4 h-4" />
+                  <span className="flex-1">{c.label}</span>
+                </Link>
+              );
+            })}
+            </div>
           );
         })}
       </nav>

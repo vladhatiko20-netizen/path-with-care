@@ -8,26 +8,17 @@ import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-priest.jpg";
 import { listPublishedClergy } from "@/lib/clergy.functions";
 import { createLead } from "@/lib/leads.functions";
+import { listPublishedPriestFaq } from "@/lib/priest-faq.functions";
 
 export const clergyQueryOptions = queryOptions({
   queryKey: ["clergy", "published"],
   queryFn: () => listPublishedClergy(),
 });
 
-const faq = [
-  { ru: { q: "Как готовиться к паломничеству?", a: "Готовиться лучше всего исповедью и причастием перед поездкой, чтением утренних и вечерних молитв, чтением о святынях, к которым едете. Душа должна быть спокойна и открыта." },
-    ro: { q: "Cum să mă pregătesc pentru pelerinaj?", a: "Cea mai bună pregătire este spovedania și împărtășania înainte de plecare, rugăciunile de dimineață și seară, lectura despre sanctuarele unde mergeți." } },
-  { ru: { q: "Нужно ли поститься перед поездкой?", a: "Если поездка попадает на пост — соблюдаем общий пост Церкви. В обычные дни — по благословению духовника. Перед причастием — обязательный евхаристический пост." },
-    ro: { q: "Trebuie să postesc înainte de călătorie?", a: "Dacă pelerinajul cade în post — ținem postul general al Bisericii. În rest — după binecuvântarea duhovnicului." } },
-  { ru: { q: "Что взять с собой в Иерусалим?", a: "Удобную скромную одежду (плечи и колени закрыты, для женщин — платок), удобную обувь, личные вещи, святую воду в малой бутылке, свои крестильные крестики и иконки для освящения." },
-    ro: { q: "Ce să iau cu mine în Ierusalim?", a: "Haine modeste comode (umeri și genunchi acoperiți, pentru femei — basma), încălțăminte comodă, cruciulițe și iconițe personale pentru sfințire." } },
-  { ru: { q: "Как правильно прикладываться к мощам?", a: "Перекреститесь дважды, поклонитесь, поцелуйте — край раки или мощи, не лик святого на иконе. Перекреститесь третий раз. Не торопитесь и не загораживайте других." },
-    ro: { q: "Cum să mă închin corect la moaște?", a: "Faceți semnul crucii de două ori, plecați-vă, sărutați marginea raclei sau moaștele, apoi încă o cruce. Fără grabă." } },
-  { ru: { q: "Можно ли участвовать невоцерковлённому человеку?", a: "Да. Многие приходят в Церковь именно через паломничество. Священник в группе всегда готов поговорить, ответить на вопросы, помочь подготовиться к первой исповеди." },
-    ro: { q: "Pot participa dacă nu sunt încă apropiat de Biserică?", a: "Da. Mulți vin în Biserică tocmai prin pelerinaj. Preotul din grup este oricând gata să vorbească și să vă ajute." } },
-  { ru: { q: "Что нужно знать о церковной этике?", a: "В храме — тишина, скромная одежда, не фотографируйте людей и службу без разрешения. Свечи ставят с молитвой. Не проходите между престолом и иконостасом." },
-    ro: { q: "Ce trebuie să știu despre eticheta bisericească?", a: "În biserică — liniște, haine modeste, fără fotografii ale slujbei. Lumânările se aprind cu rugăciune." } },
-];
+export const priestFaqQueryOptions = queryOptions({
+  queryKey: ["priest-faq", "published"],
+  queryFn: () => listPublishedPriestFaq(),
+});
 
 export function Component() {
   const { t, lang } = useLang();
@@ -36,6 +27,7 @@ export function Component() {
   const [sending, setSending] = useState(false);
   const submit = useServerFn(createLead);
   const { data: priests } = useSuspenseQuery(clergyQueryOptions);
+  const { data: faq } = useSuspenseQuery(priestFaqQueryOptions);
   return (
     <PageShell>
       <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
@@ -80,34 +72,48 @@ export function Component() {
       </section>
       )}
 
+      {faq.length > 0 && (
       <section className="bg-secondary/60 py-10 md:py-10">
         <div className="max-w-3xl mx-auto px-6">
           <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-10">
             {t("Часто задаваемые вопросы", "Întrebări frecvente")}
           </h2>
           <div className="space-y-6">
-            {faq.map((f, i) => {
-              const c = lang === "ru" ? f.ru : f.ro;
+            {faq.map((f) => {
+              const q = lang === "ru" ? f.question_ru : (f.question_ro || f.question_ru);
+              const a = lang === "ru" ? f.answer_ru : (f.answer_ro || f.answer_ru);
+              const authorName = lang === "ru" ? f.author_name_ru : (f.author_name_ro || f.author_name_ru);
+              const authorTitle = lang === "ru" ? f.author_title_ru : (f.author_title_ro || f.author_title_ru);
+              const attribution = authorName
+                ? (authorTitle ? `${authorTitle}, ${authorName}` : authorName)
+                : null;
               return (
-                <details key={i} className="group bg-card border border-gold/30 rounded-sm p-5">
+                <details key={f.id} className="group bg-card border border-gold/30 rounded-sm p-5">
                   <summary className="cursor-pointer font-serif text-lg text-foreground list-none flex items-start gap-3">
                     <span className="text-accent shrink-0">☦</span>
-                    <span>{c.q}</span>
+                    <span>{q}</span>
                   </summary>
-                  <p className="mt-4 pl-7 text-foreground/80 leading-[1.8]">{c.a}</p>
+                  <p className="mt-4 pl-7 text-foreground/80 leading-[1.8] whitespace-pre-wrap">{a}</p>
+                  {attribution && (
+                    <p className="mt-3 pl-7 text-sm text-accent italic font-serif">{attribution}</p>
+                  )}
                 </details>
               );
             })}
           </div>
         </div>
       </section>
+      )}
 
       <section className="max-w-2xl mx-auto px-6 py-10 md:py-10">
         <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-3">
           {t("Задать вопрос", "Pune o întrebare")}
         </h2>
         <p className="text-foreground/70 italic font-serif mb-8">
-          {t("Священник ответит лично на ваш email.", "Preotul va răspunde personal la e-mailul dumneavoastră.")}
+          {t(
+            "Мы передадим ваш вопрос священнику. Ответ придёт на ваш email, а самые частые вопросы мы публикуем на сайте.",
+            "Vom transmite întrebarea preotului. Răspunsul va veni pe e-mail, iar cele mai frecvente întrebări le publicăm pe site."
+          )}
         </p>
         {sent ? (
           <div className="p-5 bg-card border border-gold/40 rounded-sm text-foreground/85 font-serif italic">

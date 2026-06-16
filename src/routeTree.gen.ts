@@ -41,11 +41,14 @@ import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index
 import { Route as RoDestinationsSlugRouteImport } from './routes/ro.destinations.$slug'
 import { Route as RoBlogSlugRouteImport } from './routes/ro.blog_.$slug'
 import { Route as AdminAdminAboutRouteImport } from './routes/_admin/admin.about'
+import { Route as AdminAdminPriestFaqIndexRouteImport } from './routes/_admin/admin.priest-faq.index'
 import { Route as AdminAdminPilgrimagesIndexRouteImport } from './routes/_admin/admin.pilgrimages.index'
 import { Route as AdminAdminLeadsIndexRouteImport } from './routes/_admin/admin.leads.index'
 import { Route as AdminAdminDestinationsIndexRouteImport } from './routes/_admin/admin.destinations.index'
 import { Route as AdminAdminClergyIndexRouteImport } from './routes/_admin/admin.clergy.index'
 import { Route as AdminAdminBlogIndexRouteImport } from './routes/_admin/admin.blog.index'
+import { Route as AdminAdminPriestFaqNewRouteImport } from './routes/_admin/admin.priest-faq.new'
+import { Route as AdminAdminPriestFaqIdRouteImport } from './routes/_admin/admin.priest-faq.$id'
 import { Route as AdminAdminPilgrimagesNewRouteImport } from './routes/_admin/admin.pilgrimages.new'
 import { Route as AdminAdminPilgrimagesIdRouteImport } from './routes/_admin/admin.pilgrimages.$id'
 import { Route as AdminAdminLeadsIdRouteImport } from './routes/_admin/admin.leads.$id'
@@ -216,6 +219,12 @@ const AdminAdminAboutRoute = AdminAdminAboutRouteImport.update({
   path: '/admin/about',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminPriestFaqIndexRoute =
+  AdminAdminPriestFaqIndexRouteImport.update({
+    id: '/admin/priest-faq/',
+    path: '/admin/priest-faq/',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminAdminPilgrimagesIndexRoute =
   AdminAdminPilgrimagesIndexRouteImport.update({
     id: '/admin/pilgrimages/',
@@ -241,6 +250,16 @@ const AdminAdminClergyIndexRoute = AdminAdminClergyIndexRouteImport.update({
 const AdminAdminBlogIndexRoute = AdminAdminBlogIndexRouteImport.update({
   id: '/admin/blog/',
   path: '/admin/blog/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminPriestFaqNewRoute = AdminAdminPriestFaqNewRouteImport.update({
+  id: '/admin/priest-faq/new',
+  path: '/admin/priest-faq/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminPriestFaqIdRoute = AdminAdminPriestFaqIdRouteImport.update({
+  id: '/admin/priest-faq/$id',
+  path: '/admin/priest-faq/$id',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminPilgrimagesNewRoute =
@@ -340,11 +359,14 @@ export interface FileRoutesByFullPath {
   '/admin/leads/$id': typeof AdminAdminLeadsIdRoute
   '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
   '/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
+  '/admin/priest-faq/$id': typeof AdminAdminPriestFaqIdRoute
+  '/admin/priest-faq/new': typeof AdminAdminPriestFaqNewRoute
   '/admin/blog/': typeof AdminAdminBlogIndexRoute
   '/admin/clergy/': typeof AdminAdminClergyIndexRoute
   '/admin/destinations/': typeof AdminAdminDestinationsIndexRoute
   '/admin/leads/': typeof AdminAdminLeadsIndexRoute
   '/admin/pilgrimages/': typeof AdminAdminPilgrimagesIndexRoute
+  '/admin/priest-faq/': typeof AdminAdminPriestFaqIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -387,11 +409,14 @@ export interface FileRoutesByTo {
   '/admin/leads/$id': typeof AdminAdminLeadsIdRoute
   '/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
   '/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
+  '/admin/priest-faq/$id': typeof AdminAdminPriestFaqIdRoute
+  '/admin/priest-faq/new': typeof AdminAdminPriestFaqNewRoute
   '/admin/blog': typeof AdminAdminBlogIndexRoute
   '/admin/clergy': typeof AdminAdminClergyIndexRoute
   '/admin/destinations': typeof AdminAdminDestinationsIndexRoute
   '/admin/leads': typeof AdminAdminLeadsIndexRoute
   '/admin/pilgrimages': typeof AdminAdminPilgrimagesIndexRoute
+  '/admin/priest-faq': typeof AdminAdminPriestFaqIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -437,11 +462,14 @@ export interface FileRoutesById {
   '/_admin/admin/leads/$id': typeof AdminAdminLeadsIdRoute
   '/_admin/admin/pilgrimages/$id': typeof AdminAdminPilgrimagesIdRoute
   '/_admin/admin/pilgrimages/new': typeof AdminAdminPilgrimagesNewRoute
+  '/_admin/admin/priest-faq/$id': typeof AdminAdminPriestFaqIdRoute
+  '/_admin/admin/priest-faq/new': typeof AdminAdminPriestFaqNewRoute
   '/_admin/admin/blog/': typeof AdminAdminBlogIndexRoute
   '/_admin/admin/clergy/': typeof AdminAdminClergyIndexRoute
   '/_admin/admin/destinations/': typeof AdminAdminDestinationsIndexRoute
   '/_admin/admin/leads/': typeof AdminAdminLeadsIndexRoute
   '/_admin/admin/pilgrimages/': typeof AdminAdminPilgrimagesIndexRoute
+  '/_admin/admin/priest-faq/': typeof AdminAdminPriestFaqIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -487,11 +515,14 @@ export interface FileRouteTypes {
     | '/admin/leads/$id'
     | '/admin/pilgrimages/$id'
     | '/admin/pilgrimages/new'
+    | '/admin/priest-faq/$id'
+    | '/admin/priest-faq/new'
     | '/admin/blog/'
     | '/admin/clergy/'
     | '/admin/destinations/'
     | '/admin/leads/'
     | '/admin/pilgrimages/'
+    | '/admin/priest-faq/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -534,11 +565,14 @@ export interface FileRouteTypes {
     | '/admin/leads/$id'
     | '/admin/pilgrimages/$id'
     | '/admin/pilgrimages/new'
+    | '/admin/priest-faq/$id'
+    | '/admin/priest-faq/new'
     | '/admin/blog'
     | '/admin/clergy'
     | '/admin/destinations'
     | '/admin/leads'
     | '/admin/pilgrimages'
+    | '/admin/priest-faq'
   id:
     | '__root__'
     | '/'
@@ -583,11 +617,14 @@ export interface FileRouteTypes {
     | '/_admin/admin/leads/$id'
     | '/_admin/admin/pilgrimages/$id'
     | '/_admin/admin/pilgrimages/new'
+    | '/_admin/admin/priest-faq/$id'
+    | '/_admin/admin/priest-faq/new'
     | '/_admin/admin/blog/'
     | '/_admin/admin/clergy/'
     | '/_admin/admin/destinations/'
     | '/_admin/admin/leads/'
     | '/_admin/admin/pilgrimages/'
+    | '/_admin/admin/priest-faq/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -836,6 +873,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminAboutRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/priest-faq/': {
+      id: '/_admin/admin/priest-faq/'
+      path: '/admin/priest-faq'
+      fullPath: '/admin/priest-faq/'
+      preLoaderRoute: typeof AdminAdminPriestFaqIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/pilgrimages/': {
       id: '/_admin/admin/pilgrimages/'
       path: '/admin/pilgrimages'
@@ -869,6 +913,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/blog'
       fullPath: '/admin/blog/'
       preLoaderRoute: typeof AdminAdminBlogIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/priest-faq/new': {
+      id: '/_admin/admin/priest-faq/new'
+      path: '/admin/priest-faq/new'
+      fullPath: '/admin/priest-faq/new'
+      preLoaderRoute: typeof AdminAdminPriestFaqNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/priest-faq/$id': {
+      id: '/_admin/admin/priest-faq/$id'
+      path: '/admin/priest-faq/$id'
+      fullPath: '/admin/priest-faq/$id'
+      preLoaderRoute: typeof AdminAdminPriestFaqIdRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/admin/pilgrimages/new': {
@@ -957,11 +1015,14 @@ interface AdminRouteChildren {
   AdminAdminLeadsIdRoute: typeof AdminAdminLeadsIdRoute
   AdminAdminPilgrimagesIdRoute: typeof AdminAdminPilgrimagesIdRoute
   AdminAdminPilgrimagesNewRoute: typeof AdminAdminPilgrimagesNewRoute
+  AdminAdminPriestFaqIdRoute: typeof AdminAdminPriestFaqIdRoute
+  AdminAdminPriestFaqNewRoute: typeof AdminAdminPriestFaqNewRoute
   AdminAdminBlogIndexRoute: typeof AdminAdminBlogIndexRoute
   AdminAdminClergyIndexRoute: typeof AdminAdminClergyIndexRoute
   AdminAdminDestinationsIndexRoute: typeof AdminAdminDestinationsIndexRoute
   AdminAdminLeadsIndexRoute: typeof AdminAdminLeadsIndexRoute
   AdminAdminPilgrimagesIndexRoute: typeof AdminAdminPilgrimagesIndexRoute
+  AdminAdminPriestFaqIndexRoute: typeof AdminAdminPriestFaqIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -977,11 +1038,14 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminLeadsIdRoute: AdminAdminLeadsIdRoute,
   AdminAdminPilgrimagesIdRoute: AdminAdminPilgrimagesIdRoute,
   AdminAdminPilgrimagesNewRoute: AdminAdminPilgrimagesNewRoute,
+  AdminAdminPriestFaqIdRoute: AdminAdminPriestFaqIdRoute,
+  AdminAdminPriestFaqNewRoute: AdminAdminPriestFaqNewRoute,
   AdminAdminBlogIndexRoute: AdminAdminBlogIndexRoute,
   AdminAdminClergyIndexRoute: AdminAdminClergyIndexRoute,
   AdminAdminDestinationsIndexRoute: AdminAdminDestinationsIndexRoute,
   AdminAdminLeadsIndexRoute: AdminAdminLeadsIndexRoute,
   AdminAdminPilgrimagesIndexRoute: AdminAdminPilgrimagesIndexRoute,
+  AdminAdminPriestFaqIndexRoute: AdminAdminPriestFaqIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
