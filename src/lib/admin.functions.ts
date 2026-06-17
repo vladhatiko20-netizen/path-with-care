@@ -1811,3 +1811,325 @@ export const adminImportPriestFaqBulk = createServerFn({ method: "POST" })
 
     return { ok: true as const, mode: data.mode, summary, created, updated, skipped, errors };
   });
+
+// ============================================================================
+// Blog posts JSON import/export
+// ----------------------------------------------------------------------------
+// Differences from priest_faq importer:
+//   - Match key is the real unique `slug`.
+//   - Body is Tiptap HTML — exported and imported verbatim (no sanitize).
+//   - Em-dashes (U+2014) are NOT rejected; they're informational warnings only.
+//   - On upsert: keys ABSENT from incoming JSON preserve existing DB values;
+//     keys PRESENT with null/"" are treated as explicit reset to null.
+// ============================================================================
+
+const BLOG_IMPORT_KEYS = [
+  "slug", "published_at", "cover_image",
+  "title_ru", "title_ro", "excerpt_ru", "excerpt_ro",
+  "body_ru", "body_ro",
+  "seo_title_ru", "seo_title_ro", "seo_description_ru", "seo_description_ro",
+  "is_published",
+] as const;
+
+const BLOG_EM_DASH_FIELDS = [
+  "title_ru", "title_ro", "excerpt_ru", "excerpt_ro", "body_ru", "body_ro",
+] as const;
+
+function stripBlogImportItem(raw: unknown): Record<string, unknown> {
+  if (!raw || typeof raw !== "object") return {};
+  const r = raw as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  for (const k of BLOG_IMPORT_KEYS) if (k in r) out[k] = r[k];
+  return out;
+}
+
+function countBlogEmDashes(row: Record<string, unknown>): {
+  total: number;
+  perField: Array<{ field: string; count: number }>;
+} {
+  const perField: Array<{ field: string; count: number }> = [];
+  let total = 0;
+  for (const f of BLOG_EM_DASH_FIELDS) {
+    const v = row[f];
+    if (typeof v !== "string" || v.length === 0) continue;
+    let c = 0;
+    for (let i = 0; i < v.length; i++) if (v.charCodeAt(i) === 0x2014) c++;
+    if (c > 0) {
+      perField.push({ field: f, count: c });
+      total += c;
+    }
+  }
+  return { total, perField };
+}
+
+function emDashWarningString(slug: string, row: Record<string, unknown>): string | null {
+  const { total, perField } = countBlogEmDashes(row);
+  if (total === 0) return null;
+  const breakdown = perField.map((p) => `${p.field}(${p.count})`).join(", ");
+  return `статья ${slug}: найдено ${total} длинных тире (U+2014) в полях: ${breakdown}`;
+}
+
+const blogImportItemSchema = z.object({
+  slug: z.string().trim().min(1, "slug обязателен").max(255).regex(/^[a-z0-9-]+$/, "slug должен содержать только a-z, 0-9 и -"),
+  published_at: z.string().trim().min(1).max(50).optional(),
+  cover_image: z.union([z.string().max(2000), z.null()]).optional(),
+  title_ru: z.string().trim().min(1, "title_ru обязателен").max(500),
+  title_ro: z.string().trim().min(1, "title_ro обязателен").max(500),
+  excerpt_ru: z.union([z.string().max(2000), z.null()]).optional(),
+  excerpt_ro: z.union([z.string().max(2000), z.null()]).optional(),
+  body_ru: z.union([z.string().max(500000), z.null()]).optional(),
+  body_ro: z.union([z.string().max(500000), z.null()]).optional(),
+  seo_title_ru: z.union([z.string().max(255), z.null()]).optional(),
+  seo_title_ro: z.union([z.string().max(255), z.null()]).optional(),
+  seo_description_ru: z.union([z.string().max(500), z.null()]).optional(),
+  seo_description_ro: z.union([z.string().max(500), z.null()]).optional(),
+  is_published: z.boolean().optional(),
+});
+
+type BlogImportItem = z.infer<typeof blogImportItemSchema>;
+
+function toBlogExportRow(row: Record<string, unknown>) {
+  return {
+    slug: String(row.slug ?? ""),
+    published_at: String(row.published_at ?? ""),
+    cover_image: (row.cover_image as string | null) ?? null,
+    title_ru: String(row.title_ru ?? ""),
+    title_ro: String(row.title_ro ?? ""),
+    excerpt_ru: (row.excerpt_ru as string | null) ?? null,
+    excerpt_ro: (row.excerpt_ro as string | null) ?? null,
+    body_ru: (row.body_ru as string | null) ?? null,
+    body_ro: (row.body_ro as string | null) ?? null,
+    seo_title_ru: (row.seo_title_ru as string | null) ?? null,
+    seo_title_ro: (row.seo_title_ro as string | null) ?? null,
+    seo_description_ru: (row.seo_description_ru as string | null) ?? null,
+    seo_description_ro: (row.seo_description_ro as string | null) ?? null,
+    is_published: Boolean(row.is_published),
+  };
+}
+
+async function findBlogPostsBySlug(
+  supabase: SupabaseLike,
+  slug: string,
+): Promise<Array<{ id: string; slug: string }>> {
+  const { data, error } = await supabase
+    .from("blog_posts").select("id, slug").eq("slug", slug.trim());
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Array<{ id: string; slug: string }>;
+}
+
+// Build INSERT payload: required fields, defaults for the rest where appropriate.
+// Absent optional keys → null (or DB default for is_published / published_at via omission).
+function buildBlogInsertPayload(item: BlogImportItem, raw: Record<string, unknown>) {
+  const p: Record<string, unknown> = {
+    slug: item.slug.trim(),
+    title_ru: item.title_ru.trim(),
+    title_ro: item.title_ro.trim(),
+  };
+  // published_at: if present (even ""), use it; else let DB default to CURRENT_DATE.
+  if ("published_at" in raw && typeof item.published_at === "string" && item.published_at.length > 0) {
+    p.published_at = item.published_at;
+  }
+  // is_published: present → use; absent → omit (DB default false).
+  if ("is_published" in raw && typeof item.is_published === "boolean") {
+    p.is_published = item.is_published;
+  }
+  // For all other nullable fields: present (incl. null/"") → write; absent → omit (null in DB).
+  const nullableKeys = [
+    "cover_image", "excerpt_ru", "excerpt_ro", "body_ru", "body_ro",
+    "seo_title_ru", "seo_title_ro", "seo_description_ru", "seo_description_ro",
+  ] as const;
+  for (const k of nullableKeys) {
+    if (k in raw) {
+      const v = (item as Record<string, unknown>)[k];
+      p[k] = v === "" ? null : (v ?? null);
+    }
+  }
+  return p;
+}
+
+// Build UPDATE payload: ONLY keys present in incoming raw object.
+// Absent → preserved. Present with null/"" → explicit reset to null.
+function buildBlogUpdatePayload(item: BlogImportItem, raw: Record<string, unknown>) {
+  const p: Record<string, unknown> = {};
+  // Required textual fields are always present (passed validation).
+  if ("title_ru" in raw) p.title_ru = item.title_ru.trim();
+  if ("title_ro" in raw) p.title_ro = item.title_ro.trim();
+  if ("published_at" in raw && typeof item.published_at === "string" && item.published_at.length > 0) {
+    p.published_at = item.published_at;
+  }
+  if ("is_published" in raw && typeof item.is_published === "boolean") {
+    p.is_published = item.is_published;
+  }
+  const nullableKeys = [
+    "cover_image", "excerpt_ru", "excerpt_ro", "body_ru", "body_ro",
+    "seo_title_ru", "seo_title_ro", "seo_description_ru", "seo_description_ro",
+  ] as const;
+  for (const k of nullableKeys) {
+    if (k in raw) {
+      const v = (item as Record<string, unknown>)[k];
+      p[k] = v === "" ? null : (v ?? null);
+    }
+  }
+  return p;
+}
+
+export const adminExportBlogPost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("blog_posts").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Статья не найдена");
+    const payload = toBlogExportRow(row as Record<string, unknown>);
+    const warning = emDashWarningString(payload.slug, payload as Record<string, unknown>);
+    return { payload, warnings: warning ? [warning] : [] };
+  });
+
+export const adminExportAllBlogPosts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("blog_posts").select("*")
+      .order("published_at", { ascending: false })
+      .order("created_at", { ascending: false });
+    if (error) throw new Error(error.message);
+    const blog_posts = (data ?? []).map((r) => toBlogExportRow(r as Record<string, unknown>));
+    const warnings: string[] = [];
+    for (const p of blog_posts) {
+      const w = emDashWarningString(p.slug, p as Record<string, unknown>);
+      if (w) warnings.push(w);
+    }
+    return { blog_posts, warnings };
+  });
+
+export const adminImportBlogPost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => {
+    const raw = stripBlogImportItem(i);
+    const parsed = blogImportItemSchema.parse(raw);
+    return { item: parsed, raw };
+  })
+  .handler(async ({ data, context }) => {
+    const { item, raw } = data;
+    const matches = await findBlogPostsBySlug(context.supabase, item.slug);
+    if (matches.length > 1) {
+      throw new Error(
+        `Найдено ${matches.length} записей с таким же slug. Разрешите вручную и повторите импорт.`,
+      );
+    }
+    const warning = emDashWarningString(item.slug, raw);
+    const warnings = warning ? [warning] : [];
+    if (matches.length === 1) {
+      const id = matches[0].id;
+      const { data: row, error } = await context.supabase
+        .from("blog_posts").update(buildBlogUpdatePayload(item, raw) as never).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return { ok: true as const, action: "updated" as const, id: row.id, slug: row.slug, warnings };
+    }
+    const { data: row, error } = await context.supabase
+      .from("blog_posts").insert(buildBlogInsertPayload(item, raw) as never).select().single();
+    if (error) throw new Error(error.message);
+    return { ok: true as const, action: "created" as const, id: row.id, slug: row.slug, warnings };
+  });
+
+const blogBulkSchema = z.object({
+  mode: z.enum(["skip", "upsert", "only_new"]).default("skip"),
+  items: z.array(z.unknown()).min(1, "Пустой список").max(50, "Максимум 50 статей за один батч"),
+});
+
+export const adminImportBlogPostsBulk = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => {
+    let mode: "skip" | "upsert" | "only_new" = "skip";
+    let items: unknown[] = [];
+    if (Array.isArray(i)) {
+      items = i;
+    } else if (i && typeof i === "object") {
+      const o = i as Record<string, unknown>;
+      if (o.mode === "skip" || o.mode === "upsert" || o.mode === "only_new") mode = o.mode;
+      if (Array.isArray(o.items)) items = o.items;
+      else if (Array.isArray(o.blog_posts)) items = o.blog_posts;
+      else if (Array.isArray(o.blog)) items = o.blog;
+    }
+    return blogBulkSchema.parse({ mode, items });
+  })
+  .handler(async ({ data, context }) => {
+    const summary = { created: 0, updated: 0, skipped: 0, errors: 0 };
+    const created: Array<{ slug: string; id: string }> = [];
+    const updated: Array<{ slug: string; id: string }> = [];
+    const skipped: Array<{ slug: string; reason: string }> = [];
+    const errors: Array<{ slug: string; error: string }> = [];
+    const warnings: string[] = [];
+
+    // only_new pre-check
+    if (data.mode === "only_new") {
+      for (let idx = 0; idx < data.items.length; idx++) {
+        const raw = stripBlogImportItem(data.items[idx]);
+        const parsed = blogImportItemSchema.safeParse(raw);
+        if (!parsed.success) continue;
+        const matches = await findBlogPostsBySlug(context.supabase, parsed.data.slug);
+        if (matches.length > 0) {
+          throw new Error(
+            `Режим «Только новые»: статья со slug «${parsed.data.slug}» уже существует. Батч отклонён.`,
+          );
+        }
+      }
+    }
+
+    for (let idx = 0; idx < data.items.length; idx++) {
+      const rawIn = data.items[idx];
+      const raw = stripBlogImportItem(rawIn);
+      const parsed = blogImportItemSchema.safeParse(raw);
+      if (!parsed.success) {
+        const slug = typeof raw.slug === "string" ? raw.slug : `#${idx + 1}`;
+        summary.errors++;
+        errors.push({
+          slug,
+          error: parsed.error.issues.map((e) => `${e.path.join(".") || "(root)"}: ${e.message}`).join("; "),
+        });
+        continue;
+      }
+      const item = parsed.data;
+      const w = emDashWarningString(item.slug, raw);
+      if (w) warnings.push(w);
+      try {
+        const matches = await findBlogPostsBySlug(context.supabase, item.slug);
+        if (matches.length > 1) {
+          summary.errors++;
+          errors.push({
+            slug: item.slug,
+            error: `Найдено ${matches.length} записей с таким же slug. Разрешите вручную.`,
+          });
+          continue;
+        }
+        if (matches.length === 1) {
+          if (data.mode === "skip") {
+            summary.skipped++;
+            skipped.push({ slug: item.slug, reason: "уже существует" });
+            continue;
+          }
+          const id = matches[0].id;
+          const { data: row, error } = await context.supabase
+            .from("blog_posts").update(buildBlogUpdatePayload(item, raw) as never).eq("id", id).select().single();
+          if (error) throw new Error(error.message);
+          summary.updated++;
+          updated.push({ slug: row.slug, id: row.id });
+        } else {
+          const { data: row, error } = await context.supabase
+            .from("blog_posts").insert(buildBlogInsertPayload(item, raw) as never).select().single();
+          if (error) throw new Error(error.message);
+          summary.created++;
+          created.push({ slug: row.slug, id: row.id });
+        }
+      } catch (e: unknown) {
+        summary.errors++;
+        errors.push({
+          slug: item.slug,
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    return { ok: true as const, mode: data.mode, summary, created, updated, skipped, errors, warnings };
+  });
