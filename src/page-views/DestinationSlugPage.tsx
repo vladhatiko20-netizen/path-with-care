@@ -740,8 +740,8 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
   }
 
   return (
-    <section id="lead" className="bg-secondary py-12 md:py-16 scroll-mt-24 border-t border-gold/30">
-      <div className="hidden md:block max-w-6xl mx-auto px-6 mb-10">
+    <section id="lead" className="bg-secondary py-12 md:pt-6 md:pb-16 scroll-mt-24 border-t border-gold/30">
+      <div className="hidden md:block max-w-6xl mx-auto px-6 md:mb-4">
         <h2 className="font-serif text-3xl md:text-5xl text-foreground font-light text-center">
           {t("Принять участие в паломничестве", "Participați la pelerinaj")}
         </h2>
