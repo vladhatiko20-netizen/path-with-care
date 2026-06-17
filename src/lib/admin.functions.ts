@@ -2028,7 +2028,7 @@ export const adminImportBlogPost = createServerFn({ method: "POST" })
       return { ok: true as const, action: "updated" as const, id: row.id, slug: row.slug, warnings };
     }
     const { data: row, error } = await context.supabase
-      .from("blog_posts").insert(buildBlogInsertPayload(item, raw)).select().single();
+      .from("blog_posts").insert(buildBlogInsertPayload(item, raw) as never).select().single();
     if (error) throw new Error(error.message);
     return { ok: true as const, action: "created" as const, id: row.id, slug: row.slug, warnings };
   });
@@ -2117,7 +2117,7 @@ export const adminImportBlogPostsBulk = createServerFn({ method: "POST" })
           updated.push({ slug: row.slug, id: row.id });
         } else {
           const { data: row, error } = await context.supabase
-            .from("blog_posts").insert(buildBlogInsertPayload(item, raw)).select().single();
+            .from("blog_posts").insert(buildBlogInsertPayload(item, raw) as never).select().single();
           if (error) throw new Error(error.message);
           summary.created++;
           created.push({ slug: row.slug, id: row.id });
