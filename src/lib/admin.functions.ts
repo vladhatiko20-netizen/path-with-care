@@ -1540,3 +1540,263 @@ export const adminDeletePriestFaq = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+// ===== Priest FAQ: JSON import / export =====
+
+const EM_DASH = "\u2014";
+
+const priestFaqImportItemSchema = z
+  .object({
+    question_ru: z.string().trim().min(1, "question_ru обязательно").max(2000),
+    question_ro: z.string().trim().min(1, "question_ro обязательно").max(2000),
+    answer_ru: z.string().trim().min(1, "answer_ru обязательно").max(10000),
+    answer_ro: z.string().trim().min(1, "answer_ro обязательно").max(10000),
+    author_name_ru: z.string().max(255).nullable().optional(),
+    author_name_ro: z.string().max(255).nullable().optional(),
+    author_title_ru: z.string().max(500).nullable().optional(),
+    author_title_ro: z.string().max(500).nullable().optional(),
+    sort_order: z.number().int().min(0).max(100000).nullable().optional(),
+    is_published: z.boolean().optional(),
+  })
+  .superRefine((v, ctx) => {
+    for (const k of ["question_ru", "question_ro", "answer_ru", "answer_ro"] as const) {
+      const val = v[k];
+      if (typeof val === "string" && val.includes(EM_DASH)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [k],
+          message: `Поле ${k} содержит длинное тире. Замените на обычное тире, запятую или двоеточие.`,
+        });
+      }
+    }
+  });
+
+type PriestFaqImportItem = z.infer<typeof priestFaqImportItemSchema>;
+
+const PRIEST_FAQ_IMPORT_KEYS = [
+  "question_ru", "question_ro", "answer_ru", "answer_ro",
+  "author_name_ru", "author_name_ro", "author_title_ru", "author_title_ro",
+  "sort_order", "is_published",
+] as const;
+
+function stripImportItem(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object") return raw;
+  const r = raw as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  for (const k of PRIEST_FAQ_IMPORT_KEYS) if (k in r) out[k] = r[k];
+  return out;
+}
+
+function toExportRow(row: Record<string, unknown>) {
+  return {
+    question_ru: row.question_ru,
+    question_ro: row.question_ro,
+    answer_ru: row.answer_ru,
+    answer_ro: row.answer_ro,
+    author_name_ru: row.author_name_ru ?? null,
+    author_name_ro: row.author_name_ro ?? null,
+    author_title_ru: row.author_title_ru ?? null,
+    author_title_ro: row.author_title_ro ?? null,
+    sort_order: row.sort_order,
+    is_published: row.is_published,
+  };
+}
+
+type SupabaseLike = { from: (t: string) => any };
+
+async function findPriestFaqMatches(
+  supabase: SupabaseLike,
+  questionRu: string,
+): Promise<Array<{ id: string; question_ru: string }>> {
+  const trimmed = questionRu.trim();
+  const { data, error } = await supabase
+    .from("priest_faq").select("id, question_ru").eq("question_ru", trimmed);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as Array<{ id: string; question_ru: string }>;
+}
+
+async function nextPriestFaqSortOrder(supabase: SupabaseLike): Promise<number> {
+  const { data, error } = await supabase
+    .from("priest_faq").select("sort_order").order("sort_order", { ascending: false }).limit(1);
+  if (error) throw new Error(error.message);
+  const max = data && data[0] ? Number((data[0] as { sort_order: number }).sort_order) || 0 : 0;
+  return max + 10;
+}
+
+function buildInsertPayload(item: PriestFaqImportItem, sortOrder: number) {
+  return {
+    question_ru: item.question_ru.trim(),
+    question_ro: item.question_ro.trim(),
+    answer_ru: item.answer_ru.trim(),
+    answer_ro: item.answer_ro.trim(),
+    author_name_ru: item.author_name_ru ?? null,
+    author_name_ro: item.author_name_ro ?? null,
+    author_title_ru: item.author_title_ru ?? null,
+    author_title_ro: item.author_title_ro ?? null,
+    sort_order: typeof item.sort_order === "number" ? item.sort_order : sortOrder,
+    is_published: item.is_published ?? false,
+  };
+}
+
+function buildUpdatePayload(item: PriestFaqImportItem) {
+  const p: Record<string, unknown> = {
+    question_ru: item.question_ru.trim(),
+    question_ro: item.question_ro.trim(),
+    answer_ru: item.answer_ru.trim(),
+    answer_ro: item.answer_ro.trim(),
+    author_name_ru: item.author_name_ru ?? null,
+    author_name_ro: item.author_name_ro ?? null,
+    author_title_ru: item.author_title_ru ?? null,
+    author_title_ro: item.author_title_ro ?? null,
+  };
+  if (typeof item.sort_order === "number") p.sort_order = item.sort_order;
+  if (typeof item.is_published === "boolean") p.is_published = item.is_published;
+  return p;
+}
+
+export const adminExportPriestFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("priest_faq").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Запись не найдена");
+    return { payload: toExportRow(row as Record<string, unknown>) };
+  });
+
+export const adminExportAllPriestFaq = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("priest_faq").select("*")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return { priest_faq: (data ?? []).map((r) => toExportRow(r as Record<string, unknown>)) };
+  });
+
+export const adminImportPriestFaq = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => priestFaqImportItemSchema.parse(stripImportItem(i)))
+  .handler(async ({ data, context }) => {
+    const matches = await findPriestFaqMatches(context.supabase, data.question_ru);
+    if (matches.length > 1) {
+      throw new Error(
+        `Найдено ${matches.length} записей с таким же question_ru. Разрешите вручную и повторите импорт.`,
+      );
+    }
+    if (matches.length === 1) {
+      const id = matches[0].id;
+      const { data: row, error } = await context.supabase
+        .from("priest_faq").update(buildUpdatePayload(data)).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return { ok: true as const, action: "updated" as const, id: row.id, question_ru: row.question_ru };
+    }
+    const sortOrder = await nextPriestFaqSortOrder(context.supabase);
+    const { data: row, error } = await context.supabase
+      .from("priest_faq").insert(buildInsertPayload(data, sortOrder)).select().single();
+    if (error) throw new Error(error.message);
+    return { ok: true as const, action: "created" as const, id: row.id, question_ru: row.question_ru };
+  });
+
+const priestFaqBulkSchema = z.object({
+  mode: z.enum(["skip", "upsert", "only_new"]).default("skip"),
+  items: z.array(z.unknown()).min(1).max(200),
+});
+
+export const adminImportPriestFaqBulk = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => {
+    let mode: "skip" | "upsert" | "only_new" = "skip";
+    let items: unknown[] = [];
+    if (Array.isArray(i)) {
+      items = i;
+    } else if (i && typeof i === "object") {
+      const o = i as Record<string, unknown>;
+      if (o.mode === "skip" || o.mode === "upsert" || o.mode === "only_new") mode = o.mode;
+      if (Array.isArray(o.items)) items = o.items;
+      else if (Array.isArray(o.priest_faq)) items = o.priest_faq;
+    }
+    return priestFaqBulkSchema.parse({ mode, items });
+  })
+  .handler(async ({ data, context }) => {
+    const summary = { created: 0, updated: 0, skipped: 0, errors: 0 };
+    const created: Array<{ question_ru: string; id: string }> = [];
+    const updated: Array<{ question_ru: string; id: string }> = [];
+    const skipped: Array<{ question_ru: string; reason: string }> = [];
+    const errors: Array<{ question_ru: string; error: string }> = [];
+
+    // only_new pre-check: if ANY item matches an existing row, reject whole batch.
+    if (data.mode === "only_new") {
+      for (let idx = 0; idx < data.items.length; idx++) {
+        const parsed = priestFaqImportItemSchema.safeParse(stripImportItem(data.items[idx]));
+        if (!parsed.success) continue;
+        const matches = await findPriestFaqMatches(context.supabase, parsed.data.question_ru);
+        if (matches.length > 0) {
+          throw new Error(
+            `Режим «Только новые»: запись «${parsed.data.question_ru.slice(0, 60)}…» уже существует. Батч отклонён.`,
+          );
+        }
+      }
+    }
+
+    let nextOrder = await nextPriestFaqSortOrder(context.supabase);
+
+    for (let idx = 0; idx < data.items.length; idx++) {
+      const raw = data.items[idx];
+      const parsed = priestFaqImportItemSchema.safeParse(stripImportItem(raw));
+      if (!parsed.success) {
+        const q = (raw && typeof raw === "object" && typeof (raw as Record<string, unknown>).question_ru === "string")
+          ? ((raw as Record<string, unknown>).question_ru as string)
+          : `#${idx + 1}`;
+        summary.errors++;
+        errors.push({
+          question_ru: q,
+          error: parsed.error.issues.map((e) => `${e.path.join(".") || "(root)"}: ${e.message}`).join("; "),
+        });
+        continue;
+      }
+      const item = parsed.data;
+      try {
+        const matches = await findPriestFaqMatches(context.supabase, item.question_ru);
+        if (matches.length > 1) {
+          summary.errors++;
+          errors.push({
+            question_ru: item.question_ru,
+            error: `Найдено ${matches.length} записей с таким же question_ru. Разрешите вручную.`,
+          });
+          continue;
+        }
+        if (matches.length === 1) {
+          if (data.mode === "skip") {
+            summary.skipped++;
+            skipped.push({ question_ru: item.question_ru, reason: "уже существует" });
+            continue;
+          }
+          // upsert (only_new is handled above and never reaches here on conflict)
+          const id = matches[0].id;
+          const { data: row, error } = await context.supabase
+            .from("priest_faq").update(buildUpdatePayload(item)).eq("id", id).select().single();
+          if (error) throw new Error(error.message);
+          summary.updated++;
+          updated.push({ question_ru: row.question_ru, id: row.id });
+        } else {
+          const sortOrder = typeof item.sort_order === "number" ? item.sort_order : nextOrder++;
+          const { data: row, error } = await context.supabase
+            .from("priest_faq").insert(buildInsertPayload(item, sortOrder)).select().single();
+          if (error) throw new Error(error.message);
+          summary.created++;
+          created.push({ question_ru: row.question_ru, id: row.id });
+        }
+      } catch (e: unknown) {
+        summary.errors++;
+        errors.push({
+          question_ru: item.question_ru,
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+
+    return { ok: true as const, mode: data.mode, summary, created, updated, skipped, errors };
+  });
