@@ -1587,18 +1587,29 @@ function stripImportItem(raw: unknown): unknown {
   return out;
 }
 
-function toExportRow(row: Record<string, unknown>) {
+function toExportRow(row: Record<string, unknown>): {
+  question_ru: string;
+  question_ro: string;
+  answer_ru: string;
+  answer_ro: string;
+  author_name_ru: string | null;
+  author_name_ro: string | null;
+  author_title_ru: string | null;
+  author_title_ro: string | null;
+  sort_order: number;
+  is_published: boolean;
+} {
   return {
-    question_ru: row.question_ru,
-    question_ro: row.question_ro,
-    answer_ru: row.answer_ru,
-    answer_ro: row.answer_ro,
-    author_name_ru: row.author_name_ru ?? null,
-    author_name_ro: row.author_name_ro ?? null,
-    author_title_ru: row.author_title_ru ?? null,
-    author_title_ro: row.author_title_ro ?? null,
-    sort_order: row.sort_order,
-    is_published: row.is_published,
+    question_ru: String(row.question_ru ?? ""),
+    question_ro: String(row.question_ro ?? ""),
+    answer_ru: String(row.answer_ru ?? ""),
+    answer_ro: String(row.answer_ro ?? ""),
+    author_name_ru: (row.author_name_ru as string | null) ?? null,
+    author_name_ro: (row.author_name_ro as string | null) ?? null,
+    author_title_ru: (row.author_title_ru as string | null) ?? null,
+    author_title_ro: (row.author_title_ro as string | null) ?? null,
+    sort_order: Number(row.sort_order ?? 0),
+    is_published: Boolean(row.is_published),
   };
 }
 
