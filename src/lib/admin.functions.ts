@@ -1700,7 +1700,7 @@ export const adminImportPriestFaq = createServerFn({ method: "POST" })
     if (matches.length === 1) {
       const id = matches[0].id;
       const { data: row, error } = await context.supabase
-        .from("priest_faq").update(buildUpdatePayload(data)).eq("id", id).select().single();
+        .from("priest_faq").update(buildUpdatePayload(data) as never).eq("id", id).select().single();
       if (error) throw new Error(error.message);
       return { ok: true as const, action: "updated" as const, id: row.id, question_ru: row.question_ru };
     }
@@ -1788,7 +1788,7 @@ export const adminImportPriestFaqBulk = createServerFn({ method: "POST" })
           // upsert (only_new is handled above and never reaches here on conflict)
           const id = matches[0].id;
           const { data: row, error } = await context.supabase
-            .from("priest_faq").update(buildUpdatePayload(item)).eq("id", id).select().single();
+            .from("priest_faq").update(buildUpdatePayload(item) as never).eq("id", id).select().single();
           if (error) throw new Error(error.message);
           summary.updated++;
           updated.push({ question_ru: row.question_ru, id: row.id });
