@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/use-auth";
-import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Users, Info, MessageCircleQuestion } from "lucide-react";
+import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Users, Info, MessageCircleQuestion, Archive } from "lucide-react";
 import { adminCountUnreadLeads } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin")({
@@ -53,7 +53,7 @@ function AdminLayout() {
     );
   }
 
-  const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; badge?: number; children?: Array<{ to: string; label: string; icon: typeof LayoutDashboard }> }> = [
+  const nav: Array<{ to: string; label: string; icon: typeof LayoutDashboard; badge?: number; separated?: boolean; children?: Array<{ to: string; label: string; icon: typeof LayoutDashboard }> }> = [
     { to: "/admin", label: "Обзор", icon: LayoutDashboard },
     { to: "/admin/leads", label: "Заявки", icon: Inbox, badge: unreadCount },
     { to: "/admin/blog", label: "Блог", icon: FileText },
@@ -64,6 +64,7 @@ function AdminLayout() {
     { to: "/admin/pilgrimages", label: "Паломничества", icon: Calendar },
     { to: "/admin/destinations", label: "Направления", icon: MapPin },
     { to: "/admin/about", label: "О нас", icon: Info },
+    { to: "/admin/backup", label: "Резервная копия", icon: Archive, separated: true },
   ];
 
   const SidebarContent = (
@@ -89,6 +90,7 @@ function AdminLayout() {
           const showChildren = !!item.children && (active || childActive);
           return (
             <div key={item.to}>
+            {item.separated && <div className="my-2 border-t border-border" />}
             <Link
               to={item.to}
               onClick={() => setMobileOpen(false)}

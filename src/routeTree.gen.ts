@@ -40,6 +40,7 @@ import { Route as RoDestinationsIndexRouteImport } from './routes/ro.destination
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as RoDestinationsSlugRouteImport } from './routes/ro.destinations.$slug'
 import { Route as RoBlogSlugRouteImport } from './routes/ro.blog_.$slug'
+import { Route as AdminAdminBackupRouteImport } from './routes/_admin/admin.backup'
 import { Route as AdminAdminAboutRouteImport } from './routes/_admin/admin.about'
 import { Route as AdminAdminPriestFaqIndexRouteImport } from './routes/_admin/admin.priest-faq.index'
 import { Route as AdminAdminPilgrimagesIndexRouteImport } from './routes/_admin/admin.pilgrimages.index'
@@ -214,6 +215,11 @@ const RoBlogSlugRoute = RoBlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => RoRoute,
 } as any)
+const AdminAdminBackupRoute = AdminAdminBackupRouteImport.update({
+  id: '/admin/backup',
+  path: '/admin/backup',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminAboutRoute = AdminAdminAboutRouteImport.update({
   id: '/admin/about',
   path: '/admin/about',
@@ -345,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
   '/admin/about': typeof AdminAdminAboutRoute
+  '/admin/backup': typeof AdminAdminBackupRoute
   '/ro/blog/$slug': typeof RoBlogSlugRoute
   '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/admin/': typeof AdminAdminIndexRoute
@@ -395,6 +402,7 @@ export interface FileRoutesByTo {
   '/destinations': typeof DestinationsIndexRoute
   '/ro': typeof RoIndexRoute
   '/admin/about': typeof AdminAdminAboutRoute
+  '/admin/backup': typeof AdminAdminBackupRoute
   '/ro/blog/$slug': typeof RoBlogSlugRoute
   '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/admin': typeof AdminAdminIndexRoute
@@ -448,6 +456,7 @@ export interface FileRoutesById {
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
   '/_admin/admin/about': typeof AdminAdminAboutRoute
+  '/_admin/admin/backup': typeof AdminAdminBackupRoute
   '/ro/blog_/$slug': typeof RoBlogSlugRoute
   '/ro/destinations/$slug': typeof RoDestinationsSlugRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
@@ -501,6 +510,7 @@ export interface FileRouteTypes {
     | '/destinations/'
     | '/ro/'
     | '/admin/about'
+    | '/admin/backup'
     | '/ro/blog/$slug'
     | '/ro/destinations/$slug'
     | '/admin/'
@@ -551,6 +561,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/ro'
     | '/admin/about'
+    | '/admin/backup'
     | '/ro/blog/$slug'
     | '/ro/destinations/$slug'
     | '/admin'
@@ -603,6 +614,7 @@ export interface FileRouteTypes {
     | '/destinations/'
     | '/ro/'
     | '/_admin/admin/about'
+    | '/_admin/admin/backup'
     | '/ro/blog_/$slug'
     | '/ro/destinations/$slug'
     | '/_admin/admin/'
@@ -866,6 +878,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoBlogSlugRouteImport
       parentRoute: typeof RoRoute
     }
+    '/_admin/admin/backup': {
+      id: '/_admin/admin/backup'
+      path: '/admin/backup'
+      fullPath: '/admin/backup'
+      preLoaderRoute: typeof AdminAdminBackupRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/about': {
       id: '/_admin/admin/about'
       path: '/admin/about'
@@ -1004,6 +1023,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAdminAboutRoute: typeof AdminAdminAboutRoute
+  AdminAdminBackupRoute: typeof AdminAdminBackupRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
   AdminAdminBlogIdRoute: typeof AdminAdminBlogIdRoute
   AdminAdminBlogNewRoute: typeof AdminAdminBlogNewRoute
@@ -1027,6 +1047,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminAboutRoute: AdminAdminAboutRoute,
+  AdminAdminBackupRoute: AdminAdminBackupRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
   AdminAdminBlogIdRoute: AdminAdminBlogIdRoute,
   AdminAdminBlogNewRoute: AdminAdminBlogNewRoute,
