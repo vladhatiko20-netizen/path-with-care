@@ -6,7 +6,7 @@ import {
   adminDeleteDestination,
   adminSetDestinationPublished,
 } from "@/lib/admin.functions";
-import { Plus, Pencil, Trash2, Upload } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -98,24 +98,33 @@ function Page() {
                       role="switch"
                       aria-checked={d.is_published}
                       aria-label={d.is_published ? "Скрыть направление" : "Опубликовать направление"}
+                      title={d.is_published ? "Нажмите, чтобы скрыть" : "Нажмите, чтобы опубликовать"}
                       onClick={() =>
                         toggle.mutate({ id: d.id, is_published: !d.is_published })
                       }
                       disabled={toggle.isPending && toggle.variables?.id === d.id}
                       className={cn(
-                        "inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] transition-colors disabled:opacity-60",
+                        "group inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] cursor-pointer border transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
                         d.is_published
-                          ? "bg-green-100 text-green-800 hover:bg-green-200"
-                          : "bg-muted text-muted-foreground hover:bg-secondary",
+                          ? "bg-green-100 text-green-800 border-green-200 hover:bg-rose-100 hover:text-rose-800 hover:border-rose-200"
+                          : "bg-muted text-muted-foreground border-border hover:bg-green-100 hover:text-green-800 hover:border-green-200",
                       )}
                     >
-                      <span
-                        className={cn(
-                          "w-2 h-2 rounded-full",
-                          d.is_published ? "bg-green-600" : "bg-muted-foreground/60",
-                        )}
-                      />
-                      {d.is_published ? "Опубликовано" : "Скрыто"}
+                      {d.is_published ? (
+                        <>
+                          <Eye className="w-4 h-4 group-hover:hidden" />
+                          <EyeOff className="w-4 h-4 hidden group-hover:inline" />
+                          <span className="group-hover:hidden">Опубликовано</span>
+                          <span className="hidden group-hover:inline">Скрыть</span>
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="w-4 h-4 group-hover:hidden" />
+                          <Eye className="w-4 h-4 hidden group-hover:inline" />
+                          <span className="group-hover:hidden">Скрыто</span>
+                          <span className="hidden group-hover:inline">Опубликовать</span>
+                        </>
+                      )}
                     </button>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
