@@ -104,10 +104,10 @@ function Page() {
                       }
                       disabled={toggle.isPending && toggle.variables?.id === d.id}
                       className={cn(
-                        "group inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] cursor-pointer border transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
+                        "inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] cursor-pointer border transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
                         d.is_published
-                          ? "bg-green-100 text-green-800 border-green-200 hover:bg-rose-100 hover:text-rose-800 hover:border-rose-200"
-                          : "bg-muted text-muted-foreground border-border hover:bg-green-100 hover:text-green-800 hover:border-green-200",
+                          ? "bg-green-100 text-green-800 border-green-200 [@media(hover:hover)]:hover:bg-rose-100 [@media(hover:hover)]:hover:text-rose-800 [@media(hover:hover)]:hover:border-rose-200"
+                          : "bg-muted text-muted-foreground border-border [@media(hover:hover)]:hover:bg-green-100 [@media(hover:hover)]:hover:text-green-800 [@media(hover:hover)]:hover:border-green-200",
                       )}
                     >
                       <span
@@ -117,17 +117,7 @@ function Page() {
                           d.is_published ? "bg-green-500" : "bg-rose-500",
                         )}
                       />
-                      {d.is_published ? (
-                        <>
-                          <span className="group-hover:hidden">Опубликовано</span>
-                          <span className="hidden group-hover:inline">Скрыть</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="group-hover:hidden">Скрыто</span>
-                          <span className="hidden group-hover:inline">Опубликовать</span>
-                        </>
-                      )}
+                      <span>{d.is_published ? "Опубликовано" : "Скрыто"}</span>
                     </button>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
