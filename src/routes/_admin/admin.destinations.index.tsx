@@ -59,6 +59,13 @@ function Page() {
 
   return (
     <div className="p-8 max-w-6xl">
+      <style>{`
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.15; transform: scale(0.85); }
+        }
+        .pulse-dot { animation: pulse-dot 1s ease-in-out infinite; }
+      `}</style>
       <div className="flex flex-col items-center gap-3 mb-6 md:flex-row md:justify-between">
         <h1 className="font-serif text-3xl text-center md:text-left">Направления</h1>
         <div className="flex flex-wrap justify-center gap-2">
@@ -106,14 +113,14 @@ function Page() {
                       className={cn(
                         "inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] cursor-pointer border transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
                         d.is_published
-                          ? "bg-green-100 text-green-800 border-green-200 [@media(hover:hover)]:hover:bg-rose-100 [@media(hover:hover)]:hover:text-rose-800 [@media(hover:hover)]:hover:border-rose-200"
-                          : "bg-muted text-muted-foreground border-border [@media(hover:hover)]:hover:bg-green-100 [@media(hover:hover)]:hover:text-green-800 [@media(hover:hover)]:hover:border-green-200",
+                          ? "bg-green-100 text-green-800 border-green-200 [@media(hover:hover)]:hover:bg-green-200"
+                          : "bg-muted text-muted-foreground border-border [@media(hover:hover)]:hover:bg-muted/70",
                       )}
                     >
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "w-2.5 h-2.5 rounded-full animate-pulse",
+                          "w-2.5 h-2.5 rounded-full pulse-dot",
                           d.is_published ? "bg-green-500" : "bg-rose-500",
                         )}
                       />
