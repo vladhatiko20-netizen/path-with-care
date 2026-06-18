@@ -6,7 +6,7 @@ import {
   adminDeleteDestination,
   adminSetDestinationPublished,
 } from "@/lib/admin.functions";
-import { Plus, Pencil, Trash2, Upload, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -110,17 +110,20 @@ function Page() {
                           : "bg-muted text-muted-foreground border-border hover:bg-green-100 hover:text-green-800 hover:border-green-200",
                       )}
                     >
+                      <span
+                        aria-hidden="true"
+                        className={cn(
+                          "w-2.5 h-2.5 rounded-full animate-pulse",
+                          d.is_published ? "bg-green-500" : "bg-rose-500",
+                        )}
+                      />
                       {d.is_published ? (
                         <>
-                          <Eye className="w-4 h-4 group-hover:hidden" />
-                          <EyeOff className="w-4 h-4 hidden group-hover:inline" />
                           <span className="group-hover:hidden">Опубликовано</span>
                           <span className="hidden group-hover:inline">Скрыть</span>
                         </>
                       ) : (
                         <>
-                          <EyeOff className="w-4 h-4 group-hover:hidden" />
-                          <Eye className="w-4 h-4 hidden group-hover:inline" />
                           <span className="group-hover:hidden">Скрыто</span>
                           <span className="hidden group-hover:inline">Опубликовать</span>
                         </>
