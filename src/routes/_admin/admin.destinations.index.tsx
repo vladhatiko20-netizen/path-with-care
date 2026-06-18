@@ -1,8 +1,14 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
-import { adminListDestinations, adminDeleteDestination } from "@/lib/admin.functions";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  adminListDestinations,
+  adminDeleteDestination,
+  adminSetDestinationPublished,
+} from "@/lib/admin.functions";
 import { Plus, Pencil, Trash2, Upload } from "lucide-react";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_admin/admin/destinations/")({
   component: Page,
@@ -11,10 +17,37 @@ export const Route = createFileRoute("/_admin/admin/destinations/")({
 function Page() {
   const list = useServerFn(adminListDestinations);
   const del = useServerFn(adminDeleteDestination);
+  const setPublished = useServerFn(adminSetDestinationPublished);
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const queryKey = ["admin-destinations"] as const;
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["admin-destinations"],
+    queryKey,
     queryFn: () => list(),
+  });
+
+  type Row = NonNullable<typeof data>[number];
+  const toggle = useMutation({
+    mutationFn: (vars: { id: string; is_published: boolean }) =>
+      setPublished({ data: vars }),
+    onMutate: async (vars) => {
+      await queryClient.cancelQueries({ queryKey });
+      const prev = queryClient.getQueryData<Row[]>(queryKey);
+      if (prev) {
+        queryClient.setQueryData<Row[]>(
+          queryKey,
+          prev.map((r) => (r.id === vars.id ? { ...r, is_published: vars.is_published } : r)),
+        );
+      }
+      return { prev };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) queryClient.setQueryData(queryKey, ctx.prev);
+      toast.error("Не удалось изменить видимость");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 
   async function handleDelete(id: string, title: string) {
@@ -60,9 +93,30 @@ function Page() {
                   <td className="px-4 py-3 text-muted-foreground">{d.slug}</td>
                   <td className="px-4 py-3">{d.price_from ? `€${d.price_from}` : "—"}</td>
                   <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-sm text-xs ${d.is_published ? "bg-green-100 text-green-800" : "bg-muted text-muted-foreground"}`}>
-                      {d.is_published ? "Опубликовано" : "Черновик"}
-                    </span>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={d.is_published}
+                      aria-label={d.is_published ? "Скрыть направление" : "Опубликовать направление"}
+                      onClick={() =>
+                        toggle.mutate({ id: d.id, is_published: !d.is_published })
+                      }
+                      disabled={toggle.isPending && toggle.variables?.id === d.id}
+                      className={cn(
+                        "inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] transition-colors disabled:opacity-60",
+                        d.is_published
+                          ? "bg-green-100 text-green-800 hover:bg-green-200"
+                          : "bg-muted text-muted-foreground hover:bg-secondary",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "w-2 h-2 rounded-full",
+                          d.is_published ? "bg-green-600" : "bg-muted-foreground/60",
+                        )}
+                      />
+                      {d.is_published ? "Опубликовано" : "Скрыто"}
+                    </button>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
                     <Link to="/admin/destinations/$id" params={{ id: d.id }} className="p-1.5 hover:bg-secondary rounded-sm">
