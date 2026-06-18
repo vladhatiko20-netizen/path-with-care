@@ -1,80 +1,97 @@
-# План: страница «Резервная копия» в админке
+## Цель
 
-## Что переиспользуем (без изменений)
+Добавить в строку списка `/admin/destinations` переключатель видимости (`is_published`), работающий в одно касание, с оптимистичным обновлением и откатом при ошибке. Никаких диалогов, никаких новых полей, ничего за пределами этого экрана.
 
-Подтверждено по `src/lib/admin.functions.ts`:
+## Текущее состояние (что переиспользуем)
 
-| Блок | Server fn | Текущая форма ответа |
-|---|---|---|
-| Направления | `adminExportAllDestinations` (GET) | `{ ok, exported_at, count, destinations: [...] }` — каждый элемент в per-destination схеме с `_images_manifest` |
-| Вопросы священнику | `adminExportAllPriestFaq` (GET) | `{ priest_faq: [...] }` |
-| Блог | `adminExportAllBlogPosts` (GET) | `{ blog_posts: [...], warnings: [...] }` — body HTML verbatim |
+- Список уже живёт на `useQuery(["admin-destinations"], adminListDestinations)` и показывает бейдж "Опубликовано" / "Черновик" из `d.is_published`. Меняем "Черновик" → "Скрыто" по тексту задачи.
+- Все админ-мутации идут через `createServerFn().middleware([requireSupabaseAuth])` с авторизованным `context.supabase` — RLS-политики таблицы `destinations` применяются как обычно. Точная форма — как у `adminDeleteDestination` (строки 214–221 в `src/lib/admin.functions.ts`).
+- Никакого отдельного "admin write path" нет — пишем тем же клиентом.
 
-Эти функции вызываем как есть, ничего в них и в существующих панелях экспорта (`/admin/destinations/import`, `/admin/blog`, `/admin/priest-faq`) не трогаем. В каждый файл ZIP кладём **ровно тот объект**, который вернула соответствующая функция — то есть файл, побайтово эквивалентный текущему «Скачать все» на странице блока. Это даёт обратимость: любой файл из архива можно загрузить в уже существующий bulk-import без переделок.
+## Решение
 
-## Рекомендация: ZIP vs последовательные скачивания
+### 1. Новая серверная функция `adminSetDestinationPublished`
 
-**Рекомендуем ZIP.** Браузеры показывают prompt «Сайт хочет скачать несколько файлов» при 2+ скачиваниях подряд — для админ-утилиты это неприятный UX. ZIP — один датированный файл, удобно складывать в Project Knowledge / на диск.
-
-Зависимость: добавляем `jszip` (~100 KB min+gzip, без транзитивных). Используется **только в клиентском коде** страницы `/admin/backup`, не попадает в публичный бандл (route под `_admin`, code-splitting по маршруту). Альтернатива (`fflate`) меньше, но API менее очевидный; `jszip` — отраслевой стандарт. Если против любой новой зависимости — fallback: последовательно вызвать `saveAs` для каждого JSON с задержкой ~300 мс и одноразовой подсказкой пользователю «разрешите множественные загрузки».
-
-## Архитектура страницы
-
-`src/routes/_admin/admin.backup.tsx` — новый маршрут, типовая `_admin`-шапка.
-
-Конфиг блоков — простой массив, легко расширяется:
+Файл: `src/lib/admin.functions.ts` (рядом с `adminDeleteDestination`).
 
 ```ts
-type BackupBlock = {
-  key: string;                 // 'destinations'
-  label: string;               // 'Направления'
-  filename: (date: string) => string; // `destinations-${date}.json`
-  exportFn: () => Promise<unknown>;   // useServerFn(adminExportAllDestinations)
-  countOf: (res: any) => number;      // res.destinations.length и т.п.
-};
+export const adminSetDestinationPublished = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({ id: z.string().uuid(), is_published: z.boolean() }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destinations")
+      .update({ is_published: data.is_published })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
 ```
 
-Стартовый список — три записи (destinations / priest_faq / blog_posts). Добавление clergy/icons/pilgrimages в будущем = одна новая строка в массиве.
+Почему отдельная узкая функция, а не переиспользование `adminUpsertDestination`: upsert требует полный валидный payload направления (cover, og, slug, локали и т.д.) — переслать его с listing-строки нельзя без второго запроса. Узкий патч на один булев — самый дешёвый и безопасный путь, и совпадает по стилю с уже существующими `admin*` мутациями (`adminDeleteDestination`, и т.п.).
 
-Поток по кнопке «Скачать полную резервную копию»:
+RLS: запись идёт через `context.supabase` (тот же путь, что у удаления/upsert), значит политики `destinations` для роли admin действуют — обходов нет.
 
-1. `setBusy(true)`, статус «Готовим архив…».
-2. Параллельно `Promise.all` всех `exportFn()`. Любая ошибка → toast с именем блока, архив не формируем.
-3. Создаём `JSZip`, кладём по файлу на блок (имя = `block.filename(date)`, содержимое = `JSON.stringify(result, null, 2)`).
-4. `zip.generateAsync({ type: 'blob' })` → программный `<a download="backup-palomnik-YYYY-MM-DD.zip">`.
-5. Считаем `countOf` для каждого блока, показываем подтверждение в самой странице (не toast — постоянная карточка с результатом последнего бэкапа):
+### 2. UI: inline-переключатель в строке таблицы
 
-   > Скачан архив **backup-palomnik-2026-06-17.zip**: направления (8), вопросы священнику (6), блог (1).
+Файл: `src/routes/_admin/admin.destinations.index.tsx`.
 
-   Плюс отдельной строкой — предупреждения блога (`warnings` из `adminExportAllBlogPosts`), если есть.
+- Добавить `useMutation` поверх `adminSetDestinationPublished` с оптимистичным апдейтом кэша `["admin-destinations"]`:
+  - `onMutate`: `cancelQueries` → snapshot прежних данных → `setQueryData` с перевёрнутым `is_published` для нужной строки → вернуть snapshot в контексте.
+  - `onError`: восстановить snapshot, показать `toast.error("Не удалось изменить видимость")`.
+  - `onSettled`: `invalidateQueries(["admin-destinations"])` для согласования с БД.
+  - Tasten-friendly: блокируем повторный клик пока `isPending` для этой строки (отслеживаем по `variables.id`).
+- Заменить статичный бейдж на кликабельный переключатель в ячейке "Статус". Один элемент совмещает индикатор и кнопку — одно касание, без отдельной "галочки":
 
-Дата — локальная (Europe/Chisinau), формат `YYYY-MM-DD`, одно значение на весь архив и имена файлов внутри.
+  ```tsx
+  <button
+    type="button"
+    role="switch"
+    aria-checked={d.is_published}
+    aria-label={d.is_published ? "Скрыть направление" : "Опубликовать направление"}
+    onClick={() => toggle.mutate({ data: { id: d.id, is_published: !d.is_published } })}
+    disabled={toggle.isPending && toggle.variables?.data.id === d.id}
+    className={cn(
+      "inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] transition-colors",
+      d.is_published
+        ? "bg-green-100 text-green-800 hover:bg-green-200"
+        : "bg-muted text-muted-foreground hover:bg-secondary",
+    )}
+  >
+    <span className={cn("w-2 h-2 rounded-full", d.is_published ? "bg-green-600" : "bg-muted-foreground/60")} />
+    {d.is_published ? "Опубликовано" : "Скрыто"}
+  </button>
+  ```
 
-## Текст-памятка на странице (RU, 3 предложения)
+  `min-h-[44px]` — touch-target по гайдлайнам мобильных интерфейсов. На мобильном таблица уже горизонтально-прокручиваема (`overflow-x-auto`), ничего по layout не меняем.
 
-> Бэкап делается вручную: автоматических копий контента нет. Скачанный архив храните вне Lovable — в Project Knowledge или на диске. Код сайта версионируется отдельно через Git; содержимое базы сохраняется только этими ручными выгрузками.
+- Текст "Черновик" → "Скрыто" по требованию ТЗ.
+- Никаких изменений в форме редактирования, публичных страницах, `listPublicDestinations`, `sort_order`, прочих полях.
 
-## Сайдбар
+### 3. Обратная связь
 
-`src/routes/_admin.tsx`: в массив пунктов добавляем (в самый низ, после «О нас», с визуальным разделителем — `<div className="my-2 border-t" />` перед пунктом):
+- `sonner` (`toast`) уже используется в проекте — успех тихий (оптимистично уже всё видно), ошибка — короткий toast + автоматический откат.
+- Никаких confirm-диалогов.
 
-```ts
-{ to: "/admin/backup", label: "Резервная копия", icon: Archive }
-```
+## Альтернативы, которые я отверг
 
-Иконка — `Archive` из `lucide-react` (точнее семантически, чем `Download`).
+- **Shadcn `<Switch>`** — отдельная колонка с переключателем и отдельный бейдж статуса. Это два элемента под одно действие, занимает больше места и хуже на мобильном. Совмещённая «бейдж-кнопка» = одно касание, ясный статус, меньше визуального шума.
+- **Расширение `adminUpsertDestination` единым полем-патчем** — пришлось бы делать payload опциональным и менять валидацию, риск регресса в форме редактирования. Узкая функция безопаснее.
+- **Confirm-диалог** — явно запрещён ТЗ и замедляет рутинную операцию (8 направлений, частые переключения).
+- **Локальный state вместо invalidate** — query уже есть, держать второй источник правды смысла нет; оптимистичный кэш + `invalidate` в `onSettled` — стандартный TanStack-паттерн и устойчив к гонкам.
 
-## Объём изменений
+## Затронутые файлы
 
-- **Новый файл:** `src/routes/_admin/admin.backup.tsx`
-- **Правка:** `src/routes/_admin.tsx` — одна строка в массив пунктов + рендер разделителя перед последним пунктом (минимально).
-- **Зависимость:** `bun add jszip` (+ `@types/jszip` уже включены в пакет).
+- `src/lib/admin.functions.ts` — добавить `adminSetDestinationPublished` (≈10 строк).
+- `src/routes/_admin/admin.destinations.index.tsx` — `useMutation` + замена бейджа на toggle, текст "Скрыто".
 
-Не трогаем: существующие экспорт-панели, серверные функции, схемы, публичные страницы, контент.
+Больше ничего не трогаем.
 
 ## Проверка после реализации
 
-1. Жмём кнопку на `/admin/backup` → скачивается `backup-palomnik-2026-06-17.zip`, внутри три JSON.
-2. Распаковываем `destinations-2026-06-17.json` → загружаем в существующий bulk-import на `/admin/destinations/import` в режиме `skip` → 0 ошибок, все строки skipped (доказывает побайтовую совместимость).
-3. Аналогично для `priest-faq` и `blog`.
-4. На странице видна карточка с количествами по каждому блоку.
+1. Открыть `/admin/destinations` на desktop и mobile viewport → у каждой строки видна кликабельная пилюля статуса, высота ≥44px.
+2. Тап по «Опубликовано» → мгновенно меняется на «Скрыто», запрос уходит, через короткий refetch состояние остаётся.
+3. Эмулировать ошибку (отключить сеть в DevTools) → пилюля моментально откатывается, появляется toast.
+4. Открыть публичный `/destinations` → скрытое направление пропало; вернуть `is_published=true` → снова появляется. Подтверждает, что `listPublicDestinations` не затронут.

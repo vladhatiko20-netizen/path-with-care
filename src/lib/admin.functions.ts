@@ -220,6 +220,20 @@ export const adminDeleteDestination = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const adminSetDestinationPublished = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({ id: z.string().uuid(), is_published: z.boolean() }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("destinations")
+      .update({ is_published: data.is_published })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 // ===== Destination gallery =====
 
 const gallerySchema = z.object({
