@@ -2420,7 +2420,7 @@ export const adminImportCatalogItemsBulk = createServerFn({ method: "POST" })
           if (typeof item.sort_order === "number") payload.sort_order = item.sort_order;
           if (typeof item.is_published === "boolean") payload.is_published = item.is_published;
           const { data: row, error } = await context.supabase
-            .from("catalog_items").update(payload).eq("id", ex.id).select().single();
+            .from("catalog_items").update(payload as never).eq("id", ex.id).select().single();
           if (error) throw new Error(error.message);
           summary.updated++;
           updated.push({ slug: row.slug, id: row.id });
