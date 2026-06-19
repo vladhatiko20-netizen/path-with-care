@@ -2,7 +2,6 @@ import aboutPilgrimage from "@/assets/about-pilgrimage.jpg";
 import destAthos from "@/assets/dest-athos.jpg";
 import destJerusalem from "@/assets/dest-jerusalem.jpg";
 import destGeorgia from "@/assets/dest-georgia.jpg";
-import catNikolay from "@/assets/cat-nikolay.jpg";
 import menuCalendar from "@/assets/menu-calendar.jpg";
 import heroBlog from "@/assets/hero-blog.jpg";
 
@@ -11,7 +10,6 @@ const map: Record<string, string> = {
   "dest-athos": destAthos,
   "dest-jerusalem": destJerusalem,
   "dest-georgia": destGeorgia,
-  "cat-nikolay": catNikolay,
   "menu-calendar": menuCalendar,
   "hero-blog": heroBlog,
 };
