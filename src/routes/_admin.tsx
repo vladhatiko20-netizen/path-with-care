@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/lib/use-auth";
-import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Users, Info, MessageCircleQuestion, Archive } from "lucide-react";
+import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Users, Info, MessageCircleQuestion, Archive, Package } from "lucide-react";
 import { adminCountUnreadLeads } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin")({
@@ -63,6 +63,10 @@ function AdminLayout() {
     },
     { to: "/admin/pilgrimages", label: "Календарь поездок", icon: Calendar },
     { to: "/admin/destinations", label: "Направления", icon: MapPin },
+    {
+      to: "/admin/catalog", label: "Каталог", icon: Package,
+      children: [{ to: "/admin/catalog/page", label: "Контент страницы", icon: FileText }],
+    },
     { to: "/admin/about", label: "О нас", icon: Info },
     { to: "/admin/backup", label: "Резервная копия", icon: Archive, separated: true },
   ];
