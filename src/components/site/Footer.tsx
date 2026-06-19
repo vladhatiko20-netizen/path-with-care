@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { MessageCircle } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { useLocalizedTo } from "@/lib/use-localized-to";
 import { BLESSING_BY } from "@/lib/constants";
@@ -29,8 +30,21 @@ export function Footer() {
               — {t("Анна", "Anna")}
             </p>
             <p>
+              <a href="tel:+37368787599" className="hover:text-gold transition-colors">+373 68 78 75 99</a>{" "}
+              — {t("Наталья", "Natalia")}
+            </p>
+            <p>
               <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">
                 palomnik.moldova@gmail.com
+              </a>
+            </p>
+            <p>
+              <a
+                href="viber://chat?number=37368778676"
+                className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" style={{ color: "#7360F2" }} />
+                Viber — {t("Анна", "Anna")}
               </a>
             </p>
           </div>
