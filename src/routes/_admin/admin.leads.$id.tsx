@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { ArrowLeft, Phone, Mail, Trash2, MessageCircleQuestion } from "lucide-react";
 import { adminGetLead, adminMarkLeadRead, adminDeleteLead } from "@/lib/admin.functions";
-import { sourceLabel, formatLeadDate, telLink, viberLink, isMoldovaPhone, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
+import { sourceLabel, formatLeadDate, telLink, viberLink, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
 
 export const Route = createFileRoute("/_admin/admin/leads/$id")({
   component: Page,
@@ -67,7 +67,6 @@ function Page() {
     );
   }
 
-  const moldova = isMoldovaPhone(lead.phone);
   const cat = leadCategory(lead.source);
   const isPilg = cat === "pilgrimage";
   const isPriest = cat === "priest";
