@@ -362,16 +362,17 @@ const leadsListInput = z.object({
   search: z.string().trim().max(200).optional().default(""),
   status: z.enum(["all", "new", "read"]).optional().default("all"),
   source: z.string().trim().max(80).regex(/^[a-z0-9_:\-]+$/).optional(),
-  category: z.enum(["all", "pilgrimage", "priest", "other"]).optional().default("all"),
+  category: z.enum(["all", "pilgrimage", "priest", "catalog", "other"]).optional().default("all"),
   period: z.enum(["all", "week", "month"]).optional().default("all"),
 });
 
-function applyCategoryFilter<T extends { like: any; eq: any; or: any }>(q: T, category: "all" | "pilgrimage" | "priest" | "other"): T {
+function applyCategoryFilter<T extends { like: any; eq: any; or: any }>(q: T, category: "all" | "pilgrimage" | "priest" | "catalog" | "other"): T {
   if (category === "pilgrimage") return q.like("source", "destination:%");
   if (category === "priest") return q.eq("source", "with-priest");
+  if (category === "catalog") return q.or("source.eq.catalog,source.like.catalog:%");
   if (category === "other") {
     // NULL-safe: NOT LIKE / <> on NULL → NULL → row excluded. Include explicit IS NULL branch.
-    return q.or("source.is.null,and(source.not.like.destination:%,source.neq.with-priest)");
+    return q.or("source.is.null,and(source.not.like.destination:%,source.neq.with-priest,source.neq.catalog,source.not.like.catalog:%)");
   }
   return q;
 }
@@ -458,7 +459,7 @@ export const adminDeleteLead = createServerFn({ method: "POST" })
 export const adminCountUnreadLeads = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    async function countFor(category: "all" | "pilgrimage" | "priest" | "other"): Promise<number> {
+    async function countFor(category: "all" | "pilgrimage" | "priest" | "catalog" | "other"): Promise<number> {
       let q = context.supabase
         .from("leads")
         .select("id", { count: "exact", head: true })
@@ -468,13 +469,14 @@ export const adminCountUnreadLeads = createServerFn({ method: "GET" })
       if (error) throw new Error(error.message);
       return count ?? 0;
     }
-    const [total, pilgrimage, priest, other] = await Promise.all([
+    const [total, pilgrimage, priest, catalog, other] = await Promise.all([
       countFor("all"),
       countFor("pilgrimage"),
       countFor("priest"),
+      countFor("catalog"),
       countFor("other"),
     ]);
-    return { count: total, total, pilgrimage, priest, other };
+    return { count: total, total, pilgrimage, priest, catalog, other };
   });
 
 // ============================================================
