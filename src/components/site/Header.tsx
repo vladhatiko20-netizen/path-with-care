@@ -173,24 +173,22 @@ export function Header() {
                 <span className="font-serif text-foreground/90 text-[16px]">{t(item.ru, item.ro)}</span>
               </Link>
             ))}
-            <a
-              href="tel:+37368778676"
-              className="flex items-center gap-4 py-4 px-3 mt-1 text-sm text-muted-foreground"
-            >
-              <span className="w-[60px] h-[60px] rounded-lg bg-accent/10 border-2 border-accent/30 flex items-center justify-center">
-                <Phone size={22} className="text-accent" />
-              </span>
-              <span className="flex-1">+373 68 77 86 76 — {t("Анна", "Anna")}</span>
+            <div className="flex items-center gap-4 py-4 px-3 mt-1 text-sm text-muted-foreground">
+              <a href="tel:+37368778676" className="flex items-center gap-4 flex-1 min-w-0">
+                <span className="w-[60px] h-[60px] rounded-lg bg-accent/10 border-2 border-accent/30 flex items-center justify-center shrink-0">
+                  <Phone size={22} className="text-accent" />
+                </span>
+                <span>+373 68 77 86 76 — {t("Анна", "Anna")}</span>
+              </a>
               <a
                 href="viber://chat?number=37368778676"
-                onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium hover:opacity-80"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium hover:opacity-80 shrink-0"
                 style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
                 aria-label="Viber"
               >
                 <MessageCircle size={14} /> Viber
               </a>
-            </a>
+            </div>
           </div>
         </nav>
       )}
