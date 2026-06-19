@@ -4,13 +4,13 @@ export const SOURCE_LABELS: Record<string, string> = {
   home: "Главная",
   "with-priest": "Диалог со священником",
   contacts: "Форма контактов",
-  catalog: "Предзаказ иконы",
+  catalog: "Каталог",
   about: "О нас",
   calendar: "Календарь",
   blog: "Блог",
 };
 
-export type LeadCategory = "pilgrimage" | "priest" | "other";
+export type LeadCategory = "pilgrimage" | "priest" | "catalog" | "other";
 
 export const DESTINATION_NAMES_RU: Record<string, string> = {
   jerusalem: "Иерусалим",
@@ -27,12 +27,14 @@ export function leadCategory(source: string | null | undefined): LeadCategory {
   if (!source) return "other";
   if (source.startsWith("destination:")) return "pilgrimage";
   if (source === "with-priest") return "priest";
+  if (source === "catalog" || source.startsWith("catalog:")) return "catalog";
   return "other";
 }
 
 export const CATEGORY_LABELS: Record<LeadCategory, string> = {
   pilgrimage: "Паломничество",
   priest: "Вопрос священнику",
+  catalog: "Каталог",
   other: "Прочее",
 };
 
@@ -45,6 +47,9 @@ export function sourceLabel(s: string | null | undefined): string {
   if (SOURCE_LABELS[s]) return SOURCE_LABELS[s];
   if (s.startsWith("destination:")) {
     return `Паломничество: ${destinationNameRu(s.slice("destination:".length))}`;
+  }
+  if (s.startsWith("catalog:")) {
+    return `Каталог: ${s.slice("catalog:".length)}`;
   }
   return s;
 }

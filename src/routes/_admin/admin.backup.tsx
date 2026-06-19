@@ -7,6 +7,7 @@ import {
   adminExportAllDestinations,
   adminExportAllPriestFaq,
   adminExportAllBlogPosts,
+  adminExportAllCatalogItems,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin/admin/backup")({
@@ -42,6 +43,7 @@ function BackupPage() {
   const exportDestinations = useServerFn(adminExportAllDestinations);
   const exportPriestFaq = useServerFn(adminExportAllPriestFaq);
   const exportBlog = useServerFn(adminExportAllBlogPosts);
+  const exportCatalog = useServerFn(adminExportAllCatalogItems);
 
   const blocks: BackupBlock[] = [
     {
@@ -65,6 +67,13 @@ function BackupPage() {
       exportFn: () => exportBlog(),
       countOf: (r) => (Array.isArray(r?.blog_posts) ? r.blog_posts.length : 0),
       warningsOf: (r) => (Array.isArray(r?.warnings) ? r.warnings : []),
+    },
+    {
+      key: "catalog",
+      label: "Каталог",
+      filename: (d) => `catalog-${d}.json`,
+      exportFn: () => exportCatalog(),
+      countOf: (r) => (Array.isArray(r?.catalog_items) ? r.catalog_items.length : 0),
     },
   ];
 

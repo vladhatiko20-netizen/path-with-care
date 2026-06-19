@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
-import { FileText, Calendar, MapPin, Inbox, Info, Users } from "lucide-react";
+import { FileText, Calendar, MapPin, Inbox, Info, Users, Package } from "lucide-react";
 import { adminCountUnreadLeads } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin/admin/")({
@@ -53,6 +53,11 @@ function Page() {
           <MapPin className="w-6 h-6 text-accent mb-3" />
           <h2 className="font-serif text-xl mb-1">Направления</h2>
           <p className="text-sm text-muted-foreground">Маршруты, программы и описания поездок.</p>
+        </Link>
+        <Link to="/admin/catalog" className="block p-6 border border-border rounded-sm bg-card hover:border-accent transition-colors">
+          <Package className="w-6 h-6 text-accent mb-3" />
+          <h2 className="font-serif text-xl mb-1">Каталог</h2>
+          <p className="text-sm text-muted-foreground">Иконы, ладан, книги и святыни. Заявки от посетителей.</p>
         </Link>
         <Link to="/admin/about" className="block p-6 border border-border rounded-sm bg-card hover:border-accent transition-colors">
           <Info className="w-6 h-6 text-accent mb-3" />

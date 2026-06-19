@@ -188,6 +188,129 @@ export type Database = {
         }
         Relationships: []
       }
+      catalog_items: {
+        Row: {
+          category: string
+          created_at: string
+          description_ro: string | null
+          description_ru: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean
+          slug: string
+          sort_order: number
+          title_ro: string
+          title_ru: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description_ro?: string | null
+          description_ru?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          slug: string
+          sort_order?: number
+          title_ro: string
+          title_ru: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description_ro?: string | null
+          description_ru?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean
+          slug?: string
+          sort_order?: number
+          title_ro?: string
+          title_ru?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      catalog_page: {
+        Row: {
+          card_caption_ro: string | null
+          card_caption_ru: string | null
+          categories: Json
+          created_at: string
+          empty_state_ro: string | null
+          empty_state_ru: string | null
+          form_subtitle_ro: string | null
+          form_subtitle_ru: string | null
+          form_success_text_ro: string | null
+          form_success_text_ru: string | null
+          form_success_title_ro: string | null
+          form_success_title_ru: string | null
+          form_title_ro: string | null
+          form_title_ru: string | null
+          hero_image_url: string | null
+          hero_overline_ro: string | null
+          hero_overline_ru: string | null
+          hero_title_ro: string | null
+          hero_title_ru: string | null
+          id: string
+          intro_ro: string | null
+          intro_ru: string | null
+          updated_at: string
+        }
+        Insert: {
+          card_caption_ro?: string | null
+          card_caption_ru?: string | null
+          categories?: Json
+          created_at?: string
+          empty_state_ro?: string | null
+          empty_state_ru?: string | null
+          form_subtitle_ro?: string | null
+          form_subtitle_ru?: string | null
+          form_success_text_ro?: string | null
+          form_success_text_ru?: string | null
+          form_success_title_ro?: string | null
+          form_success_title_ru?: string | null
+          form_title_ro?: string | null
+          form_title_ru?: string | null
+          hero_image_url?: string | null
+          hero_overline_ro?: string | null
+          hero_overline_ru?: string | null
+          hero_title_ro?: string | null
+          hero_title_ru?: string | null
+          id?: string
+          intro_ro?: string | null
+          intro_ru?: string | null
+          updated_at?: string
+        }
+        Update: {
+          card_caption_ro?: string | null
+          card_caption_ru?: string | null
+          categories?: Json
+          created_at?: string
+          empty_state_ro?: string | null
+          empty_state_ru?: string | null
+          form_subtitle_ro?: string | null
+          form_subtitle_ru?: string | null
+          form_success_text_ro?: string | null
+          form_success_text_ru?: string | null
+          form_success_title_ro?: string | null
+          form_success_title_ru?: string | null
+          form_title_ro?: string | null
+          form_title_ru?: string | null
+          hero_image_url?: string | null
+          hero_overline_ro?: string | null
+          hero_overline_ru?: string | null
+          hero_title_ro?: string | null
+          hero_title_ru?: string | null
+          id?: string
+          intro_ro?: string | null
+          intro_ru?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       clergy: {
         Row: {
           bio_ro: string | null
