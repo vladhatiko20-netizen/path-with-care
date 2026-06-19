@@ -2181,3 +2181,272 @@ export const adminImportBlogPostsBulk = createServerFn({ method: "POST" })
 
     return { ok: true as const, mode: data.mode, summary, created, updated, skipped, errors, warnings };
   });
+
+// ============================================================================
+// Catalog: items + page (singleton)
+// ============================================================================
+
+const catalogCategorySchema = z.object({
+  key: z.string().trim().min(1).max(50).regex(/^[a-z0-9-]+$/),
+  label_ru: z.string().trim().min(1).max(100),
+  label_ro: z.string().trim().min(1).max(100),
+  sort: z.number().int().min(0).max(10000),
+});
+
+const catalogItemSchema = z.object({
+  id: z.string().uuid().optional(),
+  slug: z.string().trim().min(1).max(100).regex(/^[a-z0-9-]+$/),
+  title_ru: z.string().trim().min(1).max(300),
+  title_ro: z.string().trim().min(1).max(300),
+  description_ru: z.string().max(3000).nullable().optional(),
+  description_ro: z.string().max(3000).nullable().optional(),
+  category: z.string().trim().min(1).max(50).regex(/^[a-z0-9-]+$/),
+  image_url: z.string().max(1000).nullable().optional(),
+  sort_order: z.number().int().min(0).max(100000),
+  is_published: z.boolean(),
+});
+
+const catalogPageSchema = z.object({
+  hero_image_url: z.string().max(1000).nullable().optional(),
+  hero_overline_ru: z.string().max(200).nullable().optional(),
+  hero_overline_ro: z.string().max(200).nullable().optional(),
+  hero_title_ru: z.string().max(300).nullable().optional(),
+  hero_title_ro: z.string().max(300).nullable().optional(),
+  intro_ru: z.string().max(5000).nullable().optional(),
+  intro_ro: z.string().max(5000).nullable().optional(),
+  empty_state_ru: z.string().max(1000).nullable().optional(),
+  empty_state_ro: z.string().max(1000).nullable().optional(),
+  form_title_ru: z.string().max(300).nullable().optional(),
+  form_title_ro: z.string().max(300).nullable().optional(),
+  form_subtitle_ru: z.string().max(1000).nullable().optional(),
+  form_subtitle_ro: z.string().max(1000).nullable().optional(),
+  form_success_title_ru: z.string().max(300).nullable().optional(),
+  form_success_title_ro: z.string().max(300).nullable().optional(),
+  form_success_text_ru: z.string().max(1000).nullable().optional(),
+  form_success_text_ro: z.string().max(1000).nullable().optional(),
+  card_caption_ru: z.string().max(100).nullable().optional(),
+  card_caption_ro: z.string().max(100).nullable().optional(),
+  categories: z.array(catalogCategorySchema).max(20),
+});
+
+export const adminListCatalogItems = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("catalog_items")
+      .select("id,slug,title_ru,title_ro,category,image_url,sort_order,is_published")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const adminGetCatalogItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("catalog_items").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminSaveCatalogItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => catalogItemSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { id, ...payload } = data;
+    if (id) {
+      const { data: row, error } = await context.supabase
+        .from("catalog_items").update(payload).eq("id", id).select().single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+    const { data: row, error } = await context.supabase
+      .from("catalog_items").insert(payload).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const adminDeleteCatalogItem = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("catalog_items").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminSetCatalogItemPublished = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({ id: z.string().uuid(), is_published: z.boolean() }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("catalog_items")
+      .update({ is_published: data.is_published })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const adminGetCatalogPage = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("catalog_page").select("*").eq("id", "singleton").maybeSingle();
+    if (error) throw new Error(error.message);
+    return data;
+  });
+
+export const adminUpsertCatalogPage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => catalogPageSchema.parse(i))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("catalog_page")
+      .upsert({ id: "singleton", ...data }, { onConflict: "id" })
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+// ----- Catalog JSON export/import -----
+
+function toCatalogExportRow(row: Record<string, unknown>) {
+  return {
+    slug: String(row.slug ?? ""),
+    title_ru: String(row.title_ru ?? ""),
+    title_ro: String(row.title_ro ?? ""),
+    description_ru: (row.description_ru as string | null) ?? null,
+    description_ro: (row.description_ro as string | null) ?? null,
+    category: String(row.category ?? "other"),
+    image_url: (row.image_url as string | null) ?? null,
+    sort_order: typeof row.sort_order === "number" ? row.sort_order : 0,
+    is_published: Boolean(row.is_published),
+  };
+}
+
+export const adminExportAllCatalogItems = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("catalog_items").select("*")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return { catalog_items: (data ?? []).map((r) => toCatalogExportRow(r as Record<string, unknown>)) };
+  });
+
+const catalogImportItemSchema = z.object({
+  slug: z.string().trim().min(1).max(100).regex(/^[a-z0-9-]+$/),
+  title_ru: z.string().trim().min(1).max(300),
+  title_ro: z.string().trim().min(1).max(300),
+  description_ru: z.union([z.string().max(3000), z.null()]).optional(),
+  description_ro: z.union([z.string().max(3000), z.null()]).optional(),
+  category: z.string().trim().min(1).max(50).regex(/^[a-z0-9-]+$/).optional(),
+  image_url: z.union([z.string().max(1000), z.null()]).optional(),
+  sort_order: z.number().int().min(0).max(100000).optional(),
+  is_published: z.boolean().optional(),
+});
+
+const catalogBulkSchema = z.object({
+  mode: z.enum(["skip", "upsert", "only_new"]).default("skip"),
+  items: z.array(z.unknown()).min(1).max(500),
+});
+
+export const adminImportCatalogItemsBulk = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) => {
+    let mode: "skip" | "upsert" | "only_new" = "skip";
+    let items: unknown[] = [];
+    if (Array.isArray(i)) items = i;
+    else if (i && typeof i === "object") {
+      const o = i as Record<string, unknown>;
+      if (o.mode === "skip" || o.mode === "upsert" || o.mode === "only_new") mode = o.mode;
+      if (Array.isArray(o.items)) items = o.items;
+      else if (Array.isArray(o.catalog_items)) items = o.catalog_items;
+    }
+    return catalogBulkSchema.parse({ mode, items });
+  })
+  .handler(async ({ data, context }) => {
+    const summary = { created: 0, updated: 0, skipped: 0, errors: 0 };
+    const created: Array<{ slug: string; id: string }> = [];
+    const updated: Array<{ slug: string; id: string }> = [];
+    const skipped: Array<{ slug: string; reason: string }> = [];
+    const errors: Array<{ slug: string; error: string }> = [];
+
+    if (data.mode === "only_new") {
+      for (const raw of data.items) {
+        const parsed = catalogImportItemSchema.safeParse(raw);
+        if (!parsed.success) continue;
+        const { data: ex } = await context.supabase
+          .from("catalog_items").select("id").eq("slug", parsed.data.slug).maybeSingle();
+        if (ex) throw new Error(`Режим «Только новые»: позиция «${parsed.data.slug}» уже существует. Батч отклонён.`);
+      }
+    }
+
+    for (let idx = 0; idx < data.items.length; idx++) {
+      const raw = data.items[idx];
+      const parsed = catalogImportItemSchema.safeParse(raw);
+      if (!parsed.success) {
+        const slug = (raw && typeof raw === "object" && typeof (raw as Record<string, unknown>).slug === "string")
+          ? ((raw as Record<string, unknown>).slug as string)
+          : `#${idx + 1}`;
+        summary.errors++;
+        errors.push({ slug, error: parsed.error.issues.map((e) => `${e.path.join(".") || "(root)"}: ${e.message}`).join("; ") });
+        continue;
+      }
+      const item = parsed.data;
+      try {
+        const { data: ex } = await context.supabase
+          .from("catalog_items").select("id").eq("slug", item.slug).maybeSingle();
+        if (ex) {
+          if (data.mode === "skip") {
+            summary.skipped++;
+            skipped.push({ slug: item.slug, reason: "уже существует" });
+            continue;
+          }
+          const payload: Record<string, unknown> = {
+            title_ru: item.title_ru,
+            title_ro: item.title_ro,
+          };
+          if ("description_ru" in (raw as object)) payload.description_ru = item.description_ru ?? null;
+          if ("description_ro" in (raw as object)) payload.description_ro = item.description_ro ?? null;
+          if (item.category) payload.category = item.category;
+          if ("image_url" in (raw as object)) payload.image_url = item.image_url ?? null;
+          if (typeof item.sort_order === "number") payload.sort_order = item.sort_order;
+          if (typeof item.is_published === "boolean") payload.is_published = item.is_published;
+          const { data: row, error } = await context.supabase
+            .from("catalog_items").update(payload).eq("id", ex.id).select().single();
+          if (error) throw new Error(error.message);
+          summary.updated++;
+          updated.push({ slug: row.slug, id: row.id });
+        } else {
+          const insertPayload = {
+            slug: item.slug,
+            title_ru: item.title_ru,
+            title_ro: item.title_ro,
+            description_ru: item.description_ru ?? null,
+            description_ro: item.description_ro ?? null,
+            category: item.category ?? "other",
+            image_url: item.image_url ?? null,
+            sort_order: typeof item.sort_order === "number" ? item.sort_order : 0,
+            is_published: typeof item.is_published === "boolean" ? item.is_published : false,
+          };
+          const { data: row, error } = await context.supabase
+            .from("catalog_items").insert(insertPayload).select().single();
+          if (error) throw new Error(error.message);
+          summary.created++;
+          created.push({ slug: row.slug, id: row.id });
+        }
+      } catch (e: unknown) {
+        summary.errors++;
+        errors.push({ slug: item.slug, error: e instanceof Error ? e.message : String(e) });
+      }
+    }
+
+    return { ok: true as const, mode: data.mode, summary, created, updated, skipped, errors };
+  });
