@@ -193,7 +193,7 @@ function Page() {
                       <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                           {!r.is_read && (
-                            <span className="inline-block w-2 h-2 rounded-full bg-accent shrink-0" aria-label="Непрочитано" />
+                            <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#ef4444] animate-pulse shrink-0" aria-label="Непрочитано" />
                           )}
                           <h2 className="font-serif text-xl md:text-2xl text-accent font-medium truncate">
                             {sourceLabel(r.source)}
@@ -220,7 +220,7 @@ function Page() {
                   <div className="flex items-start justify-between gap-3 mb-1">
                     <div className="flex items-center gap-2 min-w-0">
                       {!r.is_read && (
-                        <span className="inline-block w-2 h-2 rounded-full bg-gold shrink-0" aria-label="Непрочитано" />
+                        <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#ef4444] animate-pulse shrink-0" aria-label="Непрочитано" />
                       )}
                       <h2 className={`font-serif text-lg truncate ${r.is_read ? "text-muted-foreground" : "text-foreground"}`}>
                         {r.name}

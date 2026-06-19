@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { ArrowLeft, Phone, Mail, Trash2, MessageCircleQuestion } from "lucide-react";
 import { adminGetLead, adminMarkLeadRead, adminDeleteLead } from "@/lib/admin.functions";
-import { sourceLabel, formatLeadDate, telLink, viberLink, isMoldovaPhone, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
+import { sourceLabel, formatLeadDate, telLink, viberLink, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
 
 export const Route = createFileRoute("/_admin/admin/leads/$id")({
   component: Page,
@@ -67,7 +67,6 @@ function Page() {
     );
   }
 
-  const moldova = isMoldovaPhone(lead.phone);
   const cat = leadCategory(lead.source);
   const isPilg = cat === "pilgrimage";
   const isPriest = cat === "priest";
@@ -112,15 +111,13 @@ function Page() {
             </span>
             <span className="font-serif text-lg text-accent">{lead.phone}</span>
           </a>
-          {moldova && (
-            <a
-              href={viberLink(lead.phone)}
-              className="shrink-0 self-center mr-3 ml-2 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80"
-              style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
-            >
-              Viber
-            </a>
-          )}
+          <a
+            href={viberLink(lead.phone)}
+            className="shrink-0 self-center mr-3 ml-2 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80"
+            style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
+          >
+            Viber
+          </a>
         </div>
         )}
 
