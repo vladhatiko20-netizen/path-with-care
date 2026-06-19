@@ -69,6 +69,7 @@ function AdminLayout() {
 
   const SidebarContent = (
     <>
+      <style>{`@keyframes colorShift { 0%, 100% { background-color: #ef4444; } 50% { background-color: #10b981; } }`}</style>
       <div className="p-5 border-b border-border flex items-center justify-between">
         <div>
           <Link to="/" className="font-serif text-lg text-foreground">Паломник</Link>
@@ -100,7 +101,8 @@ function AdminLayout() {
               <span className="flex-1">{item.label}</span>
               {item.badge && item.badge > 0 ? (
                 <span
-                  className={`min-w-[1.25rem] h-5 px-1.5 inline-flex items-center justify-center rounded-full text-[11px] font-sans font-medium ${active ? "bg-primary-foreground/20 text-primary-foreground" : "bg-gold text-foreground"}`}
+                  className="inline-flex items-center justify-center min-w-8 h-8 px-2 rounded-full text-white text-sm font-semibold font-sans"
+                  style={{ animation: "colorShift 2s ease-in-out infinite" }}
                   aria-label={`${item.badge} непрочитанных`}
                 >
                   {item.badge > 99 ? "99+" : item.badge}

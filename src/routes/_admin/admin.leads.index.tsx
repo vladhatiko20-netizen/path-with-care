@@ -72,7 +72,15 @@ function Page() {
   return (
     <div className="p-4 md:p-8 max-w-4xl">
       <div className="flex items-center justify-between gap-3 mb-6">
-        <h1 className="font-serif text-2xl md:text-3xl">Заявки</h1>
+        <h1 className="font-serif text-2xl md:text-3xl flex items-center">
+          Заявки
+          <style>{`@keyframes colorShift { 0%, 100% { background-color: #ef4444; } 50% { background-color: #10b981; } }`}</style>
+          <span
+            className="inline-block w-8 h-8 rounded-full ml-3"
+            style={{ animation: "colorShift 2s ease-in-out infinite" }}
+            aria-hidden="true"
+          />
+        </h1>
         {hasUnread && (
           <button
             onClick={handleMarkAll}
