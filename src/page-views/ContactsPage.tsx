@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
+import { MessageCircle } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { createLead } from "@/lib/leads.functions";
 import heroImg from "@/assets/hero-contacts.jpg";
@@ -44,6 +45,16 @@ export function Component() {
             <div>
               <p className="overline mb-2">Email</p>
               <a href="mailto:palomnik.moldova@gmail.com" className="text-lg text-accent hover:underline">palomnik.moldova@gmail.com</a>
+            </div>
+            <div>
+              <p className="overline mb-2">Viber</p>
+              <a
+                href="viber://chat?number=37368778676"
+                className="inline-flex items-center gap-2 text-lg text-accent hover:underline"
+              >
+                <MessageCircle className="w-5 h-5" style={{ color: "#7360F2" }} />
+                +373 68 77 86 76 — {t("Анна", "Anna")}
+              </a>
             </div>
             <div>
               <p className="overline mb-2">{t("Часы работы", "Program")}</p>
