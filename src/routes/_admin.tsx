@@ -61,7 +61,7 @@ function AdminLayout() {
       to: "/admin/clergy", label: "Священники", icon: Users,
       children: [{ to: "/admin/priest-faq", label: "Вопросы священнику", icon: MessageCircleQuestion }],
     },
-    { to: "/admin/pilgrimages", label: "Паломничества", icon: Calendar },
+    { to: "/admin/pilgrimages", label: "Календарь поездок", icon: Calendar },
     { to: "/admin/destinations", label: "Направления", icon: MapPin },
     { to: "/admin/about", label: "О нас", icon: Info },
     { to: "/admin/backup", label: "Резервная копия", icon: Archive, separated: true },
