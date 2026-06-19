@@ -391,16 +391,18 @@ export function Component() {
       {/* ICONS & RELICS */}
       <section className="bg-card/70 pt-0 pb-6 md:pb-20 border-t border-border/60">
         <Link to={localize("/catalog") as "/catalog"} className="block group">
-        <div className="aspect-[16/7] max-md:max-h-[250px] w-full overflow-hidden md:hidden">
-          <img
-            src={catalogHeroImg}
-            alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
-            loading="lazy"
-            width={1600}
-            height={900}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        {catalogHeroUrl && (
+          <div className="aspect-[16/7] max-md:max-h-[250px] w-full overflow-hidden md:hidden">
+            <img
+              src={catalogHeroUrl}
+              alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
+              loading="lazy"
+              width={1600}
+              height={900}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-16">
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-stretch">
             <div className="max-w-2xl md:max-w-none md:flex md:flex-col md:justify-center">
@@ -420,16 +422,18 @@ export function Component() {
                 </span>
               </div>
             </div>
-            <div className="hidden md:block">
-              <img
-                src={catalogHeroImg}
-                alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
-                loading="lazy"
-                width={1200}
-                height={1200}
-                className="w-full h-full max-h-[520px] object-cover rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
-              />
-            </div>
+            {catalogHeroUrl && (
+              <div className="hidden md:block">
+                <img
+                  src={catalogHeroUrl}
+                  alt={t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură")}
+                  loading="lazy"
+                  width={1200}
+                  height={1200}
+                  className="w-full h-full max-h-[520px] object-cover rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]"
+                />
+              </div>
+            )}
           </div>
           <div className="mt-9 md:hidden">
             <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
