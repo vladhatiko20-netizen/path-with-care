@@ -66,6 +66,7 @@ function Page() {
   const tabs: Array<{ v: LeadCategory; l: string; n: number }> = [
     { v: "pilgrimage", l: CATEGORY_LABELS.pilgrimage, n: unread?.pilgrimage ?? 0 },
     { v: "priest", l: CATEGORY_LABELS.priest, n: unread?.priest ?? 0 },
+    { v: "catalog", l: CATEGORY_LABELS.catalog, n: unread?.catalog ?? 0 },
     { v: "other", l: CATEGORY_LABELS.other, n: unread?.other ?? 0 },
   ];
 
