@@ -1,6 +1,30 @@
-We will perform the requested structural change in the admin layout sidebar:
+## Реализация (вариант A)
 
-1. **Modify `src/routes/_admin.tsx`**:
-   - Locate the «Паломник» logo link inside the `SidebarContent` component (line 75).
-   - Replace `<Link to="/" className="font-serif text-lg text-foreground">Паломник</Link>` with a non-clickable `<span className="font-serif text-lg text-foreground">Паломник</span>`.
-   - Leave all text, fonts, layout classes, and spacing identical to preserve the exact styling.
+Файл: `src/page-views/IndexPage.tsx`.
+
+1. **Импорты**:
+   - Удалить `import catalogHeroImg from "@/assets/catalog-hero.jpg";`
+   - Добавить `import { getCatalogPageData } from "@/lib/catalog.functions";`
+
+2. **Query options** (рядом с другими `queryOptions` в файле):
+   ```ts
+   export const catalogPageQueryOptions = queryOptions({
+     queryKey: ["catalog-page"],
+     queryFn: () => getCatalogPageData(),
+   });
+   ```
+
+3. **Внутри `Component()`** добавить:
+   ```ts
+   const { data: catalogPageData } = useQuery(catalogPageQueryOptions);
+   const catalogHeroUrl = catalogPageData?.page?.hero_image_url ?? null;
+   ```
+
+4. **JSX блока «ICONS & RELICS»** (строки ~385–425):
+   - Мобильный `<div className="aspect-[16/7] ...">` с `<img src={catalogHeroImg} />` обернуть в `{catalogHeroUrl && ( ... )}`, внутри `src={catalogHeroUrl}`.
+   - Десктопный `<div className="hidden md:block">` с правой картинкой так же обернуть в `{catalogHeroUrl && ( ... )}`, внутри `src={catalogHeroUrl}`.
+   - Если `catalogHeroUrl` пустой, оба блока не рендерятся — текстовая колонка остаётся как есть. Сетка `md:grid-cols-2` визуально станет одной колонкой, что приемлемо как фолбэк до загрузки фото из админки.
+
+5. **Тексты промо-блока на главной не трогаются** — они остаются в коде как сейчас.
+
+Никаких других файлов и логики не меняем. Подтверди — перейду в build mode и применю.
