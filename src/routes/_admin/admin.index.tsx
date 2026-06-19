@@ -25,10 +25,16 @@ function Page() {
           <h2 className="font-serif text-xl mb-1">
             Заявки
             {unreadCount > 0 && (
-              <span
-                className="ml-2 inline-block w-2.5 h-2.5 rounded-full bg-[#ef4444] animate-pulse align-middle"
-                aria-label={`Непрочитанных заявок: ${unreadCount}`}
-              />
+              <>
+                <style>{`@keyframes colorShift { 0%, 100% { background-color: #ef4444; } 50% { background-color: #10b981; } }`}</style>
+                <span
+                  className="ml-2 inline-flex items-center justify-center min-w-8 h-8 px-2 rounded-full text-white text-sm font-semibold align-middle"
+                  style={{ animation: "colorShift 2s ease-in-out infinite" }}
+                  aria-label={`Непрочитанных заявок: ${unreadCount}`}
+                >
+                  {unreadCount}
+                </span>
+              </>
             )}
           </h2>
           <p className="text-sm text-muted-foreground">Заявки с форм сайта: имя, телефон, сообщение.</p>

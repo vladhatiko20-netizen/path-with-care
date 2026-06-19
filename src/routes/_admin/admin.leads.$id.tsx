@@ -113,7 +113,7 @@ function Page() {
           </a>
           <a
             href={viberLink(lead.phone)}
-            className="shrink-0 self-center mr-3 ml-2 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80"
+            className="shrink-0 self-center mr-2 ml-1 px-4 py-2 rounded-full text-base font-semibold hover:opacity-80"
             style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
           >
             Viber
