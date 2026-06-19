@@ -72,7 +72,7 @@ function AdminLayout() {
       <style>{`@keyframes colorShift { 0%, 100% { background-color: #ef4444; } 50% { background-color: #10b981; } }`}</style>
       <div className="p-5 border-b border-border flex items-center justify-between">
         <div>
-          <Link to="/" className="font-serif text-lg text-foreground">Паломник</Link>
+          <span className="font-serif text-lg text-foreground">Паломник</span>
           <p className="text-xs text-muted-foreground mt-1">Админ-панель</p>
         </div>
         <button
