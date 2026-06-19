@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Component } from "@/page-views/CatalogPage";
 import { hreflangLinks } from "@/lib/hreflang";
-import heroImg from "@/assets/catalog-hero.jpg";
 import { buildPageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/ro/catalog")({
@@ -9,9 +8,8 @@ export const Route = createFileRoute("/ro/catalog")({
     meta: buildPageMeta({
       lang: "ro",
       title: "Icoane și sfinte odoare – Pelerin",
-      description: "Catalog de icoane și obiecte bisericești cu precomandă și ridicare de la birou. Fără magazin online.",
-      ogDescription: "Catalog de icoane și sfinte odoare cu precomandă.",
-      ogImage: heroImg,
+      description: "Catalog de icoane, tămâie și cărți duhovnicești. Anna le aduce din pelerinaje.",
+      ogDescription: "Catalog de icoane și sfinte odoare de la locuri sfinte.",
     }),
     links: hreflangLinks("/catalog", "ro"),
   }),
