@@ -67,7 +67,7 @@ function Page() {
         .pulse-dot { animation: pulse-dot 1s ease-in-out infinite; }
       `}</style>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-3xl">Календарь паломничеств</h1>
+        <h1 className="font-serif text-3xl">Календарь поездок</h1>
         <Link to="/admin/pilgrimages/new" className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-primary-foreground rounded-sm font-serif text-sm">
           <Plus className="w-4 h-4" /> Новая поездка
         </Link>

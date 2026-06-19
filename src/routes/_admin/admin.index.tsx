@@ -46,7 +46,7 @@ function Page() {
         </Link>
         <Link to="/admin/pilgrimages" className="block p-6 border border-border rounded-sm bg-card hover:border-accent transition-colors">
           <Calendar className="w-6 h-6 text-accent mb-3" />
-          <h2 className="font-serif text-xl mb-1">Календарь паломничеств</h2>
+          <h2 className="font-serif text-xl mb-1">Календарь поездок</h2>
           <p className="text-sm text-muted-foreground">Поездки, даты, места и цены.</p>
         </Link>
         <Link to="/admin/destinations" className="block p-6 border border-border rounded-sm bg-card hover:border-accent transition-colors">
