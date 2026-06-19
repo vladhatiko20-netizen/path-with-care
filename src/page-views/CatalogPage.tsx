@@ -214,7 +214,7 @@ function CatalogLeadForm({
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (sending) return;
-    // Honeypot — bots that fill the hidden field get a silent success.
+    // Honeypot - bots that fill the hidden field get a silent success.
     if (form.website.trim().length > 0) {
       setSent(true);
       return;
@@ -266,7 +266,7 @@ function CatalogLeadForm({
           </div>
         ) : (
           <form onSubmit={onSubmit} className="space-y-4 font-serif">
-            {/* Honeypot — hidden from users, visible to naive bots. */}
+            {/* Honeypot - hidden from users, visible to naive bots. */}
             <input
               type="text"
               name="website"

@@ -173,7 +173,7 @@ export function CatalogPageForm({ initial }: { initial: CatalogPageFormInitial }
       <div>
         <h3 className="font-serif text-lg mb-3">Категории-фильтры</h3>
         <p className="text-xs text-muted-foreground mb-3">
-          Ключ используется в позициях каталога. Изменение ключа не переименовывает категорию в существующих позициях — придётся обновить позиции вручную.
+          Ключ используется в позициях каталога. Изменение ключа не переименовывает категорию в существующих позициях – придётся обновить позиции вручную.
         </p>
         <div className="space-y-2">
           {form.categories.map((c, i) => (

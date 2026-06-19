@@ -134,7 +134,7 @@ export function CatalogItemForm({ initial }: { initial: CatalogItemFormInitial }
             min={0}
             max={100000}
           />
-          <p className="text-xs text-muted-foreground mt-1">Меньше число — выше в списке.</p>
+          <p className="text-xs text-muted-foreground mt-1">Меньше число – выше в списке.</p>
         </div>
         <div className="flex items-end">
           <label className="inline-flex items-center gap-2 text-sm">
@@ -185,7 +185,7 @@ export function CatalogItemForm({ initial }: { initial: CatalogItemFormInitial }
               placeholder="Откуда привезено, размер, материал…"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              Показывается в окне заявки. Без длинных тире — используйте дефис или среднее тире.
+              Показывается в окне заявки. Без длинных тире – используйте дефис или среднее тире.
             </p>
           </div>
         </div>
