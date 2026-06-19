@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, MessageCircle } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { useLocalizedTo, useIsRo, stripRoPrefix } from "@/lib/use-localized-to";
 import { useRouterState } from "@tanstack/react-router";
@@ -180,7 +180,16 @@ export function Header() {
               <span className="w-[60px] h-[60px] rounded-lg bg-accent/10 border-2 border-accent/30 flex items-center justify-center">
                 <Phone size={22} className="text-accent" />
               </span>
-              +373 68 77 86 76 — {t("Анна", "Anna")}
+              <span className="flex-1">+373 68 77 86 76 — {t("Анна", "Anna")}</span>
+              <a
+                href="viber://chat?number=37368778676"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium hover:opacity-80"
+                style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
+                aria-label="Viber"
+              >
+                <MessageCircle size={14} /> Viber
+              </a>
             </a>
           </div>
         </nav>
