@@ -131,10 +131,28 @@ export const adminListPilgrimages = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("pilgrimages")
-      .select("id, slug, title_ru, title_ro, destination_ru, destination_ro, start_date, end_date, price_eur, with_priest, is_published")
+      .select("id, slug, title_ru, title_ro, destination_ru, destination_ro, destination_slug, start_date, end_date, price_eur, with_priest, is_published")
       .order("start_date", { ascending: true });
     if (error) throw new Error(error.message);
-    return data ?? [];
+    const rows = data ?? [];
+    const slugs = Array.from(
+      new Set(rows.map((r) => r.destination_slug).filter((s): s is string => !!s)),
+    );
+    const publishedMap = new Map<string, boolean>();
+    if (slugs.length > 0) {
+      const { data: dests, error: destErr } = await context.supabase
+        .from("destinations")
+        .select("slug, is_published")
+        .in("slug", slugs);
+      if (destErr) throw new Error(destErr.message);
+      for (const d of dests ?? []) publishedMap.set(d.slug, !!d.is_published);
+    }
+    return rows.map((r) => ({
+      ...r,
+      destination_published: r.destination_slug
+        ? publishedMap.get(r.destination_slug) === true
+        : false,
+    }));
   });
 
 export const adminGetPilgrimage = createServerFn({ method: "POST" })

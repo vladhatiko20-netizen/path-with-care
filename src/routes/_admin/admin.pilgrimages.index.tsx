@@ -97,6 +97,17 @@ function Page() {
                   <td className="px-4 py-3">{p.price_eur ? `€${p.price_eur}` : "—"}</td>
                   <td className="px-4 py-3">{p.with_priest ? "Да" : "Нет"}</td>
                   <td className="px-4 py-3">
+                    {p.destination_published === false ? (
+                      <span
+                        role="status"
+                        aria-disabled="true"
+                        title="Направление скрыто. Опубликуйте направление, чтобы эта дата появилась на сайте"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-sm text-xs min-h-[44px] cursor-not-allowed border bg-muted text-muted-foreground border-border"
+                      >
+                        <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-muted-foreground/60" />
+                        <span>Скрыто (направление)</span>
+                      </span>
+                    ) : (
                     <button
                       type="button"
                       role="switch"
@@ -121,8 +132,9 @@ function Page() {
                           p.is_published ? "bg-green-500" : "bg-rose-500",
                         )}
                       />
-                      <span>{p.is_published ? "Опубликовано" : "Скрыто"}</span>
+                      <span>{p.is_published ? "Активна" : "Скрыта"}</span>
                     </button>
+                    )}
                   </td>
                   <td className="px-4 py-3 flex gap-2">
                     <Link to="/admin/pilgrimages/$id" params={{ id: p.id }} className="p-1.5 hover:bg-secondary rounded-sm">
