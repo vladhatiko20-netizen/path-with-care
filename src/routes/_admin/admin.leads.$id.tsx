@@ -112,15 +112,13 @@ function Page() {
             </span>
             <span className="font-serif text-lg text-accent">{lead.phone}</span>
           </a>
-          {(
-            <a
-              href={viberLink(lead.phone)}
-              className="shrink-0 self-center mr-3 ml-2 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80"
-              style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
-            >
-              Viber
-            </a>
-          )}
+          <a
+            href={viberLink(lead.phone)}
+            className="shrink-0 self-center mr-3 ml-2 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80"
+            style={{ backgroundColor: "rgba(115,96,242,0.10)", color: "#7360F2" }}
+          >
+            Viber
+          </a>
         </div>
         )}
 
