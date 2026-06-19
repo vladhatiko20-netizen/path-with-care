@@ -112,7 +112,7 @@ function Page() {
             </span>
             <span className="font-serif text-lg text-accent">{lead.phone}</span>
           </a>
-          {moldova && (
+          {(
             <a
               href={viberLink(lead.phone)}
               className="shrink-0 self-center mr-3 ml-2 px-3 py-1 rounded-full text-xs font-medium hover:opacity-80"
