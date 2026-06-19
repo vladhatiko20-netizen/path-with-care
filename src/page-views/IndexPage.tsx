@@ -6,9 +6,9 @@ import { useLocalizedTo } from "@/lib/use-localized-to";
 import { BLESSING_BY } from "@/lib/constants";
 import heroImg from "@/assets/hero-monastery.jpg";
 import aboutPilgrimageImg from "@/assets/about-pilgrimage.jpg";
-import catalogHeroImg from "@/assets/catalog-hero.jpg";
 import blogHeroImg from "@/assets/hero-blog.jpg";
 import { listBlogPosts } from "@/lib/blog.functions";
+import { getCatalogPageData } from "@/lib/catalog.functions";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 import { listPilgrimages } from "@/lib/pilgrimages.functions";
 import { clergyQueryOptions } from "@/page-views/WithPriestPage";
@@ -22,6 +22,11 @@ export const destinationsListQueryOptions = queryOptions({
 export const upcomingPilgrimagesQueryOptions = queryOptions({
   queryKey: ["pilgrimages", "upcoming"],
   queryFn: () => listPilgrimages(),
+});
+
+export const catalogPageQueryOptions = queryOptions({
+  queryKey: ["catalog-page"],
+  queryFn: () => getCatalogPageData(),
 });
 
 const RU_MONTHS = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
@@ -59,6 +64,8 @@ export function Component() {
     queryKey: ["blog-posts"],
     queryFn: () => listBlogPosts(),
   });
+  const { data: catalogPageData } = useQuery(catalogPageQueryOptions);
+  const catalogHeroUrl = catalogPageData?.page?.hero_image_url ?? null;
   const { data: publishedDestinations } = useSuspenseQuery(destinationsListQueryOptions);
   const { data: allPilgrimages } = useSuspenseQuery(upcomingPilgrimagesQueryOptions);
   const { data: clergy } = useSuspenseQuery(clergyQueryOptions);
