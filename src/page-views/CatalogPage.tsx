@@ -131,9 +131,9 @@ export function Component() {
               <button
                 key={it.id}
                 onClick={() => setOrder(it)}
-                className="group text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:-translate-y-0.5 transition-all duration-500"
+                className="group h-full flex flex-col text-left bg-card border border-gold/30 rounded-sm overflow-hidden hover:border-gold hover:-translate-y-0.5 transition-all duration-500"
               >
-                <div className="aspect-square overflow-hidden bg-secondary flex items-center justify-center">
+                <div className="aspect-square shrink-0 overflow-hidden bg-secondary flex items-center justify-center">
                   {it.image_url ? (
                     <img
                       src={it.image_url}
@@ -147,11 +147,11 @@ export function Component() {
                     <ImageIcon className="w-12 h-12 text-foreground/20" aria-hidden="true" />
                   )}
                 </div>
-                <div className="p-4">
-                  <h3 className="font-serif text-base text-foreground mb-1 leading-tight">
+                <div className="p-4 flex-1 flex flex-col">
+                  <h3 className="font-serif text-base text-foreground mb-1 leading-tight line-clamp-2 min-h-[2.6em]">
                     {lang === "ru" ? it.title_ru : it.title_ro}
                   </h3>
-                  <p className="text-xs italic text-accent font-serif">{cardCaption}</p>
+                  <p className="mt-auto pt-2 text-xs italic text-accent font-serif">{cardCaption}</p>
                 </div>
               </button>
             ))}
