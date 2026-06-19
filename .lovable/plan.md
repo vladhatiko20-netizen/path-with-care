@@ -1,56 +1,40 @@
-## Задача
+To implement the requested feature on the destination page (`src/page-views/DestinationSlugPage.tsx`), I will modify the success state representation after a lead form submission.
 
-Исправить две проблемы в пилюле статуса в `src/routes/_admin/admin.destinations.index.tsx`:
+### Proposed Changes
 
-1. Фон пилюли не обновляется сразу после оптимистичного апдейта (приходится перезагружать страницу).
-2. Анимация точки (`animate-pulse`) слишком медленная и слабая — почти незаметна.
+1. **Keep the Form Mounted but Hidden:**
+   Instead of using a ternary condition `{sent ? <SuccessBlock /> : <Form />}` which unmounts the form, we will render both sections sequentially:
+   * The success block will be rendered conditionally using `{sent && ( ... )}`.
+   * The form will always be mounted but hidden dynamically using CSS class matching, e.g. `className={\`space-y-4 font-serif \${sent ? "hidden" : ""}\`}`.
 
-## Причина бага с фоном
+2. **Style and Content of the Success Block:**
+   The success block will be styled exactly as requested:
+   * **Container styles:** Background `#d1fae5` (`bg-[#d1fae5]`), border `#10b981` (`border-[#10b981]`), text `#065f46` (`text-[#065f46]`), with a border and rounded corners.
+   * **Icon:** `CheckCircle` from `lucide-react` (imported and colored with `#10b981` / `text-[#10b981]`).
+   * **Title & Subtitle:** Localization-friendly using `t()`:
+     * Title: RU "Заявка принята", RO "Cererea a fost primită"
+     * Subtitle: RU "Мы свяжемся с вами в ближайшее время", RO "Vă vom contacta în cel mai scurt timp"
 
-Сейчас базовые классы фона/текста/границы корректно завязаны на `d.is_published`, но к ним добавлены hover-классы `[@media(hover:hover)]:hover:bg-rose-100 …`, которые меняют пилюлю на «противоположный» цвет при наведении. На мобильных устройствах после тапа браузер удерживает `:hover` состояние до следующего тапа в другом месте — и хотя медиазапрос `(hover: hover)` должен это отсекать, ряд мобильных Chromium/WebView всё равно отдают `hover: hover` и состояние «залипает». Визуально это выглядит как «фон не обновился».
+### Technical Details
 
-Решение — убрать hover-смену цвета фона/текста/границы полностью. Фон, текст и граница рисуются строго из `d.is_published`. Для desktop-аффорданса оставляем только лёгкий визуальный отклик: чуть темнее фон того же оттенка (`hover:bg-green-200` / `hover:bg-muted/70`) — без смены семантики цвета.
-
-## Что меняем (только в `admin.destinations.index.tsx`)
-
-### 1. Классы кнопки-пилюли
-
-Убрать классы вида `[@media(hover:hover)]:hover:bg-rose-100 …` и `[@media(hover:hover)]:hover:bg-green-100 …`, заменив их на нейтральный hover того же оттенка:
-
-```tsx
-d.is_published
-  ? "bg-green-100 text-green-800 border-green-200 [@media(hover:hover)]:hover:bg-green-200"
-  : "bg-muted text-muted-foreground border-border [@media(hover:hover)]:hover:bg-muted/70"
-```
-
-Текст внутри (`Опубликовано` / `Скрыто`) и цвет точки уже строго из `d.is_published` — это не трогаем. `title` (тултип) с подсказкой «Нажмите, чтобы скрыть/опубликовать» остаётся как desktop-аффорданс.
-
-### 2. Кастомная анимация точки
-
-Заменить `animate-pulse` на собственные keyframes. Добавить один раз inline `<style>` внутри компонента (рядом с `return`) с правилом:
-
-```css
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.15; transform: scale(0.85); }
-}
-.pulse-dot { animation: pulse-dot 1s ease-in-out infinite; }
-```
-
-На span точки заменить `animate-pulse` на `pulse-dot`:
-
-```tsx
-<span
-  aria-hidden="true"
-  className={cn(
-    "w-2.5 h-2.5 rounded-full pulse-dot",
-    d.is_published ? "bg-green-500" : "bg-rose-500",
+* **Import Change:** Add `CheckCircle` to the `lucide-react` imports.
+* **Component modification in `LeadForm`:**
+  ```tsx
+  {sent && (
+    <div className="p-6 bg-[#d1fae5] border border-[#10b981] rounded-sm text-[#065f46] font-serif flex items-start gap-4 mb-6">
+      <CheckCircle className="w-6 h-6 text-[#10b981] shrink-0 mt-0.5" aria-hidden="true" />
+      <div>
+        <h3 className="font-semibold text-lg md:text-xl mb-1">
+          {t("Заявка принята", "Cererea a fost primită")}
+        </h3>
+        <p className="text-sm md:text-base leading-relaxed opacity-90">
+          {t("Мы свяжемся с вами в ближайшее время", "Vă vom contacta în cel mai scurt timp")}
+        </p>
+      </div>
+    </div>
   )}
-/>
-```
-
-## Что не трогаем
-
-- Серверные функции, мутацию, query-логику, оптимистичный апдейт.
-- Размер точки, размер пилюли, layout таблицы.
-- Любые другие места файла.
+  
+  <form onSubmit={onSubmit} className={`space-y-4 font-serif ${sent ? "hidden" : ""}`}>
+    {/* Form contents remain unchanged */}
+  </form>
+  ```
