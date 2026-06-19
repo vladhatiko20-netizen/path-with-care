@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { MessageCircle } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import { useLocalizedTo } from "@/lib/use-localized-to";
@@ -100,6 +101,14 @@ export function Component() {
                   <a href="mailto:palomnik.moldova@gmail.com" className="inline-flex items-center px-5 py-2 border border-gold text-foreground hover:bg-secondary transition-colors rounded-sm text-sm tracking-wide">
                     palomnik.moldova@gmail.com
                   </a>
+                  <a
+                    href="viber://chat?number=37368778676"
+                    className="inline-flex items-center gap-1.5 px-5 py-2 border rounded-sm text-sm tracking-wide hover:opacity-80 transition-opacity"
+                    style={{ borderColor: "#7360F2", color: "#7360F2" }}
+                    aria-label="Viber"
+                  >
+                    <MessageCircle className="w-4 h-4" /> Viber
+                  </a>
                 </div>
               </div>
             </div>
@@ -120,6 +129,14 @@ export function Component() {
           </a>
           <a href="mailto:palomnik.moldova@gmail.com" className="inline-flex items-center px-6 py-2.5 border border-gold text-foreground hover:bg-secondary transition-colors rounded-sm text-sm tracking-wide">
             palomnik.moldova@gmail.com
+          </a>
+          <a
+            href="viber://chat?number=37368778676"
+            className="inline-flex items-center gap-1.5 px-6 py-2.5 border rounded-sm text-sm tracking-wide hover:opacity-80 transition-opacity"
+            style={{ borderColor: "#7360F2", color: "#7360F2" }}
+            aria-label="Viber"
+          >
+            <MessageCircle className="w-4 h-4" /> Viber
           </a>
         </div>
       </section>
@@ -272,7 +289,18 @@ export function Component() {
           <p className="mt-3">
             <a href="tel:+37368778676" className="hover:text-gold transition-colors">+373 68 77 86 76</a>
             <span className="mx-2 text-border">·</span>
+            <a href="tel:+37368787599" className="hover:text-gold transition-colors">+373 68 78 75 99</a>
+            <span className="mx-2 text-border">·</span>
             <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">palomnik.moldova@gmail.com</a>
+          </p>
+          <p className="mt-2">
+            <a
+              href="viber://chat?number=37368778676"
+              className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" style={{ color: "#7360F2" }} />
+              Viber — {t("Анна", "Anna")}
+            </a>
           </p>
           <p className="mt-4 text-xs text-muted-foreground">
             <Link to={localize("/contacts") as "/contacts"} className="hover:text-foreground gold-underline">{t("Связаться с нами", "Contactați-ne")}</Link>
