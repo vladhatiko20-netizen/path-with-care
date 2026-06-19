@@ -25,9 +25,10 @@ function Page() {
           <h2 className="font-serif text-xl mb-1">
             Заявки
             {unreadCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center min-w-[1.5rem] h-6 px-2 rounded-full bg-gold text-foreground text-xs font-sans font-medium align-middle">
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </span>
+              <span
+                className="ml-2 inline-block w-2.5 h-2.5 rounded-full bg-[#ef4444] animate-pulse align-middle"
+                aria-label={`Непрочитанных заявок: ${unreadCount}`}
+              />
             )}
           </h2>
           <p className="text-sm text-muted-foreground">Заявки с форм сайта: имя, телефон, сообщение.</p>
