@@ -70,17 +70,29 @@ function Page() {
     { v: "other", l: CATEGORY_LABELS.other, n: unread?.other ?? 0 },
   ];
 
+  const unreadCount =
+    (unread?.pilgrimage ?? 0) +
+    (unread?.priest ?? 0) +
+    (unread?.catalog ?? 0) +
+    (unread?.other ?? 0);
+
   return (
     <div className="p-4 md:p-8 max-w-4xl">
       <div className="flex items-center justify-between gap-3 mb-6">
         <h1 className="font-serif text-2xl md:text-3xl flex items-center">
           Заявки
-          <style>{`@keyframes colorShift { 0%, 100% { background-color: #ef4444; } 50% { background-color: #10b981; } }`}</style>
-          <span
-            className="inline-block w-8 h-8 rounded-full ml-3"
-            style={{ animation: "colorShift 2s ease-in-out infinite" }}
-            aria-hidden="true"
-          />
+          {unreadCount > 0 && (
+            <>
+              <style>{`@keyframes colorShift { 0%, 100% { background-color: #ef4444; } 50% { background-color: #10b981; } }`}</style>
+              <span
+                className="inline-flex items-center justify-center w-8 h-8 rounded-full ml-3 text-sm font-semibold text-white transition-all duration-300"
+                style={{ animation: "colorShift 2s ease-in-out infinite" }}
+                aria-label={`Непрочитанных заявок: ${unreadCount}`}
+              >
+                {unreadCount}
+              </span>
+            </>
+          )}
         </h1>
         {hasUnread && (
           <button
