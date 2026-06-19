@@ -59,6 +59,7 @@ import { Route as AdminAdminDestinationsImportRouteImport } from './routes/_admi
 import { Route as AdminAdminDestinationsIdRouteImport } from './routes/_admin/admin.destinations.$id'
 import { Route as AdminAdminClergyNewRouteImport } from './routes/_admin/admin.clergy.new'
 import { Route as AdminAdminClergyIdRouteImport } from './routes/_admin/admin.clergy.$id'
+import { Route as AdminAdminCatalogPageRouteImport } from './routes/_admin/admin.catalog.page'
 import { Route as AdminAdminCatalogNewRouteImport } from './routes/_admin/admin.catalog.new'
 import { Route as AdminAdminCatalogIdRouteImport } from './routes/_admin/admin.catalog.$id'
 import { Route as AdminAdminBlogNewRouteImport } from './routes/_admin/admin.blog.new'
@@ -320,6 +321,11 @@ const AdminAdminClergyIdRoute = AdminAdminClergyIdRouteImport.update({
   path: '/admin/clergy/$id',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminCatalogPageRoute = AdminAdminCatalogPageRouteImport.update({
+  id: '/admin/catalog/page',
+  path: '/admin/catalog/page',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdminCatalogNewRoute = AdminAdminCatalogNewRouteImport.update({
   id: '/admin/catalog/new',
   path: '/admin/catalog/new',
@@ -378,6 +384,7 @@ export interface FileRoutesByFullPath {
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/admin/catalog/$id': typeof AdminAdminCatalogIdRoute
   '/admin/catalog/new': typeof AdminAdminCatalogNewRoute
+  '/admin/catalog/page': typeof AdminAdminCatalogPageRoute
   '/admin/clergy/$id': typeof AdminAdminClergyIdRoute
   '/admin/clergy/new': typeof AdminAdminClergyNewRoute
   '/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
@@ -432,6 +439,7 @@ export interface FileRoutesByTo {
   '/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/admin/catalog/$id': typeof AdminAdminCatalogIdRoute
   '/admin/catalog/new': typeof AdminAdminCatalogNewRoute
+  '/admin/catalog/page': typeof AdminAdminCatalogPageRoute
   '/admin/clergy/$id': typeof AdminAdminClergyIdRoute
   '/admin/clergy/new': typeof AdminAdminClergyNewRoute
   '/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
@@ -489,6 +497,7 @@ export interface FileRoutesById {
   '/_admin/admin/blog/new': typeof AdminAdminBlogNewRoute
   '/_admin/admin/catalog/$id': typeof AdminAdminCatalogIdRoute
   '/_admin/admin/catalog/new': typeof AdminAdminCatalogNewRoute
+  '/_admin/admin/catalog/page': typeof AdminAdminCatalogPageRoute
   '/_admin/admin/clergy/$id': typeof AdminAdminClergyIdRoute
   '/_admin/admin/clergy/new': typeof AdminAdminClergyNewRoute
   '/_admin/admin/destinations/$id': typeof AdminAdminDestinationsIdRoute
@@ -546,6 +555,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/catalog/$id'
     | '/admin/catalog/new'
+    | '/admin/catalog/page'
     | '/admin/clergy/$id'
     | '/admin/clergy/new'
     | '/admin/destinations/$id'
@@ -600,6 +610,7 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/catalog/$id'
     | '/admin/catalog/new'
+    | '/admin/catalog/page'
     | '/admin/clergy/$id'
     | '/admin/clergy/new'
     | '/admin/destinations/$id'
@@ -656,6 +667,7 @@ export interface FileRouteTypes {
     | '/_admin/admin/blog/new'
     | '/_admin/admin/catalog/$id'
     | '/_admin/admin/catalog/new'
+    | '/_admin/admin/catalog/page'
     | '/_admin/admin/clergy/$id'
     | '/_admin/admin/clergy/new'
     | '/_admin/admin/destinations/$id'
@@ -1047,6 +1059,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminClergyIdRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/catalog/page': {
+      id: '/_admin/admin/catalog/page'
+      path: '/admin/catalog/page'
+      fullPath: '/admin/catalog/page'
+      preLoaderRoute: typeof AdminAdminCatalogPageRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/admin/catalog/new': {
       id: '/_admin/admin/catalog/new'
       path: '/admin/catalog/new'
@@ -1086,6 +1105,7 @@ interface AdminRouteChildren {
   AdminAdminBlogNewRoute: typeof AdminAdminBlogNewRoute
   AdminAdminCatalogIdRoute: typeof AdminAdminCatalogIdRoute
   AdminAdminCatalogNewRoute: typeof AdminAdminCatalogNewRoute
+  AdminAdminCatalogPageRoute: typeof AdminAdminCatalogPageRoute
   AdminAdminClergyIdRoute: typeof AdminAdminClergyIdRoute
   AdminAdminClergyNewRoute: typeof AdminAdminClergyNewRoute
   AdminAdminDestinationsIdRoute: typeof AdminAdminDestinationsIdRoute
@@ -1113,6 +1133,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdminBlogNewRoute: AdminAdminBlogNewRoute,
   AdminAdminCatalogIdRoute: AdminAdminCatalogIdRoute,
   AdminAdminCatalogNewRoute: AdminAdminCatalogNewRoute,
+  AdminAdminCatalogPageRoute: AdminAdminCatalogPageRoute,
   AdminAdminClergyIdRoute: AdminAdminClergyIdRoute,
   AdminAdminClergyNewRoute: AdminAdminClergyNewRoute,
   AdminAdminDestinationsIdRoute: AdminAdminDestinationsIdRoute,
