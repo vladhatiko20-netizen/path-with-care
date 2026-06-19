@@ -37,7 +37,7 @@ import {
   CheckCircle2, Minus,
   Calendar,
   User, Phone, Mail, MessageSquare, Send,
-  ChevronDown, ChevronUp, HelpCircle,
+  ChevronDown, ChevronUp, HelpCircle, CheckCircle,
 } from "lucide-react";
 import Lightbox from "yet-another-react-lightbox";
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -750,12 +750,20 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
         <div>
         <h2 className="md:hidden font-serif text-3xl text-foreground font-light mb-8">{t("Оставить заявку", "Lăsați o cerere")}</h2>
         <h2 className="hidden md:block font-serif md:text-2xl text-muted-foreground font-light mb-6">{t("Вариант 1: Оставить заявку", "Varianta 1: Lăsați o cerere")}</h2>
-        {sent ? (
-          <div className="p-5 bg-background border border-gold/40 rounded-sm font-serif italic text-[17px] text-foreground/85">
-            {t("Спасибо! Ваша заявка получена.", "Mulțumim! Cererea dvs. a fost primită.")}
+        {sent && (
+          <div className="p-6 bg-[#d1fae5] border border-[#10b981] rounded-sm text-[#065f46] font-serif flex items-start gap-4 mb-6">
+            <CheckCircle className="w-6 h-6 text-[#10b981] shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <h3 className="font-semibold text-lg md:text-xl mb-1">
+                {t("Заявка принята", "Cererea a fost primită")}
+              </h3>
+              <p className="text-sm md:text-base leading-relaxed opacity-90">
+                {t("Мы свяжемся с вами в ближайшее время", "Vă vom contacta în cel mai scurt timp")}
+              </p>
+            </div>
           </div>
-        ) : (
-          <form onSubmit={onSubmit} className="space-y-4 font-serif">
+        )}
+        <form onSubmit={onSubmit} className={`space-y-4 font-serif ${sent ? "hidden" : ""}`}>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
               <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
@@ -776,8 +784,7 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
               {sending ? t("Отправка…", "Se trimite…") : t("Отправить заявку", "Trimiteți cererea")}
               {!sending && <Send className="w-4 h-4" aria-hidden="true" />}
             </button>
-          </form>
-        )}
+        </form>
         {/* Mobile-only contacts (desktop shows them in right column) */}
         <div className="md:hidden mt-12">
           <ContactsBlock desktop={false} />
