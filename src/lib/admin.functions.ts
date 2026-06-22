@@ -1247,7 +1247,13 @@ async function insertSingleDestination(supabase: any, item: ImportItem) {
   }
 
   await writeChildTables(supabase, slug, item, rollback);
-  return { id: destId, slug, title_ru: item.destination.title_ru };
+  let galleryWarnings: string[] = [];
+  try {
+    galleryWarnings = await applyGalleryCaptions(supabase, slug, item.gallery);
+  } catch (e) {
+    await rollback(e instanceof Error ? e.message : String(e));
+  }
+  return { id: destId, slug, title_ru: item.destination.title_ru, warnings: galleryWarnings };
 }
 
 async function writeChildTables(
