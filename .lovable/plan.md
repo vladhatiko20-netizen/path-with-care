@@ -1,11 +1,28 @@
-We will update the Romanian translation of the slogan under the logo in the website header.
+Мы можем настроить внешний вид подписи в мобильной галерее (Lightbox), добавив точечные CSS-правила в `src/styles.css`.
 
-### Steps to execute
-1. Read `src/components/site/Header.tsx` L93-L100 (already verified).
-2. Modify L96:
-   From: `{t("Путь к Святыням", "Cale spre sfinte locuri")}`
-   To: `{t("Путь к Святыням", "Calea spre locurile sfinte")}`
-3. Verify that the application builds and runs correctly with no other files modified.
+### Предлагаемые изменения:
+1. **Сделать полосу затемнения сверху тоньше**: уменьшим верхний внутренний отступ (`padding-top`) у контейнера подписи `.yarl__slide_captions_container` (например, с 16px до 6px-8px). Также мы можем сделать градиент более мягким, чтобы он быстрее рассеивался кверху.
+2. **Опустить поле надписи ниже**: уменьшим нижний внутренний отступ (`padding-bottom`) до минимума (например, до 4px-6px) или отрегулируем внешние отступы у абзаца описания `.yarl__slide_description`.
 
-### Technical details
-This is a simple JSX text replacement in a presentation component, which does not affect any database schemas or server functions.
+### Технические детали (CSS):
+Добавим в `src/styles.css` следующие стили:
+
+```css
+/* Настройка контейнера подписи в галерее (мобильная версия) */
+.yarl__slide_captions_container {
+  padding-top: 6px !important;     /* Делает полосу затемнения над текстом тоньше */
+  padding-bottom: 6px !important;  /* Смещает текст ниже к миниатюрам */
+  background: linear-gradient(
+    to top, 
+    rgba(0, 0, 0, 0.75) 0%, 
+    rgba(0, 0, 0, 0.4) 70%, 
+    rgba(0, 0, 0, 0) 100%
+  ) !important;                    /* Более мягкий градиент затемнения */
+}
+
+/* Настройка самого текста подписи */
+.yarl__slide_description {
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+}
+```
