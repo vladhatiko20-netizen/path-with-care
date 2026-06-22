@@ -1154,6 +1154,12 @@ async function buildDestinationExportPayload(supabase: any, id: string) {
       answer_ru: f.answer_ru ?? null,
       answer_ro: f.answer_ro ?? null,
     })),
+    gallery: gallery.map((g: any) => ({
+      sort_order: g.sort_order,
+      image_url: g.image_url,
+      alt_ru: g.alt_ru ?? null,
+      alt_ro: g.alt_ro ?? null,
+    })),
     _images_manifest: {
       note: "Справочный блок: реальные URL картинок из текущего хранилища. Игнорируется при импорте. Используется как резервная копия и для миграции на собственный Supabase.",
       cover_image: dest.cover_image ?? null,
