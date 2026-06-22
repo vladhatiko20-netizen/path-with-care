@@ -852,6 +852,14 @@ const importFaqSchema = z.object({
   answer_ro: z.string().max(10000).nullable().optional(),
 });
 
+const importGalleryCaptionSchema = z.object({
+  sort_order: z.number().int().min(1).max(1000),
+  // image_url is reference-only (helps human self-check); ignored on write.
+  image_url: z.string().max(2000).nullable().optional(),
+  alt_ru: z.string().max(500).nullable().optional(),
+  alt_ro: z.string().max(500).nullable().optional(),
+});
+
 const importPayloadSchema = z.object({
   destination: importDestSchema,
   shrines: z.array(importShrineSchema).max(100).optional().default([]),
@@ -861,6 +869,7 @@ const importPayloadSchema = z.object({
     not_included: z.array(importInclusionItemSchema).max(100).optional().default([]),
   }).optional().default({ included: [], not_included: [] }),
   faq: z.array(importFaqSchema).max(100).optional().default([]),
+  gallery: z.array(importGalleryCaptionSchema).max(200).optional().default([]),
 });
 
 function formatZodError(err: z.ZodError): string {
