@@ -56,7 +56,7 @@ export function Component() {
         <p className="mt-10 font-serif italic text-foreground/70 leading-relaxed">
           {t(
             "Многие наши поездки приурочены к церковным праздникам – Страстной седмице в Иерусалиме, перенесению мощей свт. Николая в Бари, Успению Богородицы. Если вас интересует поездка к конкретному празднику – напишите нам.",
-            "Multe pelerinaje sunt legate de sărbătorile bisericești – Săptămâna Patimilor la Ierusalim, aducerea moaștelor Sf. Nicolae la Bari, Adormirea Maicii Domnului. Dacă vă interesează o călătorie la o anumită sărbătoare – scrieți-ne."
+            "Multe pelerinaje sunt legate de sărbătorile bisericești – Săptămâna Patimilor la Ierusalim, aducerea moaștelor Sfântului Nicolae la Bari, Adormirea Maicii Domnului. Dacă vă interesează o călătorie la o anumită sărbătoare, scrieți-ne."
           )}
         </p>
       </section>
