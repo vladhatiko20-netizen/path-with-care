@@ -102,6 +102,7 @@ function DesktopSlideFooter({ description }: { description: string }) {
  */
 export function useLightboxCaptionProps(): CaptionProps {
   const isDesktop = useIsDesktop();
+  useMobileControlsAutoHide(!isDesktop);
   if (isDesktop) {
     return {
       className: "lb-caption-below",
