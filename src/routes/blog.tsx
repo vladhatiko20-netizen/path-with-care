@@ -9,7 +9,7 @@ export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "Православный блог — Паломник",
+      title: "Православный блог – Паломник",
       description: "Истории паломников, практические советы, рассказы о святых местах.",
       ogDescription: "Истории паломников и рассказы о святых местах.",
       ogImage: heroImg,

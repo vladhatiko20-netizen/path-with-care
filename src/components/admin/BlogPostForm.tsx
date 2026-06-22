@@ -56,7 +56,7 @@ export function BlogPostForm({ initial }: { initial: Initial }) {
     const over = len > recommended;
     return (
       <p className={`mt-1 text-xs ${over ? "text-destructive" : "text-muted-foreground"}`}>
-        {len} / {recommended} символов{over ? " — Google может обрезать" : ""}
+        {len} / {recommended} символов{over ? " – Google может обрезать" : ""}
       </p>
     );
   }
@@ -152,7 +152,7 @@ export function BlogPostForm({ initial }: { initial: Initial }) {
           </div>
         </div>
         <p className="text-xs text-muted-foreground">
-          Если поля не заполнены — используются заголовок и краткое описание статьи.
+          Если поля не заполнены – используются заголовок и краткое описание статьи.
         </p>
       </section>
 

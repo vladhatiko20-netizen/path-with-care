@@ -7,7 +7,7 @@ export const Route = createFileRoute("/public-offer")({
   head: () => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "Публичная оферта — Паломник",
+      title: "Публичная оферта – Паломник",
       description: "Публичная оферта сайта Паломник.",
       ogDescription: "Условия публичной оферты на услуги паломнических поездок Паломник.",
     }),

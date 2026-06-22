@@ -197,7 +197,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
           const a = (p.author ?? "").trim();
           const l = (p.license ?? "").trim();
           if (!a && !l) return "";
-          if (a && l) return `${a} — ${l}`;
+          if (a && l) return `${a} – ${l}`;
           return a || l;
         })
         .filter(Boolean),

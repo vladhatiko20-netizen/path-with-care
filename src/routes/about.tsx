@@ -8,9 +8,9 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "О нас — Паломник",
-      description: "Анна Плотник — путешественница и паломница. Подразделение SRL Eldorado Tur.",
-      ogDescription: "Анна Плотник — путешественница и паломница.",
+      title: "О нас – Паломник",
+      description: "Анна Плотник – путешественница и паломница. Подразделение SRL Eldorado Tur.",
+      ogDescription: "Анна Плотник – путешественница и паломница.",
       ogImage: annaHero,
     }),
     links: hreflangLinks("/about", "ru"),

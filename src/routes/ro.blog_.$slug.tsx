@@ -14,7 +14,7 @@ export const Route = createFileRoute("/ro/blog_/$slug")({
   },
   head: ({ loaderData, params }) => {
     const post = loaderData?.post;
-    if (!post) return { meta: [{ title: "Articol negăsit — Pelerin" }] };
+    if (!post) return { meta: [{ title: "Articol negăsit – Pelerin" }] };
     const cover = resolveBlogImage(post.cover_image);
     const baseTitle = post.seo_title_ro || post.title_ro || post.title_ru;
     const desc =
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/ro/blog_/$slug")({
     return {
       meta: buildPageMeta({
         lang: "ro",
-        title: `${baseTitle} — Pelerin`,
+        title: `${baseTitle} – Pelerin`,
         description: desc,
         ogTitle: baseTitle,
         ogType: "article",

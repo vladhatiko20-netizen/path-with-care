@@ -114,7 +114,7 @@ export function Component() {
                             {durationDays(row.start_date, row.end_date)} {t("дн.", "zile")}
                           </td>
                           <td className="py-2.5 pr-2 md:py-3 md:pr-3 text-gold font-medium text-[15px] md:text-base whitespace-nowrap">
-                            {row.price_eur ? `€${row.price_eur}` : "—"}
+                            {row.price_eur ? `€${row.price_eur}` : "–"}
                           </td>
                           <td className="py-2.5 pl-1 md:py-3 md:pl-0 text-right">
                             {hasLink && (

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/contacts")({
   head: () => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "Контакты — Паломник",
+      title: "Контакты – Паломник",
       description: "Адрес офиса в Кишинёве, телефоны, электронная почта, часы работы и форма обратной связи.",
       ogDescription: "Свяжитесь с нами: бд. Дачия 20, оф. 81, Кишинёв.",
       ogImage: heroImg,

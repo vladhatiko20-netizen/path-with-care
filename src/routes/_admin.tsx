@@ -7,7 +7,7 @@ import { LogOut, FileText, Calendar, LayoutDashboard, Menu, X, MapPin, Inbox, Us
 import { adminCountUnreadLeads } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_admin")({
-  head: () => ({ meta: [{ title: "Админ-панель — Паломник" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Админ-панель – Паломник" }, { name: "robots", content: "noindex" }] }),
   component: AdminLayout,
 });
 

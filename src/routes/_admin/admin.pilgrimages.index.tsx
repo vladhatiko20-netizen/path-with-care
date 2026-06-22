@@ -94,7 +94,7 @@ function Page() {
                 <tr key={p.id} className="border-t border-border">
                   <td className="px-4 py-3 whitespace-nowrap">{p.start_date} → {p.end_date}</td>
                   <td className="px-4 py-3">{p.destination_ru}</td>
-                  <td className="px-4 py-3">{p.price_eur ? `€${p.price_eur}` : "—"}</td>
+                  <td className="px-4 py-3">{p.price_eur ? `€${p.price_eur}` : "–"}</td>
                   <td className="px-4 py-3">{p.with_priest ? "Да" : "Нет"}</td>
                   <td className="px-4 py-3">
                     {p.destination_published === false ? (
