@@ -380,6 +380,11 @@ function Page() {
               включено: {result.counts.included}, не включено: {result.counts.not_included},
               FAQ: {result.counts.faq}.
             </p>
+            {result.warnings && result.warnings.length > 0 && (
+              <ul className="list-disc pl-5 text-sm text-amber-800">
+                {result.warnings.map((w, i) => <li key={i}>{w}</li>)}
+              </ul>
+            )}
             <p className="text-sm text-green-900">
               <Link to="/admin/destinations/$id" params={{ id: result.id }} className="underline">
                 Открыть направление →
