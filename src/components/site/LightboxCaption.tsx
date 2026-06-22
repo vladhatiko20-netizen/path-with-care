@@ -32,6 +32,45 @@ function useIsDesktop(query = "(min-width: 768px)") {
 }
 
 /**
+ * On mobile, hide YARL nav arrows + toolbar by default and reveal them for
+ * ~2.5s whenever the user taps the lightbox. Adds/removes `lb-controls-visible`
+ * on `.yarl__root`. No-op when `enabled` is false (desktop).
+ */
+function useMobileControlsAutoHide(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled || typeof document === "undefined") return;
+    let hideTimer: ReturnType<typeof setTimeout> | null = null;
+    const attached = new WeakSet<Element>();
+
+    const reveal = (root: Element) => {
+      root.classList.add("lb-controls-visible");
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        root.classList.remove("lb-controls-visible");
+      }, 2500);
+    };
+
+    const attach = (root: Element) => {
+      if (attached.has(root)) return;
+      attached.add(root);
+      const handler = () => reveal(root);
+      root.addEventListener("pointerdown", handler, true);
+    };
+
+    document.querySelectorAll(".yarl__root").forEach(attach);
+    const mo = new MutationObserver(() => {
+      document.querySelectorAll(".yarl__root").forEach(attach);
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      mo.disconnect();
+      if (hideTimer) clearTimeout(hideTimer);
+    };
+  }, [enabled]);
+}
+
+/**
  * Desktop slideFooter: caption rendered in the black area below the photo,
  * with width bound to the live rendered width of the .yarl__slide_image via
  * ResizeObserver. Works for portrait + landscape automatically.
