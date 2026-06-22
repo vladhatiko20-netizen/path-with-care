@@ -1019,6 +1019,13 @@ export const adminImportDestination = createServerFn({ method: "POST" })
       if (error) await rollback(`Ошибка при добавлении FAQ: ${error.message}`);
     }
 
+    let galleryWarnings: string[] = [];
+    try {
+      galleryWarnings = await applyGalleryCaptions(context.supabase, slug, data.gallery);
+    } catch (e) {
+      await rollback(e instanceof Error ? e.message : String(e));
+    }
+
     return {
       ok: true,
       id: destId,
@@ -1031,6 +1038,7 @@ export const adminImportDestination = createServerFn({ method: "POST" })
         not_included: data.inclusions.not_included.length,
         faq: data.faq.length,
       },
+      warnings: galleryWarnings,
     };
   });
 
