@@ -43,7 +43,7 @@ export function destinationNameRu(slug: string): string {
 }
 
 export function sourceLabel(s: string | null | undefined): string {
-  if (!s) return "—";
+  if (!s) return "–";
   if (SOURCE_LABELS[s]) return SOURCE_LABELS[s];
   if (s.startsWith("destination:")) {
     return `Паломничество: ${destinationNameRu(s.slice("destination:".length))}`;

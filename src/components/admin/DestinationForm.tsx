@@ -99,7 +99,7 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             <label className="block text-sm font-serif mb-1">Короткое название (для крошек, RO)</label>
             <input className={cls} value={form.short_title_ro ?? ""} onChange={(e) => set("short_title_ro", e.target.value || null)} maxLength={120} placeholder="Bari" />
           </div>
-          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">Используется только в хлебных крошках. Если пусто — берётся первое слово полного названия.</p>
+          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">Используется только в хлебных крошках. Если пусто – берётся первое слово полного названия.</p>
           <div className="sm:col-span-2">
             <label className="block text-sm font-serif mb-1">Порядок сортировки</label>
             <input
@@ -112,7 +112,7 @@ export function DestinationForm({ initial }: { initial: Initial }) {
               step={1}
               placeholder="напр. 10"
             />
-            <p className="text-xs text-muted-foreground mt-1">Чем меньше — тем выше в списке на главной и в каталоге. Можно оставить пустым у новых направлений — присвоится автоматически.</p>
+            <p className="text-xs text-muted-foreground mt-1">Чем меньше – тем выше в списке на главной и в каталоге. Можно оставить пустым у новых направлений – присвоится автоматически.</p>
           </div>
         </div>
         <ImageUpload
@@ -160,7 +160,7 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             <input className={cls} value={form.accompaniment_ro ?? ""} onChange={(e) => set("accompaniment_ro", e.target.value || null)} maxLength={255} placeholder="cu preot" />
           </div>
           <p className="sm:col-span-2 text-xs text-muted-foreground -mt-2">
-            По умолчанию — со священником. Заполните, только если поездка отличается.
+            По умолчанию – со священником. Заполните, только если поездка отличается.
           </p>
         </div>
         <div>
@@ -194,7 +194,7 @@ export function DestinationForm({ initial }: { initial: Initial }) {
             />
             <p className="text-xs text-muted-foreground mt-1">{(form.card_text_ro ?? "").length}/120</p>
           </div>
-          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-1">Показывается только на главной странице под названием направления. Если пусто — возьмётся краткое описание.</p>
+          <p className="sm:col-span-2 text-xs text-muted-foreground -mt-1">Показывается только на главной странице под названием направления. Если пусто – возьмётся краткое описание.</p>
         </div>
       </section>
 
@@ -296,7 +296,7 @@ export function DestinationForm({ initial }: { initial: Initial }) {
           label="Картинка для соцсетей (OG image)"
         />
         <p className="text-xs text-muted-foreground">
-          Если поля не заполнены — будут использованы основное название, краткое описание и главное фото.
+          Если поля не заполнены – будут использованы основное название, краткое описание и главное фото.
         </p>
       </section>
 

@@ -108,7 +108,7 @@ export function ImageUpload({
             </button>
           )}
           <p className="text-xs text-muted-foreground">
-            JPG, PNG, WEBP, AVIF — до 15 МБ. Фото автоматически оптимизируется для веба (до 1920px, качество 90%).
+            JPG, PNG, WEBP, AVIF – до 15 МБ. Фото автоматически оптимизируется для веба (до 1920px, качество 90%).
           </p>
         </div>
       </div>

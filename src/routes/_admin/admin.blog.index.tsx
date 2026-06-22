@@ -243,7 +243,7 @@ function Page() {
                 onChange={(e) => setExportId(e.target.value)}
                 className="px-3 py-2 border border-border rounded-sm bg-background text-sm min-w-[280px]"
               >
-                <option value="">— выберите статью —</option>
+                <option value="">– выберите статью –</option>
                 {(data ?? []).map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.title_ru.slice(0, 80)}{d.is_published ? "" : " · черновик"}
@@ -326,7 +326,7 @@ function Page() {
           <section>
             <h2 className="font-serif text-base mb-2">Массовый импорт</h2>
             <p className="text-xs text-muted-foreground mb-3">
-              JSON-массив или объект <code>{`{ "blog_posts": [...] }`}</code> либо <code>{`{ "mode", "items" }`}</code>. Лимит — 50 статей за батч. Совпадение по <code>slug</code>. При upsert правило сохранения отсутствующих ключей действует и здесь.
+              JSON-массив или объект <code>{`{ "blog_posts": [...] }`}</code> либо <code>{`{ "mode", "items" }`}</code>. Лимит – 50 статей за батч. Совпадение по <code>slug</code>. При upsert правило сохранения отсутствующих ключей действует и здесь.
             </p>
             <div className="mb-3">
               <label className="block text-xs font-medium mb-1">Режим обработки совпадений</label>
@@ -382,7 +382,7 @@ function Page() {
                   )}
                   {bulkResult.skipped.length > 0 && (
                     <details><summary className="text-xs cursor-pointer">Пропущено ({bulkResult.skipped.length})</summary>
-                      <ul className="text-xs mt-1 space-y-0.5">{bulkResult.skipped.map((r, i) => <li key={i}>· {r.slug} — {r.reason}</li>)}</ul>
+                      <ul className="text-xs mt-1 space-y-0.5">{bulkResult.skipped.map((r, i) => <li key={i}>· {r.slug} – {r.reason}</li>)}</ul>
                     </details>
                   )}
                   {bulkResult.errors.length > 0 && (

@@ -27,11 +27,11 @@ export function Footer() {
             <p>bd. Dacia 20, of. 81, Chișinău</p>
             <p>
               <a href="tel:+37368778676" className="hover:text-gold transition-colors">+373 68 77 86 76</a>{" "}
-              — {t("Анна", "Anna")}
+              – {t("Анна", "Anna")}
             </p>
             <p>
               <a href="tel:+37368787599" className="hover:text-gold transition-colors">+373 68 78 75 99</a>{" "}
-              — {t("Наталья", "Natalia")}
+              – {t("Наталья", "Natalia")}
             </p>
             <p>
               <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">
@@ -44,7 +44,7 @@ export function Footer() {
                 className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
               >
                 <MessageCircle className="w-4 h-4" style={{ color: "#7360F2" }} />
-                Viber — {t("Анна", "Anna")}
+                Viber – {t("Анна", "Anna")}
               </a>
             </p>
           </div>

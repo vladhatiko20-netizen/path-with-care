@@ -140,7 +140,7 @@ function BackupPage() {
         Бэкап делается вручную: автоматических копий контента нет.
       </p>
       <p className="text-sm text-muted-foreground mb-2">
-        Скачанный архив храните вне Lovable — в Project Knowledge или на диске.
+        Скачанный архив храните вне Lovable – в Project Knowledge или на диске.
       </p>
       <p className="text-sm text-muted-foreground mb-6">
         Код сайта версионируется отдельно через Git; содержимое базы сохраняется
@@ -150,7 +150,7 @@ function BackupPage() {
       <div className="border border-border rounded-sm p-5 bg-card">
         <h2 className="font-serif text-lg text-foreground mb-2">Полная резервная копия контента</h2>
         <p className="text-sm text-muted-foreground mb-4">
-          Один ZIP-архив со всеми блоками. В архиве по одному JSON на блок —
+          Один ZIP-архив со всеми блоками. В архиве по одному JSON на блок –
           в том же формате, что и кнопки «Скачать все» на страницах блоков
           (можно загрузить обратно через существующие bulk-импорты).
         </p>

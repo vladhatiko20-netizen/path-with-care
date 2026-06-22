@@ -323,10 +323,10 @@ export function Component() {
               )}
             </p>
             <ul className="space-y-2 font-serif italic text-foreground/75 mb-7">
-              <li>— {t("Как готовиться к паломничеству?", "Cum să te pregătești de pelerinaj?")}</li>
-              <li>— {t("Нужно ли поститься перед поездкой?", "Trebuie să postim înainte de călătorie?")}</li>
-              <li>— {t("Что взять с собой в Иерусалим?", "Ce să iei cu tine la Ierusalim?")}</li>
-              <li>— {t("Как правильно прикладываться к мощам?", "Cum ne închinăm la moaște?")}</li>
+              <li>– {t("Как готовиться к паломничеству?", "Cum să te pregătești de pelerinaj?")}</li>
+              <li>– {t("Нужно ли поститься перед поездкой?", "Trebuie să postim înainte de călătorie?")}</li>
+              <li>– {t("Что взять с собой в Иерусалим?", "Ce să iei cu tine la Ierusalim?")}</li>
+              <li>– {t("Как правильно прикладываться к мощам?", "Cum ne închinăm la moaște?")}</li>
             </ul>
             <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
               {t("Перейти к беседам", "Treci la conversații")} →
@@ -372,7 +372,7 @@ export function Component() {
               <ul className="space-y-3 mb-7">
                 {blogPosts.slice(0, 3).map((post) => (
                   <li key={post.slug} className="font-serif text-foreground/85 leading-snug border-b border-gold/20 pb-3 last:border-b-0">
-                    — {lang === "ru" ? post.title_ru : post.title_ro}
+                    – {lang === "ru" ? post.title_ru : post.title_ro}
                   </li>
                 ))}
               </ul>
@@ -412,8 +412,8 @@ export function Component() {
               </h2>
               <p className="text-foreground/75 leading-relaxed mb-6">
                 {t(
-                  "Многие православные святыни и духовная литература трудно найти в Молдове. Мы привозим их из паломнических поездок — со Святой Земли, из Бари, с Корфу, с Афона. Если вас интересует определённая икона, книга или ладан — оставьте предзаказ, и мы поможем его привезти.",
-                  "Multe sanctuare ortodoxe și literatură duhovnicească sunt greu de găsit în Moldova. Le aducem din călătoriile de pelerinaj — din Țara Sfântă, din Bari, din Corfu, din Athos. Dacă vă interesează o anumită icoană, carte sau tămâie — lăsați o pre-comandă și vă vom ajuta să o aducem."
+                  "Многие православные святыни и духовная литература трудно найти в Молдове. Мы привозим их из паломнических поездок – со Святой Земли, из Бари, с Корфу, с Афона. Если вас интересует определённая икона, книга или ладан – оставьте предзаказ, и мы поможем его привезти.",
+                  "Multe sanctuare ortodoxe și literatură duhovnicească sunt greu de găsit în Moldova. Le aducem din călătoriile de pelerinaj – din Țara Sfântă, din Bari, din Corfu, din Athos. Dacă vă interesează o anumită icoană, carte sau tămâie – lăsați o pre-comandă și vă vom ajuta să o aducem."
                 )}
               </p>
               <div className="hidden md:block">

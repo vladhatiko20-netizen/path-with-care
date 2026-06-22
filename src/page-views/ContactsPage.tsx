@@ -53,7 +53,7 @@ export function Component() {
                 className="inline-flex items-center gap-2 text-lg text-accent hover:underline"
               >
                 <MessageCircle className="w-5 h-5" style={{ color: "#7360F2" }} />
-                +373 68 77 86 76 — {t("Анна", "Anna")}
+                +373 68 77 86 76 – {t("Анна", "Anna")}
               </a>
             </div>
             <div>
@@ -66,7 +66,7 @@ export function Component() {
           <div>
             <div className="aspect-[4/3] rounded-sm overflow-hidden border border-gold/30">
               <iframe
-                title="Google Maps — бд. Дачия 20, Кишинёв"
+                title="Google Maps – бд. Дачия 20, Кишинёв"
                 src="https://www.google.com/maps?q=Bulevardul+Dacia+20,+Chi%C8%99in%C4%83u,+Moldova&hl=ru&z=16&output=embed"
                 className="w-full h-full"
                 style={{ border: 0 }}

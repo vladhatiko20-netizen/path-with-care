@@ -178,7 +178,7 @@ export function Header() {
                 <span className="w-[60px] h-[60px] rounded-lg bg-accent/10 border-2 border-accent/30 flex items-center justify-center shrink-0">
                   <Phone size={22} className="text-accent" />
                 </span>
-                <span>+373 68 77 86 76 — {t("Анна", "Anna")}</span>
+                <span>+373 68 77 86 76 – {t("Анна", "Anna")}</span>
               </a>
               <a
                 href="viber://chat?number=37368778676"

@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // Neutral sitewide defaults only. Per-page title/description/og/twitter
       // are set on leaves via `buildPageMeta`. Leaving leaf-specific tags here
       // would leak (e.g. RU twitter values onto RO pages).
-      { title: "Паломник — Православные паломнические поездки" },
+      { title: "Паломник – Православные паломнические поездки" },
       { name: "description", content: "Паломнические поездки к святыням православного мира из Кишинёва. И вместе ко Христу." },
       { property: "og:site_name", content: "Паломник" },
       { property: "og:type", content: "website" },

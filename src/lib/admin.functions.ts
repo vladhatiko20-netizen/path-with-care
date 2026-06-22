@@ -901,7 +901,7 @@ async function applyGalleryCaptions(
   for (const item of gallery) {
     const id = byOrder.get(item.sort_order);
     if (!id) {
-      warnings.push(`Галерея: фото №${item.sort_order} не найдено — подпись пропущена.`);
+      warnings.push(`Галерея: фото №${item.sort_order} не найдено – подпись пропущена.`);
       continue;
     }
     const patch: { alt_ru?: string | null; alt_ro?: string | null } = {};
@@ -1488,7 +1488,7 @@ export const adminImportDestinationsBulk = createServerFn({ method: "POST" })
       const conflicts = slugs.filter((s) => existingMap.has(s));
       if (conflicts.length > 0) {
         throw new Error(
-          `Режим "только новые": найдены существующие slug — ${conflicts.join(", ")}. Батч отклонён, ничего не записано.`,
+          `Режим "только новые": найдены существующие slug – ${conflicts.join(", ")}. Батч отклонён, ничего не записано.`,
         );
       }
     }

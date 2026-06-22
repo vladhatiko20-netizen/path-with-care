@@ -98,7 +98,7 @@ function Page() {
                 <tr key={d.id} className="border-t border-border">
                   <td className="px-4 py-3">{d.title_ru}</td>
                   <td className="px-4 py-3 text-muted-foreground">{d.slug}</td>
-                  <td className="px-4 py-3">{d.price_from ? `€${d.price_from}` : "—"}</td>
+                  <td className="px-4 py-3">{d.price_from ? `€${d.price_from}` : "–"}</td>
                   <td className="px-4 py-3">
                     <button
                       type="button"

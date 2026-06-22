@@ -102,12 +102,12 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
             value={form.destination_slug ?? ""}
             onChange={(e) => set("destination_slug", e.target.value || null)}
           >
-            <option value="">— не выбрано —</option>
+            <option value="">– не выбрано –</option>
             {(destinations ?? []).map((d) => (
               <option key={d.slug} value={d.slug}>{d.title_ru}</option>
             ))}
           </select>
-          <p className="text-xs text-muted-foreground mt-1">Связывает поездку с карточкой направления — клик по строке в календаре ведёт на /destinations/{`{slug}`}.</p>
+          <p className="text-xs text-muted-foreground mt-1">Связывает поездку с карточкой направления – клик по строке в календаре ведёт на /destinations/{`{slug}`}.</p>
         </div>
       </div>
 

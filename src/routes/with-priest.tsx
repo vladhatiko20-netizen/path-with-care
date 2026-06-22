@@ -16,7 +16,7 @@ export const Route = createFileRoute("/with-priest")({
   head: ({ loaderData }) => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "Диалог со священником — Паломник",
+      title: "Диалог со священником – Паломник",
       description: "Беседы со священниками, сопровождающими наши паломнические группы. Часто задаваемые вопросы и форма для личного вопроса.",
       ogDescription: "Беседы со священниками, сопровождающими паломников.",
       ogImage: heroImg,

@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/use-auth";
 import { PageShell } from "@/components/site/PageShell";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Вход — Паломник" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Вход – Паломник" }, { name: "robots", content: "noindex" }] }),
   component: LoginPage,
 });
 

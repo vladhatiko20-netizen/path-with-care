@@ -63,7 +63,7 @@ function Page() {
                     )}
                   </td>
                   <td className="px-4 py-3">{c.name_ru}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{c.title_ru ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{c.title_ru ?? "–"}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.sort_order}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-sm text-xs ${c.is_published ? "bg-green-100 text-green-800" : "bg-muted text-muted-foreground"}`}>

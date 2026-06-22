@@ -299,7 +299,7 @@ export function Component() {
               className="inline-flex items-center gap-1.5 hover:text-gold transition-colors"
             >
               <MessageCircle className="w-4 h-4" style={{ color: "#7360F2" }} />
-              Viber — {t("Анна", "Anna")}
+              Viber – {t("Анна", "Anna")}
             </a>
           </p>
           <p className="mt-4 text-xs text-muted-foreground">

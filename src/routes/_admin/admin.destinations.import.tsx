@@ -286,13 +286,13 @@ function Page() {
       <Link to="/admin/destinations" className="text-sm text-accent hover:underline">← К списку</Link>
       <h1 className="font-serif text-3xl mt-3 mb-2">Импорт направления из JSON</h1>
       <p className="text-sm text-muted-foreground mb-6 max-w-3xl">
-        Вставьте JSON-документ и нажмите «Импортировать». Будет создано направление вместе со святынями, программой по дням, разделом «Включено / Не включено» и FAQ. Фотографии (главное, OG, святынь, файлы галереи) загружаются отдельно через админ-форму. Для уже загруженной галереи через JSON можно обновить только подписи: блок <code>gallery</code> — массив <code>{`{ sort_order, alt_ru, alt_ro }`}</code>, сопоставление с фото идёт по <code>sort_order</code> (номер фото в галерее); сами файлы и порядок не меняются. Если фото с таким номером нет — подпись пропускается с предупреждением, новые строки не создаются. <strong>Направление создаётся со статусом «Черновик»</strong> — опубликуйте его вручную после проверки.
+        Вставьте JSON-документ и нажмите «Импортировать». Будет создано направление вместе со святынями, программой по дням, разделом «Включено / Не включено» и FAQ. Фотографии (главное, OG, святынь, файлы галереи) загружаются отдельно через админ-форму. Для уже загруженной галереи через JSON можно обновить только подписи: блок <code>gallery</code> – массив <code>{`{ sort_order, alt_ru, alt_ro }`}</code>, сопоставление с фото идёт по <code>sort_order</code> (номер фото в галерее); сами файлы и порядок не меняются. Если фото с таким номером нет – подпись пропускается с предупреждением, новые строки не создаются. <strong>Направление создаётся со статусом «Черновик»</strong> – опубликуйте его вручную после проверки.
       </p>
 
       <div className="mb-6 p-4 border border-border rounded-sm bg-muted/30">
         <h2 className="font-serif text-lg mb-1">Экспортировать существующее направление</h2>
         <p className="text-xs text-muted-foreground mb-3 max-w-3xl">
-          Структура экспорта идентична схеме импорта — можно сразу импортировать обратно. Все поля картинок в основном объекте равны <code>null</code>; реальные URL вынесены в отдельный блок <code>_images_manifest</code> (игнорируется при импорте; используется как резервная копия и для миграции).
+          Структура экспорта идентична схеме импорта – можно сразу импортировать обратно. Все поля картинок в основном объекте равны <code>null</code>; реальные URL вынесены в отдельный блок <code>_images_manifest</code> (игнорируется при импорте; используется как резервная копия и для миграции).
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <select
@@ -301,7 +301,7 @@ function Page() {
             className="px-3 py-2 border border-border rounded-sm bg-background text-sm min-w-[260px]"
             disabled={listQuery.isLoading}
           >
-            <option value="">— выберите направление —</option>
+            <option value="">– выберите направление –</option>
             {(listQuery.data ?? []).map((d) => (
               <option key={d.id} value={d.id}>
                 {d.title_ru} ({d.slug}){d.is_published ? "" : " · черновик"}
@@ -330,7 +330,7 @@ function Page() {
         )}
         <div className="mt-4 pt-4 border-t border-border">
           <p className="text-xs text-muted-foreground mb-2">
-            Резервная копия всех направлений одним файлом — массив объектов в той же per-destination схеме, с блоком <code>_images_manifest</code> в каждом.
+            Резервная копия всех направлений одним файлом – массив объектов в той же per-destination схеме, с блоком <code>_images_manifest</code> в каждом.
           </p>
           <button
             type="button"
@@ -407,7 +407,7 @@ function Page() {
       <div className="mt-12 p-4 border border-border rounded-sm bg-muted/30">
         <h2 className="font-serif text-lg mb-1">Массовый импорт (несколько направлений)</h2>
         <p className="text-xs text-muted-foreground mb-3 max-w-3xl">
-          Вставьте JSON-массив направлений (или файл, полученный из «Экспортировать все направления»). Лимит — 100 за один батч.
+          Вставьте JSON-массив направлений (или файл, полученный из «Экспортировать все направления»). Лимит – 100 за один батч.
           Каждый элемент проходит ту же валидацию, что и одиночный импорт. Блок <code>_images_manifest</code> игнорируется.
         </p>
 
@@ -418,12 +418,12 @@ function Page() {
             onChange={(e) => setBulkMode(e.target.value as typeof bulkMode)}
             className="px-3 py-2 border border-border rounded-sm bg-background text-sm w-full max-w-md"
           >
-            <option value="upsert">Обновить существующие (upsert по slug) — по умолчанию</option>
+            <option value="upsert">Обновить существующие (upsert по slug) – по умолчанию</option>
             <option value="skip">Пропустить существующие</option>
             <option value="only_new">Только новые (отклонить весь батч, если есть конфликт)</option>
           </select>
           <p className="text-xs text-muted-foreground mt-1">
-            При <strong>upsert</strong>: тексты и дочерние таблицы пересоздаются. Картинки (cover, og, фото святынь — по совпадению title_ru, галерея) и флаг публикации сохраняются.
+            При <strong>upsert</strong>: тексты и дочерние таблицы пересоздаются. Картинки (cover, og, фото святынь – по совпадению title_ru, галерея) и флаг публикации сохраняются.
           </p>
         </div>
 
@@ -497,7 +497,7 @@ function Page() {
               {bulkResult.skipped.length > 0 && (
                 <details><summary>Пропущено ({bulkResult.skipped.length})</summary>
                   <ul className="list-disc pl-5 mt-1">
-                    {bulkResult.skipped.map((r) => <li key={r.slug}><code>{r.slug}</code> — {r.reason}</li>)}
+                    {bulkResult.skipped.map((r) => <li key={r.slug}><code>{r.slug}</code> – {r.reason}</li>)}
                   </ul>
                 </details>
               )}

@@ -7,7 +7,7 @@ export const Route = createFileRoute("/orthodox-calendar")({
   head: () => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "Православный календарь — Паломник",
+      title: "Православный календарь – Паломник",
       description: "Православный календарь: память святых, посты, праздники и связь с паломническими поездками.",
     }),
     links: hreflangLinks("/orthodox-calendar", "ru"),

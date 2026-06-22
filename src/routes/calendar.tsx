@@ -9,7 +9,7 @@ export const Route = createFileRoute("/calendar")({
   head: () => ({
     meta: buildPageMeta({
       lang: "ru",
-      title: "Календарь поездок 2026 — Паломник",
+      title: "Календарь поездок 2026 – Паломник",
       description: "Полный календарь паломнических поездок на 2026 год по месяцам и направлениям.",
       ogDescription: "Полный календарь паломнических поездок на 2026 год.",
       ogImage: `${SITE_ORIGIN}/assets/hero-calendar.jpg`,
