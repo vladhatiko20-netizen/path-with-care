@@ -465,14 +465,32 @@ function Page() {
               {bulkResult.created.length > 0 && (
                 <details><summary>Создано ({bulkResult.created.length})</summary>
                   <ul className="list-disc pl-5 mt-1">
-                    {bulkResult.created.map((r) => <li key={r.id}>{r.title_ru} <code>({r.slug})</code></li>)}
+                    {bulkResult.created.map((r) => (
+                      <li key={r.id}>
+                        {r.title_ru} <code>({r.slug})</code>
+                        {r.warnings && r.warnings.length > 0 && (
+                          <ul className="list-disc pl-5 text-amber-800">
+                            {r.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </details>
               )}
               {bulkResult.updated.length > 0 && (
                 <details><summary>Обновлено ({bulkResult.updated.length})</summary>
                   <ul className="list-disc pl-5 mt-1">
-                    {bulkResult.updated.map((r) => <li key={r.id}>{r.title_ru} <code>({r.slug})</code></li>)}
+                    {bulkResult.updated.map((r) => (
+                      <li key={r.id}>
+                        {r.title_ru} <code>({r.slug})</code>
+                        {r.warnings && r.warnings.length > 0 && (
+                          <ul className="list-disc pl-5 text-amber-800">
+                            {r.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </details>
               )}
