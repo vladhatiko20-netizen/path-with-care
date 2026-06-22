@@ -77,6 +77,14 @@ const EMPTY_TEMPLATE = {
       answer_ro: null,
     },
   ],
+  gallery: [
+    {
+      sort_order: 1,
+      image_url: null,
+      alt_ru: null,
+      alt_ro: null,
+    },
+  ],
 };
 
 type ImportResult = {
@@ -91,6 +99,7 @@ type ImportResult = {
     not_included: number;
     faq: number;
   };
+  warnings?: string[];
 };
 
 function Page() {
@@ -117,8 +126,8 @@ function Page() {
     ok: true;
     mode: "skip" | "upsert" | "only_new";
     summary: { created: number; updated: number; skipped: number; errors: number };
-    created: Array<{ slug: string; title_ru: string; id: string }>;
-    updated: Array<{ slug: string; title_ru: string; id: string }>;
+    created: Array<{ slug: string; title_ru: string; id: string; warnings?: string[] }>;
+    updated: Array<{ slug: string; title_ru: string; id: string; warnings?: string[] }>;
     skipped: Array<{ slug: string; reason: string }>;
     errors: Array<{ slug: string; error: string }>;
   };
@@ -216,7 +225,7 @@ function Page() {
 
     if (bulkMode === "upsert") {
       const ok = window.confirm(
-        "Режим «Обновить существующие»: тексты и связанные таблицы (святыни, дни программы, включено/не включено, FAQ) будут перезаписаны для совпадающих по slug направлений. Картинки (cover, og, фото святынь, галерея) и статус публикации сохраняются. Продолжить?",
+        "Режим «Обновить существующие»: тексты и связанные таблицы (святыни, дни программы, включено/не включено, FAQ) будут перезаписаны для совпадающих по slug направлений. Картинки (cover, og, фото святынь) и статус публикации сохраняются. Для галереи будут обновлены только подписи alt_ru/alt_ro по номеру фото (sort_order); сами файлы галереи и порядок не меняются. Продолжить?",
       );
       if (!ok) return;
     }
@@ -277,7 +286,7 @@ function Page() {
       <Link to="/admin/destinations" className="text-sm text-accent hover:underline">← К списку</Link>
       <h1 className="font-serif text-3xl mt-3 mb-2">Импорт направления из JSON</h1>
       <p className="text-sm text-muted-foreground mb-6 max-w-3xl">
-        Вставьте JSON-документ и нажмите «Импортировать». Будет создано направление вместе со святынями, программой по дням, разделом «Включено / Не включено» и FAQ. Фотографии (главное, OG, святынь, галерея) загружаются отдельно через админ-форму после импорта. <strong>Направление создаётся со статусом «Черновик»</strong> — опубликуйте его вручную после проверки.
+        Вставьте JSON-документ и нажмите «Импортировать». Будет создано направление вместе со святынями, программой по дням, разделом «Включено / Не включено» и FAQ. Фотографии (главное, OG, святынь, файлы галереи) загружаются отдельно через админ-форму. Для уже загруженной галереи через JSON можно обновить только подписи: блок <code>gallery</code> — массив <code>{`{ sort_order, alt_ru, alt_ro }`}</code>, сопоставление с фото идёт по <code>sort_order</code> (номер фото в галерее); сами файлы и порядок не меняются. Если фото с таким номером нет — подпись пропускается с предупреждением, новые строки не создаются. <strong>Направление создаётся со статусом «Черновик»</strong> — опубликуйте его вручную после проверки.
       </p>
 
       <div className="mb-6 p-4 border border-border rounded-sm bg-muted/30">
@@ -371,6 +380,11 @@ function Page() {
               включено: {result.counts.included}, не включено: {result.counts.not_included},
               FAQ: {result.counts.faq}.
             </p>
+            {result.warnings && result.warnings.length > 0 && (
+              <ul className="list-disc pl-5 text-sm text-amber-800">
+                {result.warnings.map((w, i) => <li key={i}>{w}</li>)}
+              </ul>
+            )}
             <p className="text-sm text-green-900">
               <Link to="/admin/destinations/$id" params={{ id: result.id }} className="underline">
                 Открыть направление →
@@ -451,14 +465,32 @@ function Page() {
               {bulkResult.created.length > 0 && (
                 <details><summary>Создано ({bulkResult.created.length})</summary>
                   <ul className="list-disc pl-5 mt-1">
-                    {bulkResult.created.map((r) => <li key={r.id}>{r.title_ru} <code>({r.slug})</code></li>)}
+                    {bulkResult.created.map((r) => (
+                      <li key={r.id}>
+                        {r.title_ru} <code>({r.slug})</code>
+                        {r.warnings && r.warnings.length > 0 && (
+                          <ul className="list-disc pl-5 text-amber-800">
+                            {r.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </details>
               )}
               {bulkResult.updated.length > 0 && (
                 <details><summary>Обновлено ({bulkResult.updated.length})</summary>
                   <ul className="list-disc pl-5 mt-1">
-                    {bulkResult.updated.map((r) => <li key={r.id}>{r.title_ru} <code>({r.slug})</code></li>)}
+                    {bulkResult.updated.map((r) => (
+                      <li key={r.id}>
+                        {r.title_ru} <code>({r.slug})</code>
+                        {r.warnings && r.warnings.length > 0 && (
+                          <ul className="list-disc pl-5 text-amber-800">
+                            {r.warnings.map((w, i) => <li key={i}>{w}</li>)}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </details>
               )}

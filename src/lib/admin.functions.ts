@@ -852,6 +852,14 @@ const importFaqSchema = z.object({
   answer_ro: z.string().max(10000).nullable().optional(),
 });
 
+const importGalleryCaptionSchema = z.object({
+  sort_order: z.number().int().min(1).max(1000),
+  // image_url is reference-only (helps human self-check); ignored on write.
+  image_url: z.string().max(2000).nullable().optional(),
+  alt_ru: z.string().max(500).nullable().optional(),
+  alt_ro: z.string().max(500).nullable().optional(),
+});
+
 const importPayloadSchema = z.object({
   destination: importDestSchema,
   shrines: z.array(importShrineSchema).max(100).optional().default([]),
@@ -861,12 +869,50 @@ const importPayloadSchema = z.object({
     not_included: z.array(importInclusionItemSchema).max(100).optional().default([]),
   }).optional().default({ included: [], not_included: [] }),
   faq: z.array(importFaqSchema).max(100).optional().default([]),
+  gallery: z.array(importGalleryCaptionSchema).max(200).optional().default([]),
 });
 
 function formatZodError(err: z.ZodError): string {
   return err.issues
     .map((i) => `Поле "${i.path.join(".") || "(корень)"}": ${i.message}`)
     .join("; ");
+}
+
+// Apply caption updates (alt_ru / alt_ro) to existing gallery rows, matched
+// by sort_order. Never creates rows, never touches image_url / author /
+// license / source_url / sort_order. Missing sort_order values are reported
+// as warnings, not errors.
+async function applyGalleryCaptions(
+  supabase: any,
+  slug: string,
+  gallery: Array<z.infer<typeof importGalleryCaptionSchema>>,
+): Promise<string[]> {
+  if (!gallery || gallery.length === 0) return [];
+  const { data: rows, error } = await supabase
+    .from("destination_gallery_images")
+    .select("id, sort_order")
+    .eq("destination_slug", slug);
+  if (error) throw new Error(`Чтение галереи: ${error.message}`);
+  const byOrder = new Map<number, string>();
+  for (const r of (rows ?? []) as Array<{ id: string; sort_order: number }>) {
+    byOrder.set(r.sort_order, r.id);
+  }
+  const warnings: string[] = [];
+  for (const item of gallery) {
+    const id = byOrder.get(item.sort_order);
+    if (!id) {
+      warnings.push(`Галерея: фото №${item.sort_order} не найдено — подпись пропущена.`);
+      continue;
+    }
+    const patch: { alt_ru?: string | null; alt_ro?: string | null } = {};
+    if (item.alt_ru !== undefined) patch.alt_ru = item.alt_ru;
+    if (item.alt_ro !== undefined) patch.alt_ro = item.alt_ro;
+    if (Object.keys(patch).length === 0) continue;
+    const { error: updErr } = await supabase
+      .from("destination_gallery_images").update(patch).eq("id", id);
+    if (updErr) throw new Error(`Обновление подписи фото №${item.sort_order}: ${updErr.message}`);
+  }
+  return warnings;
 }
 
 export const adminImportDestination = createServerFn({ method: "POST" })
@@ -973,6 +1019,13 @@ export const adminImportDestination = createServerFn({ method: "POST" })
       if (error) await rollback(`Ошибка при добавлении FAQ: ${error.message}`);
     }
 
+    let galleryWarnings: string[] = [];
+    try {
+      galleryWarnings = await applyGalleryCaptions(context.supabase, slug, data.gallery);
+    } catch (e) {
+      await rollback(e instanceof Error ? e.message : String(e));
+    }
+
     return {
       ok: true,
       id: destId,
@@ -985,6 +1038,7 @@ export const adminImportDestination = createServerFn({ method: "POST" })
         not_included: data.inclusions.not_included.length,
         faq: data.faq.length,
       },
+      warnings: galleryWarnings,
     };
   });
 
@@ -1100,6 +1154,12 @@ async function buildDestinationExportPayload(supabase: any, id: string) {
       answer_ru: f.answer_ru ?? null,
       answer_ro: f.answer_ro ?? null,
     })),
+    gallery: gallery.map((g: any) => ({
+      sort_order: g.sort_order,
+      image_url: g.image_url,
+      alt_ru: g.alt_ru ?? null,
+      alt_ro: g.alt_ro ?? null,
+    })),
     _images_manifest: {
       note: "Справочный блок: реальные URL картинок из текущего хранилища. Игнорируется при импорте. Используется как резервная копия и для миграции на собственный Supabase.",
       cover_image: dest.cover_image ?? null,
@@ -1187,7 +1247,13 @@ async function insertSingleDestination(supabase: any, item: ImportItem) {
   }
 
   await writeChildTables(supabase, slug, item, rollback);
-  return { id: destId, slug, title_ru: item.destination.title_ru };
+  let galleryWarnings: string[] = [];
+  try {
+    galleryWarnings = await applyGalleryCaptions(supabase, slug, item.gallery);
+  } catch (e) {
+    await rollback(e instanceof Error ? e.message : String(e));
+  }
+  return { id: destId, slug, title_ru: item.destination.title_ru, warnings: galleryWarnings };
 }
 
 async function writeChildTables(
@@ -1375,7 +1441,13 @@ async function upsertSingleDestination(
     if (error) await restore(`Ошибка при добавлении FAQ: ${error.message}`);
   }
 
-  return { id: existingId, slug, title_ru: item.destination.title_ru };
+  let galleryWarnings: string[] = [];
+  try {
+    galleryWarnings = await applyGalleryCaptions(supabase, slug, item.gallery);
+  } catch (e) {
+    await restore(e instanceof Error ? e.message : String(e));
+  }
+  return { id: existingId, slug, title_ru: item.destination.title_ru, warnings: galleryWarnings };
 }
 
 const bulkImportInputSchema = z.object({
