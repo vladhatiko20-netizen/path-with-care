@@ -103,7 +103,7 @@ export function Component() {
           <p className="text-lg md:text-3xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow">
             {t(
               "Паломничество – это вдохновение христианской жизни",
-              "Pelerinajul – este inspirația vieții creștine"
+              "Pelerinajul – inspirația vieții creștine"
             )}
           </p>
           <p className="text-base md:text-2xl text-white/95 max-w-2xl mx-auto leading-relaxed font-serif italic drop-shadow mt-2">
@@ -319,7 +319,7 @@ export function Component() {
             <p className="text-foreground/80 leading-relaxed mb-6 max-w-prose">
               {t(
                 "Вопросы о подготовке к паломничеству, исповеди, духовной жизни. Отвечают батюшки Кишинёва и духовники, сопровождающие наши группы.",
-                "Întrebări despre pregătirea pentru pelerinaj, spovedanie, viața duhovnicească. Răspund preoți din Chișinău și duhovnicii care însoțesc grupurile."
+                "Întrebări despre pregătirea pentru pelerinaj, spovedanie, viața duhovnicească. Răspund preoții din Chișinău și duhovnicii care însoțesc grupurile."
               )}
             </p>
             <ul className="space-y-2 font-serif italic text-foreground/75 mb-7">
@@ -413,7 +413,7 @@ export function Component() {
               <p className="text-foreground/75 leading-relaxed mb-6">
                 {t(
                   "Многие православные святыни и духовная литература трудно найти в Молдове. Мы привозим их из паломнических поездок – со Святой Земли, из Бари, с Корфу, с Афона. Если вас интересует определённая икона, книга или ладан – оставьте предзаказ, и мы поможем его привезти.",
-                  "Multe sanctuare ortodoxe și literatură duhovnicească sunt greu de găsit în Moldova. Le aducem din călătoriile de pelerinaj – din Țara Sfântă, din Bari, din Corfu, din Athos. Dacă vă interesează o anumită icoană, carte sau tămâie – lăsați o pre-comandă și vă vom ajuta să o aducem."
+                  "Multe sanctuare ortodoxe și literatură duhovnicească sunt greu de găsit în Moldova. Le aducem din călătoriile de pelerinaj – din Țara Sfântă, din Bari, din Corfu, din Athos. Dacă vă interesează o anumită icoană, carte sau tămâie, lăsați o pre-comandă și vă vom ajuta să o aducem."
                 )}
               </p>
               <div className="hidden md:block">
