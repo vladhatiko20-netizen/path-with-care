@@ -93,7 +93,7 @@ export function Header() {
               {t("ПАЛОМНИК", "PELERIN")}
             </span>
             <span className="text-[15px] md:text-[17px] text-muted-foreground mt-1 font-serif italic tracking-wide text-center">
-              {t("Путь к Святыням", "Cale spre sfinte locuri")}
+              {t("Путь к Святыням", "Calea spre locurile sfinte")}
             </span>
           </div>
         </Link>
