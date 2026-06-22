@@ -878,6 +878,43 @@ function formatZodError(err: z.ZodError): string {
     .join("; ");
 }
 
+// Apply caption updates (alt_ru / alt_ro) to existing gallery rows, matched
+// by sort_order. Never creates rows, never touches image_url / author /
+// license / source_url / sort_order. Missing sort_order values are reported
+// as warnings, not errors.
+async function applyGalleryCaptions(
+  supabase: any,
+  slug: string,
+  gallery: Array<z.infer<typeof importGalleryCaptionSchema>>,
+): Promise<string[]> {
+  if (!gallery || gallery.length === 0) return [];
+  const { data: rows, error } = await supabase
+    .from("destination_gallery_images")
+    .select("id, sort_order")
+    .eq("destination_slug", slug);
+  if (error) throw new Error(`Чтение галереи: ${error.message}`);
+  const byOrder = new Map<number, string>();
+  for (const r of (rows ?? []) as Array<{ id: string; sort_order: number }>) {
+    byOrder.set(r.sort_order, r.id);
+  }
+  const warnings: string[] = [];
+  for (const item of gallery) {
+    const id = byOrder.get(item.sort_order);
+    if (!id) {
+      warnings.push(`Галерея: фото №${item.sort_order} не найдено — подпись пропущена.`);
+      continue;
+    }
+    const patch: { alt_ru?: string | null; alt_ro?: string | null } = {};
+    if (item.alt_ru !== undefined) patch.alt_ru = item.alt_ru;
+    if (item.alt_ro !== undefined) patch.alt_ro = item.alt_ro;
+    if (Object.keys(patch).length === 0) continue;
+    const { error: updErr } = await supabase
+      .from("destination_gallery_images").update(patch).eq("id", id);
+    if (updErr) throw new Error(`Обновление подписи фото №${item.sort_order}: ${updErr.message}`);
+  }
+  return warnings;
+}
+
 export const adminImportDestination = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) => {
