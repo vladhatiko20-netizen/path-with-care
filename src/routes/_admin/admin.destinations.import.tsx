@@ -77,6 +77,14 @@ const EMPTY_TEMPLATE = {
       answer_ro: null,
     },
   ],
+  gallery: [
+    {
+      sort_order: 1,
+      image_url: null,
+      alt_ru: null,
+      alt_ro: null,
+    },
+  ],
 };
 
 type ImportResult = {
@@ -91,6 +99,7 @@ type ImportResult = {
     not_included: number;
     faq: number;
   };
+  warnings?: string[];
 };
 
 function Page() {
@@ -117,8 +126,8 @@ function Page() {
     ok: true;
     mode: "skip" | "upsert" | "only_new";
     summary: { created: number; updated: number; skipped: number; errors: number };
-    created: Array<{ slug: string; title_ru: string; id: string }>;
-    updated: Array<{ slug: string; title_ru: string; id: string }>;
+    created: Array<{ slug: string; title_ru: string; id: string; warnings?: string[] }>;
+    updated: Array<{ slug: string; title_ru: string; id: string; warnings?: string[] }>;
     skipped: Array<{ slug: string; reason: string }>;
     errors: Array<{ slug: string; error: string }>;
   };
