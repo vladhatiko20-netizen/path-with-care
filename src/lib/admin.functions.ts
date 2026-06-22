@@ -1441,7 +1441,13 @@ async function upsertSingleDestination(
     if (error) await restore(`Ошибка при добавлении FAQ: ${error.message}`);
   }
 
-  return { id: existingId, slug, title_ru: item.destination.title_ru };
+  let galleryWarnings: string[] = [];
+  try {
+    galleryWarnings = await applyGalleryCaptions(supabase, slug, item.gallery);
+  } catch (e) {
+    await restore(e instanceof Error ? e.message : String(e));
+  }
+  return { id: existingId, slug, title_ru: item.destination.title_ru, warnings: galleryWarnings };
 }
 
 const bulkImportInputSchema = z.object({
