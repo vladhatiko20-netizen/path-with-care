@@ -600,7 +600,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
           <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light mb-6">{t("Ближайшие даты", "Datele apropiate")}</h2>
           {dates.length === 0 ? (
             <p className="font-serif italic text-[17px] text-foreground/70">
-              {t("Даты уточняются. Свяжитесь с нами – подскажем ближайшую поездку.", "Datele se precizează. Contactați-ne – vă vom informa despre cel mai apropiat pelerinaj.")}
+              {t("Даты уточняются. Свяжитесь с нами – подскажем ближайшую поездку.", "Datele se stabilesc ulterior. Contactați-ne – vă vom informa despre cel mai apropiat pelerinaj.")}
             </p>
           ) : (
             <ul className="space-y-3 font-serif">
