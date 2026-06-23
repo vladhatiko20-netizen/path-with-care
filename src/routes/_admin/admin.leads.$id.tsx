@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useRouter, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { ArrowLeft, Phone, Mail, Trash2, MessageCircleQuestion } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowLeft, Phone, Mail, Trash2, MessageCircleQuestion, Mic } from "lucide-react";
 import { adminGetLead, adminMarkLeadRead, adminDeleteLead } from "@/lib/admin.functions";
 import { sourceLabel, formatLeadDate, telLink, viberLink, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
+import { getVoiceQuestionAudioUrl } from "@/lib/voice.functions";
 
 export const Route = createFileRoute("/_admin/admin/leads/$id")({
   component: Page,
@@ -70,6 +71,9 @@ function Page() {
   const cat = leadCategory(lead.source);
   const isPilg = cat === "pilgrimage";
   const isPriest = cat === "priest";
+  const isVoice = !!lead.transcribed_text;
+  const displayText = lead.transcribed_text ?? lead.message;
+  const langLabel = lead.source_lang === "ru" ? "RU" : lead.source_lang === "ro" ? "RO" : null;
 
   return (
     <div className="p-4 md:p-8 max-w-2xl">
@@ -137,10 +141,21 @@ function Page() {
 
       {lead.message && (
         <div className="mb-8">
-          <h2 className="font-serif text-sm text-muted-foreground mb-2">Сообщение</h2>
+          <h2 className="font-serif text-sm text-muted-foreground mb-2 flex items-center gap-2">
+            <span>Сообщение</span>
+            {isVoice && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-accent/10 text-accent text-[11px] font-medium tracking-wide">
+                <Mic className="w-3 h-3" aria-hidden="true" />
+                пришло голосом{langLabel ? ` · ${langLabel}` : ""}
+              </span>
+            )}
+          </h2>
           <div className="bg-card border border-border rounded-sm p-4 whitespace-pre-wrap text-foreground leading-relaxed">
-            {lead.message}
+            {displayText}
           </div>
+          {isVoice && lead.audio_url && (
+            <VoiceAudioPlayer leadId={lead.id} />
+          )}
         </div>
       )}
 
@@ -167,6 +182,69 @@ function Page() {
           <Trash2 className="w-4 h-4" /> Удалить
         </button>
       </div>
+    </div>
+  );
+}
+
+function VoiceAudioPlayer({ leadId }: { leadId: string }) {
+  const fetchUrl = useServerFn(getVoiceQuestionAudioUrl);
+  const [url, setUrl] = useState<string | null>(null);
+  const [state, setState] = useState<"idle" | "loading" | "ready" | "error">("idle");
+
+  async function load() {
+    if (state === "loading" || state === "ready") return;
+    setState("loading");
+    try {
+      const res = await fetchUrl({ data: { lead_id: leadId } });
+      if (!res?.url) {
+        setState("error");
+        return;
+      }
+      setUrl(res.url);
+      setState("ready");
+    } catch {
+      setState("error");
+    }
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leadId]);
+
+  if (state === "error") {
+    return (
+      <div className="mt-3 text-xs text-muted-foreground italic flex items-center gap-1.5">
+        <Mic className="w-3.5 h-3.5" aria-hidden="true" />
+        аудио недоступно
+      </div>
+    );
+  }
+
+  if (state !== "ready" || !url) {
+    return (
+      <div className="mt-3 text-xs text-muted-foreground italic flex items-center gap-1.5">
+        <Mic className="w-3.5 h-3.5" aria-hidden="true" />
+        загрузка аудио…
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-3">
+      <div className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1.5">
+        <Mic className="w-3 h-3" aria-hidden="true" />
+        слушать аудио
+      </div>
+      <audio
+        controls
+        preload="none"
+        src={url}
+        className="w-full max-w-md"
+        onError={() => setState("error")}
+      >
+        аудио недоступно
+      </audio>
     </div>
   );
 }
