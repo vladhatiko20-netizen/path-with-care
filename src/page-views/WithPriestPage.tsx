@@ -9,6 +9,7 @@ import heroImg from "@/assets/hero-priest.jpg";
 import { listPublishedClergy } from "@/lib/clergy.functions";
 import { createLead } from "@/lib/leads.functions";
 import { listPublishedPriestFaq } from "@/lib/priest-faq.functions";
+import { VoiceInput } from "@/components/voice/VoiceInput";
 
 export const clergyQueryOptions = queryOptions({
   queryKey: ["clergy", "published"],
@@ -147,7 +148,18 @@ export function Component() {
           >
             <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
             <input required type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
-            <textarea required maxLength={1000} rows={5} placeholder={t("Ваш вопрос", "Întrebarea dumneavoastră")} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
+            <div className="flex items-start gap-3">
+              <VoiceInput
+                size="sm"
+                onTranscript={(txt) =>
+                  setForm((f) => ({
+                    ...f,
+                    question: f.question.trim() ? `${f.question.trim()} ${txt}` : txt,
+                  }))
+                }
+              />
+              <textarea required maxLength={1000} rows={5} placeholder={t("Ваш вопрос", "Întrebarea dumneavoastră")} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} className="flex-1 px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
+            </div>
             <button type="submit" disabled={sending} className="px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
               {sending ? t("Отправляем…", "Se trimite…") : t("Отправить", "Trimite")}
             </button>

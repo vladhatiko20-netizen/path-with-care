@@ -676,7 +676,9 @@ export type Database = {
       }
       leads: {
         Row: {
+          audio_url: string | null
           created_at: string
+          destination_slug: string | null
           email: string | null
           id: string
           is_read: boolean
@@ -685,9 +687,13 @@ export type Database = {
           phone: string | null
           read_at: string | null
           source: string
+          source_lang: string | null
+          transcribed_text: string | null
         }
         Insert: {
+          audio_url?: string | null
           created_at?: string
+          destination_slug?: string | null
           email?: string | null
           id?: string
           is_read?: boolean
@@ -696,9 +702,13 @@ export type Database = {
           phone?: string | null
           read_at?: string | null
           source: string
+          source_lang?: string | null
+          transcribed_text?: string | null
         }
         Update: {
+          audio_url?: string | null
           created_at?: string
+          destination_slug?: string | null
           email?: string | null
           id?: string
           is_read?: boolean
@@ -707,6 +717,8 @@ export type Database = {
           phone?: string | null
           read_at?: string | null
           source?: string
+          source_lang?: string | null
+          transcribed_text?: string | null
         }
         Relationships: []
       }
@@ -844,6 +856,30 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      voice_rate_limits: {
+        Row: {
+          count: number
+          id: string
+          ip: string
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          count?: number
+          id?: string
+          ip: string
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          count?: number
+          id?: string
+          ip?: string
+          updated_at?: string
+          window_start?: string
         }
         Relationships: []
       }
