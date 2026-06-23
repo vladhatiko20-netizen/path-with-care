@@ -103,6 +103,20 @@ async function callProviderTranscribe(
   upstream.append("file", audio, filename);
   if (requestedLang) {
     upstream.append("language", requestedLang);
+    // Reinforce the language with a textual prompt. The hint nudges the model
+    // to use the correct script (Latin for Romanian, Cyrillic for Russian)
+    // even on short clips where language detection alone is unreliable.
+    if (requestedLang === "ro") {
+      upstream.append(
+        "prompt",
+        "Transcribe Romanian speech in Romanian using Latin script. Do not transliterate into Cyrillic or Russian.",
+      );
+    } else if (requestedLang === "ru") {
+      upstream.append(
+        "prompt",
+        "Транскрибируй русскую речь на русском языке кириллицей.",
+      );
+    }
   }
   // Non-streaming JSON keeps things simple and returns usage for billing.
 
@@ -124,12 +138,16 @@ async function callProviderTranscribe(
   const text = (json?.text ?? "").trim();
   if (!text) throw new Error("empty_transcript");
 
-  const rawLang = (json?.language ?? "").toLowerCase();
-  let lang: "ru" | "ro" | null = null;
-  if (rawLang.startsWith("ru")) lang = "ru";
-  else if (rawLang.startsWith("ro") || rawLang.startsWith("mo")) lang = "ro";
-  // Fallback: cyrillic letters => ru
-  if (!lang) lang = /[А-Яа-яЁё]/.test(text) ? "ru" : "ro";
+  // Trust the requested language when the caller specified one — that matches
+  // what the user saw on screen. Fall back to provider detection / heuristic
+  // only when no language was requested.
+  let lang: "ru" | "ro" | null = requestedLang;
+  if (!lang) {
+    const rawLang = (json?.language ?? "").toLowerCase();
+    if (rawLang.startsWith("ru")) lang = "ru";
+    else if (rawLang.startsWith("ro") || rawLang.startsWith("mo")) lang = "ro";
+    if (!lang) lang = /[А-Яа-яЁё]/.test(text) ? "ru" : "ro";
+  }
   return { text, lang };
 }
 
