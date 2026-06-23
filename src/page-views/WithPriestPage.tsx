@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSuspenseQuery, queryOptions } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { User } from "lucide-react";
+import { User, CheckCircle } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 import heroImg from "@/assets/hero-priest.jpg";
@@ -23,7 +23,7 @@ export const priestFaqQueryOptions = queryOptions({
 
 export function Component() {
   const { t, lang } = useLang();
-  const [form, setForm] = useState({ name: "", email: "", question: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", question: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const submit = useServerFn(createLead);
@@ -117,8 +117,16 @@ export function Component() {
           )}
         </p>
         {sent ? (
-          <div className="p-5 bg-card border border-gold/40 rounded-sm text-foreground/85 font-serif italic">
-            {t("Спасибо, ваш вопрос отправлен.", "Mulțumim, întrebarea a fost trimisă.")}
+          <div className="p-6 bg-[#d1fae5] border border-[#10b981] rounded-sm text-[#065f46] font-serif flex items-start gap-4">
+            <CheckCircle className="w-6 h-6 text-[#10b981] shrink-0 mt-0.5" aria-hidden="true" />
+            <div>
+              <h3 className="font-semibold text-lg md:text-xl mb-1">
+                {t("Вопрос отправлен", "Întrebarea a fost trimisă")}
+              </h3>
+              <p className="text-sm md:text-base leading-relaxed opacity-90">
+                {t("Ответ придёт на ваш email в ближайшее время.", "Răspunsul va veni pe e-mail în cel mai scurt timp.")}
+              </p>
+            </div>
           </div>
         ) : (
           <form
@@ -130,6 +138,7 @@ export function Component() {
                 await submit({
                   data: {
                     name: form.name,
+                    phone: form.phone,
                     email: form.email,
                     message: form.question,
                     source: "with-priest",
@@ -148,17 +157,20 @@ export function Component() {
           >
             <input required maxLength={100} placeholder={t("Имя", "Nume")} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
             <input required type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
-            <div className="flex items-start gap-3">
-              <VoiceInput
-                size="sm"
-                onTranscript={(txt) =>
-                  setForm((f) => ({
-                    ...f,
-                    question: f.question.trim() ? `${f.question.trim()} ${txt}` : txt,
-                  }))
-                }
-              />
-              <textarea required maxLength={1000} rows={5} placeholder={t("Ваш вопрос", "Întrebarea dumneavoastră")} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} className="flex-1 px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
+            <input maxLength={30} placeholder={t("Телефон (необязательно)", "Telefon (opțional)")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
+            <div className="relative">
+              <textarea required maxLength={1000} rows={5} placeholder={t("Ваш вопрос", "Întrebarea dumneavoastră")} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} className="w-full pl-4 pr-14 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
+              <div className="absolute bottom-2 right-2">
+                <VoiceInput
+                  size="sm"
+                  onTranscript={(txt) =>
+                    setForm((f) => ({
+                      ...f,
+                      question: f.question.trim() ? `${f.question.trim()} ${txt}` : txt,
+                    }))
+                  }
+                />
+              </div>
             </div>
             <button type="submit" disabled={sending} className="px-7 py-3 bg-accent text-primary-foreground text-sm font-serif tracking-wide hover:bg-accent/90 rounded-sm shadow-md disabled:opacity-60">
               {sending ? t("Отправляем…", "Se trimite…") : t("Отправить", "Trimite")}
