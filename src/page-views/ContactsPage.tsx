@@ -124,7 +124,7 @@ export function Component() {
               <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
               <div className="relative">
                 <textarea required maxLength={1000} rows={5} placeholder={t("Сообщение", "Mesaj")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full pl-4 pr-14 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
-                <div className="absolute bottom-2 right-2">
+                <div className="absolute bottom-3 right-3">
                   <VoiceInput
                     size="sm"
                     onTranscript={(txt) =>

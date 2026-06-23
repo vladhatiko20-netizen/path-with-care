@@ -779,7 +779,7 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
             <div className="relative">
               <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
               <textarea maxLength={2000} rows={5} placeholder={t("Сообщение (необязательно)", "Mesaj (opțional)")} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className="w-full pl-11 pr-14 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
-              <div className="absolute bottom-2 right-2">
+              <div className="absolute bottom-3 right-3">
                 <VoiceInput
                   size="sm"
                   onTranscript={(txt) =>

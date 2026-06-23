@@ -93,6 +93,7 @@ async function consumeRateLimit(): Promise<void> {
 async function callProviderTranscribe(
   audio: Blob,
   filename: string,
+  requestedLang: "ru" | "ro" | null,
 ): Promise<{ text: string; lang: "ru" | "ro" | null }> {
   const apiKey = process.env.LOVABLE_API_KEY;
   if (!apiKey) throw new Error("voice_unavailable");
@@ -100,6 +101,9 @@ async function callProviderTranscribe(
   const upstream = new FormData();
   upstream.append("model", "openai/gpt-4o-mini-transcribe");
   upstream.append("file", audio, filename);
+  if (requestedLang) {
+    upstream.append("language", requestedLang);
+  }
   // Non-streaming JSON keeps things simple and returns usage for billing.
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
@@ -160,7 +164,10 @@ export const transcribeAudio = createServerFn({ method: "POST" })
     const ext = mimeToExt(mime || "audio/webm");
     const filename = `recording.${ext}`;
 
-    const { text, lang } = await callProviderTranscribe(blob, filename);
+    const langEntry = fd.get("lang");
+    const requestedLang = typeof langEntry === "string" && (langEntry === "ru" || langEntry === "ro") ? langEntry : null;
+
+    const { text, lang } = await callProviderTranscribe(blob, filename, requestedLang);
 
     return { text, lang };
   });
