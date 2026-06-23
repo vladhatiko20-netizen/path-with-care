@@ -160,7 +160,7 @@ export function Component() {
             <input maxLength={30} placeholder={t("Телефон (необязательно)", "Telefon (opțional)")} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="w-full px-4 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
             <div className="relative">
               <textarea required maxLength={1000} rows={5} placeholder={t("Ваш вопрос", "Întrebarea dumneavoastră")} value={form.question} onChange={(e) => setForm({ ...form, question: e.target.value })} className="w-full pl-4 pr-14 py-3 bg-card border border-border rounded-sm font-serif focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25 resize-none" />
-              <div className="absolute bottom-2 right-2">
+              <div className="absolute bottom-3 right-3">
                 <VoiceInput
                   size="sm"
                   onTranscript={(txt) =>

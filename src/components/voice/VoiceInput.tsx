@@ -110,6 +110,7 @@ export function VoiceInput({
       try {
         const fd = new FormData();
         fd.append("audio", blob);
+        fd.append("lang", t("ru", "ro")); // Send the current active language code
         const res = await transcribeAudio({ data: fd });
         if (!res?.text) {
           toast.error(
