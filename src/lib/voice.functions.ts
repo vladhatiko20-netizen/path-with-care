@@ -108,34 +108,20 @@ async function callProviderTranscribe(
       : "openai/gpt-4o-mini-transcribe";
   upstream.append("model", model);
   upstream.append("file", audio, filename);
-  let languageFieldAppended: string | null = null;
-  let promptFieldAppended: string | null = null;
   if (requestedLang) {
     upstream.append("language", requestedLang);
-    languageFieldAppended = requestedLang;
     // Reinforce the language with a textual prompt. The hint nudges the model
     // to use the correct script (Latin for Romanian, Cyrillic for Russian)
     // even on short clips where language detection alone is unreliable.
     if (requestedLang === "ro") {
       const p = "Transcribe Romanian speech in Romanian using Latin script. Do not transliterate into Cyrillic or Russian.";
       upstream.append("prompt", p);
-      promptFieldAppended = p;
     } else if (requestedLang === "ru") {
       const p = "Транскрибируй русскую речь на русском языке кириллицей.";
       upstream.append("prompt", p);
-      promptFieldAppended = p;
     }
   }
   // Non-streaming JSON keeps things simple and returns usage for billing.
-
-  console.log("[voice:diag] callProviderTranscribe pre-fetch", {
-    requestedLang,
-    upstream_language_field: languageFieldAppended,
-    upstream_prompt_field: promptFieldAppended,
-    model,
-    filename,
-    audio_bytes: audio.size,
-  });
 
   const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
     method: "POST",
@@ -153,12 +139,6 @@ async function callProviderTranscribe(
 
   const json = (await res.json().catch(() => null)) as { text?: string; language?: string } | null;
   const text = (json?.text ?? "").trim();
-  console.log("[voice:diag] callProviderTranscribe post-fetch", {
-    requestedLang,
-    provider_returned_language: json?.language ?? null,
-    text_preview: text.slice(0, 50),
-    text_length: text.length,
-  });
   if (!text) throw new Error("empty_transcript");
 
   // Trust the requested language when the caller specified one — that matches
@@ -206,14 +186,7 @@ export const transcribeAudio = createServerFn({ method: "POST" })
     const filename = `recording.${ext}`;
 
     const langEntry = fd.get("lang");
-    console.log("[voice:diag] transcribeAudio received lang form entry", {
-      raw_value: langEntry,
-      raw_type: typeof langEntry,
-    });
     const requestedLang = typeof langEntry === "string" && (langEntry === "ru" || langEntry === "ro") ? langEntry : null;
-    console.log("[voice:diag] transcribeAudio resolved requestedLang", {
-      requestedLang,
-    });
 
     const { text, lang } = await callProviderTranscribe(blob, filename, requestedLang);
 
