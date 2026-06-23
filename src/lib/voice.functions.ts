@@ -150,14 +150,14 @@ export const transcribeAudio = createServerFn({ method: "POST" })
     }
 
     const fd = data;
-    const audio = fd.get("audio");
+    const audioEntry = fd.get("audio");
     const saveAudioFlag = String(fd.get("save_audio") ?? "") === "true";
     const destinationSlug = (fd.get("destination_slug") as string | null) || null;
 
-    if (!(audio instanceof File) && !(audio instanceof Blob)) {
+    if (!audioEntry || typeof audioEntry === "string") {
       throw new Error("missing_audio");
     }
-    const blob = audio as Blob;
+    const blob = audioEntry as Blob;
     if (blob.size < MIN_AUDIO_BYTES) throw new Error("empty_audio");
     if (blob.size > MAX_AUDIO_BYTES) throw new Error("audio_too_large");
     const mime = (blob.type || "").toLowerCase().split(";")[0];
