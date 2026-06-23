@@ -35,7 +35,7 @@ export function VoiceInput({
   className,
   ariaLabel,
 }: Props) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const cap = useVoiceCapability();
   const [hidden, setHidden] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -110,7 +110,14 @@ export function VoiceInput({
       try {
         const fd = new FormData();
         fd.append("audio", blob);
-        fd.append("lang", t("ru", "ro")); // Send the current active language code
+        // Determine target language: trust the URL first (the /ro subtree is
+        // always Romanian), fall back to the i18n context. This guards against
+        // any case where the context might leak the wrong value.
+        const voiceLang =
+          typeof window !== "undefined" && window.location.pathname.startsWith("/ro")
+            ? "ro"
+            : lang;
+        fd.append("lang", voiceLang);
         const res = await transcribeAudio({ data: fd });
         if (!res?.text) {
           toast.error(
