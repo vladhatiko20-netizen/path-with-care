@@ -20,7 +20,7 @@ import {
 } from "@/lib/destinations.functions";
 import { listPilgrimages, type PilgrimageSummary } from "@/lib/pilgrimages.functions";
 import { createLead } from "@/lib/leads.functions";
-import { DestinationVoiceQuestion } from "@/components/voice/DestinationVoiceQuestion";
+import { VoiceInput } from "@/components/voice/VoiceInput";
 import {
   Accordion,
   AccordionContent,
@@ -669,11 +669,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
         </section>
       )}
 
-      {/* Lead form */}
       <LeadForm slug={slug} prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
-
-      {/* Voice question (only renders when voice features are available) */}
-      <DestinationVoiceQuestion slug={slug} />
 
       {/* Lightbox */}
       {galleryPhotos.length > 0 && (

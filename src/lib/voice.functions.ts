@@ -145,8 +145,6 @@ export const transcribeAudio = createServerFn({ method: "POST" })
 
     const fd = data;
     const audioEntry = fd.get("audio");
-    const saveAudioFlag = String(fd.get("save_audio") ?? "") === "true";
-    const destinationSlug = (fd.get("destination_slug") as string | null) || null;
 
     if (!audioEntry || typeof audioEntry === "string") {
       throw new Error("missing_audio");
@@ -164,102 +162,5 @@ export const transcribeAudio = createServerFn({ method: "POST" })
 
     const { text, lang } = await callProviderTranscribe(blob, filename);
 
-    let audioPath: string | null = null;
-    if (saveAudioFlag && voiceSaveAudioEnabled()) {
-      try {
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-        const now = new Date();
-        const yyyy = now.getUTCFullYear();
-        const mm = String(now.getUTCMonth() + 1).padStart(2, "0");
-        const uuid = crypto.randomUUID();
-        const slugPart = destinationSlug ? `${destinationSlug}/` : "";
-        const path = `${yyyy}/${mm}/${slugPart}${uuid}.${ext}`;
-        const buf = new Uint8Array(await blob.arrayBuffer());
-        const { error: upErr } = await supabaseAdmin.storage
-          .from("voice-questions")
-          .upload(path, buf, {
-            contentType: mime || "audio/webm",
-            upsert: false,
-          });
-        if (upErr) {
-          console.error("[voice] audio upload failed", upErr.message);
-        } else {
-          audioPath = path;
-        }
-      } catch (err) {
-        console.error("[voice] audio upload threw", err);
-      }
-    }
-
-    return { text, lang, audioPath };
-  });
-
-// --- Public server fn: createVoiceLead (destination voice question) ------
-
-const voiceLeadSchema = z.object({
-  transcribed_text: z.string().trim().min(1).max(2000),
-  destination_slug: z.string().trim().min(1).max(100).regex(/^[a-z0-9-]+$/),
-  audio_path: z.string().trim().max(500).nullable().optional(),
-  source_lang: z.enum(["ru", "ro"]).nullable().optional(),
-  name: z.string().trim().min(1).max(100),
-  phone: z.string().trim().max(30).regex(/^[+\d\s()\-]*$/).optional().or(z.literal("")),
-  email: z.string().trim().email().max(255).optional().or(z.literal("")),
-});
-
-export const createVoiceLead = createServerFn({ method: "POST" })
-  .inputValidator((i: unknown) => voiceLeadSchema.parse(i))
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const phone = data.phone && data.phone.trim().length >= 5 ? data.phone : null;
-    const email = data.email ? data.email : null;
-    if (!phone && !email) {
-      throw new Error("contact_required");
-    }
-    const payload = {
-      name: data.name,
-      phone,
-      email,
-      message: data.transcribed_text,
-      transcribed_text: data.transcribed_text,
-      source_lang: data.source_lang ?? null,
-      destination_slug: data.destination_slug,
-      audio_url: data.audio_path ?? null,
-      source: `destination:${data.destination_slug}`,
-    };
-    const { error } = await supabaseAdmin.from("leads").insert(payload);
-    if (error) throw new Error(error.message);
-    return { ok: true };
-  });
-
-// --- Public server fn: getVoiceQuestionAudioUrl (admin only) -------------
-
-export const getVoiceQuestionAudioUrl = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((i: unknown) =>
-    z.object({ lead_id: z.string().uuid() }).parse(i),
-  )
-  .handler(async ({ data, context }) => {
-    const { data: isAdmin, error: roleErr } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (roleErr || !isAdmin) throw new Error("Forbidden");
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: lead, error: leadErr } = await supabaseAdmin
-      .from("leads")
-      .select("audio_url")
-      .eq("id", data.lead_id)
-      .maybeSingle();
-    if (leadErr) throw new Error(leadErr.message);
-    if (!lead?.audio_url) return { url: null as string | null };
-
-    const { data: signed, error: signErr } = await supabaseAdmin.storage
-      .from("voice-questions")
-      .createSignedUrl(lead.audio_url, 60 * 60);
-    if (signErr) {
-      console.error("[voice] signed url failed", signErr.message);
-      return { url: null as string | null };
-    }
-    return { url: signed?.signedUrl ?? null };
+    return { text, lang };
   });
