@@ -1,7 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestIP } from "@tanstack/react-start/server";
-import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 // ============================================================
 //  SINGLE PROVIDER INTEGRATION POINT FOR SPEECH-TO-TEXT
@@ -39,21 +37,16 @@ function voiceFeaturesEnabled(): boolean {
   return (process.env.VOICE_FEATURES_ENABLED ?? "").toLowerCase() === "true";
 }
 
-function voiceSaveAudioEnabled(): boolean {
-  return (process.env.VOICE_SAVE_AUDIO_ENABLED ?? "true").toLowerCase() === "true";
-}
-
 // --- Capability self-check ------------------------------------------------
 
-let _capabilityCache: { value: { available: boolean; saveAudio: boolean }; expires: number } | undefined;
+let _capabilityCache: { value: { available: boolean }; expires: number } | undefined;
 
 export const getVoiceCapability = createServerFn({ method: "GET" }).handler(async () => {
   const now = Date.now();
   if (_capabilityCache && _capabilityCache.expires > now) return _capabilityCache.value;
   const hasKey = !!process.env.LOVABLE_API_KEY;
   const available = voiceFeaturesEnabled() && hasKey;
-  const saveAudio = available && voiceSaveAudioEnabled();
-  const value = { available, saveAudio };
+  const value = { available };
   _capabilityCache = { value, expires: now + 60_000 };
   return value;
 });
