@@ -99,7 +99,14 @@ async function callProviderTranscribe(
   if (!apiKey) throw new Error("voice_unavailable");
 
   const upstream = new FormData();
-  upstream.append("model", "openai/gpt-4o-mini-transcribe");
+  // Romanian transcription on the mini model produces Cyrillic gibberish even
+  // with `language=ro` + a Latin-script prompt. Use the full (non-mini) model
+  // for Romanian only; Russian works perfectly on mini and stays cheaper.
+  const model =
+    requestedLang === "ro"
+      ? "openai/gpt-4o-transcribe"
+      : "openai/gpt-4o-mini-transcribe";
+  upstream.append("model", model);
   upstream.append("file", audio, filename);
   let languageFieldAppended: string | null = null;
   let promptFieldAppended: string | null = null;
@@ -125,7 +132,7 @@ async function callProviderTranscribe(
     requestedLang,
     upstream_language_field: languageFieldAppended,
     upstream_prompt_field: promptFieldAppended,
-    model: "openai/gpt-4o-mini-transcribe",
+    model,
     filename,
     audio_bytes: audio.size,
   });
