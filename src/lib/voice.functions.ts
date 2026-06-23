@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequestIP } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 // ============================================================
 //  SINGLE PROVIDER INTEGRATION POINT FOR SPEECH-TO-TEXT
@@ -240,31 +241,18 @@ export const createVoiceLead = createServerFn({ method: "POST" })
 // --- Public server fn: getVoiceQuestionAudioUrl (admin only) -------------
 
 export const getVoiceQuestionAudioUrl = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) =>
     z.object({ lead_id: z.string().uuid() }).parse(i),
   )
-  .handler(async ({ data }) => {
-    const { requireSupabaseAuth } = await import("@/integrations/supabase/auth-middleware");
-    // Cannot reuse middleware retroactively – instead, do an explicit auth check via headers.
-    void requireSupabaseAuth; // referenced for tooling clarity; actual check below
-    const { getRequestHeader } = await import("@tanstack/react-start/server");
-    const authHeader = getRequestHeader("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new Error("Unauthorized");
-    }
-    const token = authHeader.slice("Bearer ".length);
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: claimsData, error: claimsErr } = await supabaseAdmin.auth.getClaims(token);
-    if (claimsErr || !claimsData?.claims?.sub) throw new Error("Unauthorized");
-    const userId = claimsData.claims.sub;
-
-    const { data: isAdmin, error: roleErr } = await supabaseAdmin.rpc("has_role", {
-      _user_id: userId,
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin, error: roleErr } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
       _role: "admin",
     });
     if (roleErr || !isAdmin) throw new Error("Forbidden");
 
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: lead, error: leadErr } = await supabaseAdmin
       .from("leads")
       .select("audio_url")
