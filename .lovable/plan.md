@@ -1,108 +1,12 @@
-## Что я нашёл
+# Plan - Remove Voice Diagnostic Logs
 
-Проблема, скорее всего, не в микрофоне и не в мобильной/веб-версии, а в том, как мы передаём язык в распознавание.
+We will clean up `src/lib/voice.functions.ts` by removing all diagnostic `[voice:diag]` log statements that were temporarily added to diagnose Romanian transcription quality. We will leave all other behavior, prompts, conditional model selections (full model for Romanian, mini for Russian), and validation perfectly intact.
 
-Сейчас в `VoiceInput.tsx` язык отправляется так:
+## Steps
 
-```ts
-fd.append("lang", t("ru", "ro"));
-```
-
-Это выглядит правильно, но на практике зависит от React-контекста `LangProvider`. Если компонент по какой-то причине получает внешний русскоязычный контекст, в румынском разделе всё равно уходит `lang=ru`. Тогда сервер честно передаёт модели русский язык, и модель начинает «слушать как русский», поэтому румынская речь превращается в кириллицу.
-
-Дополнительно: мы передаём только параметр `language`, но не даём модели текстовую подсказку, что нужен именно румынский алфавит/латиница. Для коротких записей это может быть недостаточно устойчиво.
-
-## План исправления
-
-### 1. Определять язык в `VoiceInput` напрямую и надёжно
-
-В `src/components/voice/VoiceInput.tsx` заменить текущую логику:
-
-```ts
-const { t } = useLang();
-fd.append("lang", t("ru", "ro"));
-```
-
-на явное чтение `lang`:
-
-```ts
-const { t, lang } = useLang();
-fd.append("lang", lang);
-```
-
-Так мы перестанем использовать функцию перевода как источник технического языка.
-
-### 2. Добавить страховку по URL
-
-Чтобы румынская версия точно отправляла `ro`, даже если контекст где-то не сработал, добавить fallback:
-
-```ts
-const voiceLang = typeof window !== "undefined" && window.location.pathname.startsWith("/ro")
-  ? "ro"
-  : lang;
-
-fd.append("lang", voiceLang);
-```
-
-Это важно именно для вашего случая: все румынские страницы находятся под `/ro/...`.
-
-### 3. Усилить серверную подсказку для модели
-
-В `src/lib/voice.functions.ts`, когда `requestedLang === "ro"`, кроме:
-
-```ts
-upstream.append("language", "ro");
-```
-
-добавить `prompt`, например:
-
-```ts
-upstream.append(
-  "prompt",
-  "Transcribe Romanian speech in Romanian using Latin script. Do not transliterate into Cyrillic or Russian."
-);
-```
-
-Для русского оставить аналогичную русскую подсказку или вообще не менять поведение:
-
-```ts
-upstream.append("prompt", "Транскрибируй русскую речь на русском языке кириллицей.");
-```
-
-Цель — не переводить текст, а направить модель на правильный язык и письменность.
-
-### 4. Возвращать в ответе язык из запроса как приоритетный
-
-Сейчас после распознавания сервер снова пытается угадать язык по тексту:
-
-```ts
-if (!lang) lang = /[А-Яа-яЁё]/.test(text) ? "ru" : "ro";
-```
-
-Это не главная причина проблемы, но лучше сделать поведение предсказуемым:
-
-- если пользователь был на `/ro/...`, возвращаем `lang: "ro"`;
-- если был на русской версии — `lang: "ru"`;
-- автоугадывание оставляем только для будущих вызовов без языка.
-
-### 5. Небольшая диагностическая проверка
-
-После исправления можно временно проверить в браузере/логах, что с румынской страницы уходит именно:
-
-```text
-lang = ro
-```
-
-Постоянные пользовательские логи добавлять не нужно.
-
-## Что не меняем
-
-- Дизайн и расположение микрофона — уже поправлено.
-- Формы, заявки, админку, базу данных — не трогаем.
-- Модель остаётся прежней: `openai/gpt-4o-mini-transcribe`.
-- Аудио по-прежнему не сохраняем, только распознаём и вставляем текст в поле.
-
-## Ожидаемый результат
-
-- На русской версии сайта голосовой ввод остаётся кириллицей.
-- На румынской версии (`/ro/...`) румынская речь должна распознаваться как румынский текст латиницей, а не как русская кириллица.
+### 1. Edit `src/lib/voice.functions.ts`
+- Remove the `console.log("[voice:diag] callProviderTranscribe pre-fetch", ...)` block.
+- Remove the unused `languageFieldAppended` and `promptFieldAppended` tracking variables.
+- Remove the `console.log("[voice:diag] callProviderTranscribe post-fetch", ...)` block.
+- Remove the `console.log("[voice:diag] transcribeAudio received lang form entry", ...)` block.
+- Remove the `console.log("[voice:diag] transcribeAudio resolved requestedLang", ...)` block.
