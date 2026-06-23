@@ -7,13 +7,11 @@ import { transcribeAudio } from "@/lib/voice.functions";
 
 const MAX_DURATION_MS = 60_000;
 
-type Meta = { lang: "ru" | "ro" | null; audioPath: string | null };
+type Meta = { lang: "ru" | "ro" | null };
 
 type Props = {
   onTranscript: (text: string, meta: Meta) => void;
   size?: "sm" | "md";
-  saveAudio?: boolean;
-  destinationSlug?: string;
   className?: string;
   ariaLabel?: string;
 };
@@ -34,8 +32,6 @@ function pickMimeType(): string | null {
 export function VoiceInput({
   onTranscript,
   size = "sm",
-  saveAudio = false,
-  destinationSlug,
   className,
   ariaLabel,
 }: Props) {
@@ -61,8 +57,6 @@ export function VoiceInput({
   }, []);
 
   if (!cap.available || hidden) return null;
-
-  const effectiveSaveAudio = saveAudio && cap.saveAudio;
 
   async function startRecording() {
     if (recording || busy) return;
@@ -116,8 +110,6 @@ export function VoiceInput({
       try {
         const fd = new FormData();
         fd.append("audio", blob);
-        if (effectiveSaveAudio) fd.append("save_audio", "true");
-        if (effectiveSaveAudio && destinationSlug) fd.append("destination_slug", destinationSlug);
         const res = await transcribeAudio({ data: fd });
         if (!res?.text) {
           toast.error(
@@ -125,7 +117,7 @@ export function VoiceInput({
           );
           return;
         }
-        onTranscript(res.text, { lang: res.lang ?? null, audioPath: res.audioPath ?? null });
+        onTranscript(res.text, { lang: res.lang ?? null });
       } catch (err) {
         const msg = err instanceof Error ? err.message : "";
         if (msg.includes("rate_limit")) {

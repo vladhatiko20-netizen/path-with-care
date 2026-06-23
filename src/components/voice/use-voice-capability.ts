@@ -9,5 +9,5 @@ export function useVoiceCapability() {
     refetchOnWindowFocus: false,
     retry: false,
   });
-  return data ?? { available: false, saveAudio: false };
+  return data ?? { available: false };
 }
