@@ -792,6 +792,49 @@ const ViberIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+function ViberFloatingButton({ destinationName, dateLabel }: { destinationName: string; dateLabel: string | null }) {
+  const { t } = useLang();
+  const [hidden, setHidden] = useState(false);
+  const ref = useRef<HTMLAnchorElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const target = document.getElementById("lead");
+    if (!target || !("IntersectionObserver" in window)) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) setHidden(e.isIntersecting);
+      },
+      { rootMargin: "0px 0px -20% 0px", threshold: 0.05 },
+    );
+    obs.observe(target);
+    return () => obs.disconnect();
+  }, []);
+
+  const datePart = dateLabel ? t(`, даты ${dateLabel}`, `, datele ${dateLabel}`) : "";
+  const text = t(
+    `Здравствуйте! Интересует паломничество в ${destinationName}${datePart}`,
+    `Bună ziua! Mă interesează pelerinajul în ${destinationName}${datePart}`,
+  );
+  const href = `viber://chat?number=%2B37368778676&text=${encodeURIComponent(text)}`;
+
+  return (
+    <a
+      ref={ref}
+      href={href}
+      aria-label="Viber"
+      className={`fixed right-4 z-40 inline-flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-opacity duration-200 ${hidden ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      style={{
+        backgroundColor: "#7360F2",
+        color: "#ffffff",
+        bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
+      }}
+    >
+      <ViberIcon className="w-7 h-7" />
+    </a>
+  );
+}
+
 function LeadForm({
   slug,
   prefill,
