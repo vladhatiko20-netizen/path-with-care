@@ -217,7 +217,9 @@ function Page() {
                             <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#ef4444] animate-pulse shrink-0" aria-label="Непрочитано" />
                           )}
                           <h2 className="font-serif text-xl md:text-2xl text-accent font-medium truncate">
-                            {sourceLabel(r.source)}
+                            Паломничество: {r.destination
+                              ? (r.destination.short_title_ru || r.destination.title_ru)
+                              : sourceLabel(r.source).replace(/^Паломничество:\s*/, "")}
                           </h2>
                         </div>
                         <span className="shrink-0 text-[10px] tracking-[0.18em] uppercase font-medium text-accent bg-accent/10 px-2 py-0.5 rounded-sm">

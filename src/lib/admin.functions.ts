@@ -409,7 +409,32 @@ export const adminListLeads = createServerFn({ method: "POST" })
 
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    const list = rows ?? [];
+
+    // Resolve destination titles by slug in a single batched query (no N+1).
+    const slugs = new Set<string>();
+    for (const r of list) {
+      if (r.source && typeof r.source === "string" && r.source.startsWith("destination:")) {
+        slugs.add(r.source.slice("destination:".length));
+      }
+    }
+    let destMap = new Map<string, { short_title_ru: string | null; short_title_ro: string | null; title_ru: string; title_ro: string }>();
+    if (slugs.size > 0) {
+      const { data: dests } = await context.supabase
+        .from("destinations")
+        .select("slug, short_title_ru, short_title_ro, title_ru, title_ro")
+        .in("slug", Array.from(slugs));
+      for (const d of dests ?? []) destMap.set(d.slug, d);
+    }
+    return list.map((r) => {
+      let destination: { slug: string; short_title_ru: string | null; short_title_ro: string | null; title_ru: string; title_ro: string } | null = null;
+      if (r.source && typeof r.source === "string" && r.source.startsWith("destination:")) {
+        const slug = r.source.slice("destination:".length);
+        const d = destMap.get(slug);
+        if (d) destination = { slug, ...d };
+      }
+      return { ...r, destination };
+    });
   });
 
 export const adminGetLead = createServerFn({ method: "POST" })
@@ -438,7 +463,23 @@ export const adminGetLead = createServerFn({ method: "POST" })
         .maybeSingle();
       pilgrimage = p ?? null;
     }
-    return { ...row, pilgrimage };
+    let destination: {
+      slug: string;
+      short_title_ru: string | null;
+      short_title_ro: string | null;
+      title_ru: string;
+      title_ro: string;
+    } | null = null;
+    if (row.source && typeof row.source === "string" && row.source.startsWith("destination:")) {
+      const slug = row.source.slice("destination:".length);
+      const { data: d } = await context.supabase
+        .from("destinations")
+        .select("slug, short_title_ru, short_title_ro, title_ru, title_ro")
+        .eq("slug", slug)
+        .maybeSingle();
+      destination = d ?? null;
+    }
+    return { ...row, pilgrimage, destination };
   });
 
 export const adminMarkLeadRead = createServerFn({ method: "POST" })
