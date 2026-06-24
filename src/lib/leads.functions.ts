@@ -8,6 +8,8 @@ const leadSchema = z.object({
   email: z.string().trim().email().max(255).optional().or(z.literal("")),
   message: z.string().trim().max(2000).optional().or(z.literal("")),
   source: z.string().trim().min(1).max(80).regex(/^[a-z0-9_:\-]+$/),
+  people_count: z.number().int().min(1).max(100).optional().nullable(),
+  pilgrimage_id: z.string().uuid().optional().nullable(),
 });
 
 export const createLead = createServerFn({ method: "POST" })
@@ -19,6 +21,8 @@ export const createLead = createServerFn({ method: "POST" })
       email: data.email ? data.email : null,
       message: data.message ? data.message : null,
       source: data.source,
+      people_count: data.people_count ?? null,
+      pilgrimage_id: data.pilgrimage_id ?? null,
     };
     const { error } = await supabaseAdmin.from("leads").insert(payload);
     if (error) throw new Error(error.message);
