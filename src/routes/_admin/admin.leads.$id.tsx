@@ -99,9 +99,12 @@ function Page() {
   const pilgDestination = lead.pilgrimage
     ? (lead.pilgrimage.destination_ru || lead.pilgrimage.title_ru)
     : null;
+  const destName = lead.destination
+    ? (lead.destination.short_title_ru || lead.destination.title_ru)
+    : null;
 
   return (
-    <div className="p-4 md:p-8 max-w-2xl md:max-w-5xl">
+    <div className="p-4 md:p-8 max-w-2xl md:max-w-5xl md:pb-24">
       <Link to="/admin/leads" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6">
         <ArrowLeft className="w-4 h-4" /> К списку заявок
       </Link>
