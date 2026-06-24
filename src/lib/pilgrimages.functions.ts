@@ -16,6 +16,7 @@ export type PilgrimageSummary = {
   cover_image: string | null;
   price_eur: number | null;
   with_priest: boolean;
+  status: "recruiting" | "full" | "completed" | null;
 };
 
 export const listPilgrimages = createServerFn({ method: "GET" }).handler(
@@ -29,7 +30,7 @@ export const listPilgrimages = createServerFn({ method: "GET" }).handler(
     if (publishedSlugs.length === 0) return [];
     const { data, error } = await supabaseAdmin
       .from("pilgrimages")
-      .select("id, slug, start_date, end_date, destination_ru, destination_ro, destination_slug, title_ru, title_ro, description_ru, description_ro, cover_image, price_eur, with_priest")
+      .select("id, slug, start_date, end_date, destination_ru, destination_ro, destination_slug, title_ru, title_ro, description_ru, description_ro, cover_image, price_eur, with_priest, status")
       .eq("is_published", true)
       .in("destination_slug", publishedSlugs)
       .order("start_date", { ascending: true });
