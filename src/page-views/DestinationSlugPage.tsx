@@ -792,10 +792,22 @@ const ViberIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill: string; onPrefillConsumed: () => void }) {
+function LeadForm({
+  slug,
+  prefill,
+  onPrefillConsumed,
+  pilgrimageId,
+  onClearPilgrimage,
+}: {
+  slug: string;
+  prefill: string;
+  onPrefillConsumed: () => void;
+  pilgrimageId: string | null;
+  onClearPilgrimage: () => void;
+}) {
   const { t } = useLang();
   const submit = useServerFn(createLead);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "", people_count: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -816,11 +828,27 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
       toast.error(t("Проверьте номер телефона", "Verificați numărul de telefon"));
       return;
     }
+    const peopleNum = Number.parseInt(form.people_count, 10);
+    if (!Number.isFinite(peopleNum) || peopleNum < 1 || peopleNum > 100) {
+      toast.error(t("Укажите количество человек (от 1 до 100)", "Indicați numărul de persoane (de la 1 la 100)"));
+      return;
+    }
     setSending(true);
     try {
-      await submit({ data: { ...form, source: `destination:${slug}` } });
+      await submit({
+        data: {
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          message: form.message,
+          source: `destination:${slug}`,
+          people_count: peopleNum,
+          pilgrimage_id: pilgrimageId,
+        },
+      });
       setSent(true);
-      setForm({ name: "", phone: "", email: "", message: "" });
+      setForm({ name: "", phone: "", email: "", message: "", people_count: "" });
+      onClearPilgrimage();
       toast.success(t("Заявка отправлена", "Cererea a fost trimisă"));
     } catch (err) {
       toast.error(t("Не удалось отправить. Попробуйте позже.", "Nu s-a putut trimite. Încercați mai târziu."));
