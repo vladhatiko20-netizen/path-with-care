@@ -1029,12 +1029,12 @@ function ContactsBlock({ desktop = false }: { desktop?: boolean }) {
           ))}
           <a
             href="mailto:palomnik.moldova@gmail.com"
-            className="flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors text-[18px]"
+            className="flex items-center w-full py-3 pl-4 pr-4 bg-card rounded-sm border border-border/40 border-l-2 border-l-gold hover:bg-gold/5 transition-colors text-[18px] cursor-pointer"
           >
             <span className="w-9 h-9 rounded-full bg-gold/15 flex items-center justify-center mr-3 shrink-0">
               <Mail className="w-4 h-4 text-accent" aria-hidden="true" />
             </span>
-            <span className="text-accent">palomnik.moldova@gmail.com</span>
+            <span className="text-accent hover:underline">palomnik.moldova@gmail.com</span>
           </a>
         </div>
       </div>
