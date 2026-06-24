@@ -13,6 +13,25 @@ function formatPilgrimageDates(start: string, end: string): string {
   return `${fmt.format(s)} – ${fmt.format(e)}`;
 }
 
+const RU_MONTHS_GEN = [
+  "января","февраля","марта","апреля","мая","июня",
+  "июля","августа","сентября","октября","ноября","декабря",
+];
+
+function formatPilgrimageDatesCompact(start: string, end: string): string {
+  const s = new Date(start);
+  const e = new Date(end);
+  const sd = s.getDate(), sm = s.getMonth(), sy = s.getFullYear();
+  const ed = e.getDate(), em = e.getMonth(), ey = e.getFullYear();
+  if (sy === ey && sm === em) {
+    return `${sd}\u2013${ed} ${RU_MONTHS_GEN[sm]} ${sy}`;
+  }
+  if (sy === ey) {
+    return `${sd} ${RU_MONTHS_GEN[sm]} \u2013 ${ed} ${RU_MONTHS_GEN[em]} ${sy}`;
+  }
+  return `${sd} ${RU_MONTHS_GEN[sm]} ${sy} \u2013 ${ed} ${RU_MONTHS_GEN[em]} ${ey}`;
+}
+
 export const Route = createFileRoute("/_admin/admin/leads/$id")({
   component: Page,
 });
@@ -77,9 +96,12 @@ function Page() {
   const cat = leadCategory(lead.source);
   const isPilg = cat === "pilgrimage";
   const isPriest = cat === "priest";
+  const pilgDestination = lead.pilgrimage
+    ? (lead.pilgrimage.destination_ru || lead.pilgrimage.title_ru)
+    : null;
 
   return (
-    <div className="p-4 md:p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl md:max-w-5xl">
       <Link to="/admin/leads" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6">
         <ArrowLeft className="w-4 h-4" /> К списку заявок
       </Link>
@@ -94,12 +116,18 @@ function Page() {
               {sourceLabel(lead.source)}
             </h1>
             {lead.pilgrimage && (
-              <div className="text-sm text-foreground/80 mb-1">
-                Поездка: {lead.pilgrimage.title_ru} · {formatPilgrimageDates(lead.pilgrimage.start_date, lead.pilgrimage.end_date)}
+              <div className="text-base md:text-lg mb-1">
+                <span className="text-muted-foreground">Поездка:</span>{" "}
+                <span className="text-accent font-medium">
+                  {pilgDestination}, {formatPilgrimageDatesCompact(lead.pilgrimage.start_date, lead.pilgrimage.end_date)}
+                </span>
               </div>
             )}
             {lead.people_count != null && (
-              <div className="text-sm text-foreground/80 mb-1">Человек: {lead.people_count}</div>
+              <div className="text-base md:text-lg mb-1">
+                <span className="text-muted-foreground">Человек:</span>{" "}
+                <span className="text-accent font-medium">{lead.people_count}</span>
+              </div>
             )}
             <div className="text-lg text-foreground mb-1">{lead.name}</div>
             <div className="text-sm text-muted-foreground">{formatLeadDate(lead.created_at)}</div>
@@ -111,18 +139,19 @@ function Page() {
               <span>{formatLeadDate(lead.created_at)}</span>
               <span>·</span>
               <span className="px-2 py-0.5 bg-secondary rounded-sm">{sourceLabel(lead.source)}</span>
-              {lead.people_count != null && (
-                <>
-                  <span>·</span>
-                  <span>Человек: {lead.people_count}</span>
-                </>
-              )}
             </div>
+            {lead.people_count != null && (
+              <div className="mt-2 text-base md:text-lg">
+                <span className="text-muted-foreground">Человек:</span>{" "}
+                <span className="text-accent font-medium">{lead.people_count}</span>
+              </div>
+            )}
           </>
         )}
       </header>
 
-      <div className="space-y-3 mb-6">
+      <div className="md:grid md:grid-cols-2 md:gap-8">
+        <div className="space-y-3 mb-6 md:mb-0">
         {/* Phone row */}
         {lead.phone && (
         <div className={`flex items-stretch bg-card border-y border-r border-border/40 rounded-sm overflow-hidden ${isPilg ? "border-l-2 border-l-accent" : "border-l-2 border-l-gold"}`}>
@@ -154,18 +183,19 @@ function Page() {
             <span className="text-foreground break-all">{lead.email}</span>
           </a>
         )}
+        </div>
+
+        {lead.message && (
+          <div className="mb-8 md:mb-0">
+            <h2 className="font-serif text-sm text-muted-foreground mb-2">Сообщение</h2>
+            <div className="bg-card border border-border rounded-sm p-4 whitespace-pre-wrap text-foreground leading-relaxed md:max-h-[60vh] md:overflow-y-auto">
+              {lead.message}
+            </div>
+          </div>
+        )}
       </div>
 
-      {lead.message && (
-        <div className="mb-8">
-          <h2 className="font-serif text-sm text-muted-foreground mb-2">Сообщение</h2>
-          <div className="bg-card border border-border rounded-sm p-4 whitespace-pre-wrap text-foreground leading-relaxed">
-            {lead.message}
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-border">
+      <div className="flex flex-wrap items-center gap-3 mt-6 md:mt-8 pt-4 border-t border-border md:sticky md:bottom-0 md:bg-background/95 md:backdrop-blur md:-mx-8 md:px-8 md:py-3 md:z-10">
         <button
           onClick={toggleRead}
           className="px-3 py-1.5 text-sm border border-border rounded-sm hover:bg-secondary"
