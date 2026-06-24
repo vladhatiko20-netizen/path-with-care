@@ -677,7 +677,9 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
             </p>
           ) : (
             <ul className="space-y-3 font-serif">
-              {dates.map((p) => (
+              {dates.map((p) => {
+                const sb = statusLabel(p.status);
+                return (
                 <li
                   key={p.id}
                   onClick={() => selectDate(p)}
@@ -687,6 +689,11 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
                   className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card border border-gold/30 rounded-sm px-6 py-5 cursor-pointer hover:border-gold transition-all duration-300"
                 >
                   <div>
+                    {sb && (
+                      <span className={`inline-block text-[12px] tracking-wide uppercase px-2 py-0.5 rounded-sm mb-2 ${sb.cls}`}>
+                        {sb.text}
+                      </span>
+                    )}
                     <p className="text-[17px] md:text-[24px] text-foreground">{pickL(p.title_ru, p.title_ro)}</p>
                     <p className="text-[17px] md:text-[21px] text-foreground/65 mt-1">
                       <Calendar className="w-4 h-4 text-gold inline mr-2 -mt-0.5" aria-hidden="true" />
@@ -709,7 +716,8 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
                     </button>
                   </div>
                 </li>
-              ))}
+              );
+              })}
             </ul>
           )}
         </div>
@@ -741,7 +749,18 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
         </section>
       )}
 
-      <LeadForm slug={slug} prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
+      <LeadForm
+        slug={slug}
+        prefill={prefill}
+        onPrefillConsumed={() => setPrefill("")}
+        pilgrimageId={selectedPilgrimage?.id ?? null}
+        onClearPilgrimage={() => setSelectedPilgrimage(null)}
+      />
+
+      <ViberFloatingButton
+        destinationName={title}
+        dateLabel={selectedPilgrimage?.dateLabel ?? null}
+      />
 
       {/* Lightbox */}
       {galleryPhotos.length > 0 && (
