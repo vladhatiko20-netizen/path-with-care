@@ -6,6 +6,13 @@ import { ArrowLeft, Phone, Mail, Trash2, MessageCircleQuestion } from "lucide-re
 import { adminGetLead, adminMarkLeadRead, adminDeleteLead } from "@/lib/admin.functions";
 import { sourceLabel, formatLeadDate, telLink, viberLink, leadCategory, CATEGORY_LABELS } from "@/lib/leads-shared";
 
+function formatPilgrimageDates(start: string, end: string): string {
+  const s = new Date(start);
+  const e = new Date(end);
+  const fmt = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", year: "numeric" });
+  return `${fmt.format(s)} – ${fmt.format(e)}`;
+}
+
 export const Route = createFileRoute("/_admin/admin/leads/$id")({
   component: Page,
 });
@@ -86,6 +93,14 @@ function Page() {
             <h1 className="font-serif text-3xl md:text-4xl text-accent font-medium mb-2">
               {sourceLabel(lead.source)}
             </h1>
+            {lead.pilgrimage && (
+              <div className="text-sm text-foreground/80 mb-1">
+                Поездка: {lead.pilgrimage.title_ru} · {formatPilgrimageDates(lead.pilgrimage.start_date, lead.pilgrimage.end_date)}
+              </div>
+            )}
+            {lead.people_count != null && (
+              <div className="text-sm text-foreground/80 mb-1">Человек: {lead.people_count}</div>
+            )}
             <div className="text-lg text-foreground mb-1">{lead.name}</div>
             <div className="text-sm text-muted-foreground">{formatLeadDate(lead.created_at)}</div>
           </>
@@ -96,6 +111,12 @@ function Page() {
               <span>{formatLeadDate(lead.created_at)}</span>
               <span>·</span>
               <span className="px-2 py-0.5 bg-secondary rounded-sm">{sourceLabel(lead.source)}</span>
+              {lead.people_count != null && (
+                <>
+                  <span>·</span>
+                  <span>Человек: {lead.people_count}</span>
+                </>
+              )}
             </div>
           </>
         )}
