@@ -427,11 +427,13 @@ export const adminGetLead = createServerFn({ method: "POST" })
       end_date: string;
       title_ru: string;
       title_ro: string;
+      destination_ru: string | null;
+      destination_ro: string | null;
     } | null = null;
     if (row.pilgrimage_id) {
       const { data: p } = await context.supabase
         .from("pilgrimages")
-        .select("id, slug, start_date, end_date, title_ru, title_ro")
+        .select("id, slug, start_date, end_date, title_ru, title_ro, destination_ru, destination_ro")
         .eq("id", row.pilgrimage_id)
         .maybeSingle();
       pilgrimage = p ?? null;
