@@ -140,6 +140,56 @@ export function buildDestinationJsonLd(data: DestinationLoaderData | undefined, 
       }),
     });
   }
+
+  // Event per pilgrimage (skip status='completed').
+  const host = url.replace(/(https?:\/\/[^/]+).*/, "$1");
+  const slugLower = (d.slug || "").toLowerCase();
+  const titleLower = (d.title_ru + " " + d.title_ro).toLowerCase();
+  const matchingPilgrimages = (data.pilgrimages ?? []).filter((p) => {
+    const dd = (p.destination_ru + " " + p.destination_ro).toLowerCase();
+    return (
+      p.slug.toLowerCase().includes(slugLower) ||
+      dd.includes(slugLower) ||
+      (titleLower && dd.includes(titleLower.split(" ")[0]))
+    );
+  });
+  for (const p of matchingPilgrimages) {
+    if (p.status === "completed") continue;
+    const availability =
+      p.status === "full"
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock";
+    const evt: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: lang === "ru" ? p.title_ru : p.title_ro,
+      startDate: p.start_date,
+      endDate: p.end_date,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: {
+        "@type": "Place",
+        name: lang === "ru" ? p.destination_ru : p.destination_ro,
+      },
+      organizer: {
+        "@type": "Organization",
+        name: "Паломник",
+        url: host,
+      },
+      url,
+    };
+    if (p.price_eur != null) {
+      evt.offers = {
+        "@type": "Offer",
+        price: p.price_eur,
+        priceCurrency: "EUR",
+        availability,
+        url,
+      };
+    }
+    scripts.push({ type: "application/ld+json", children: JSON.stringify(evt) });
+  }
+
   return scripts;
 }
 
