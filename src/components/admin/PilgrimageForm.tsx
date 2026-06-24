@@ -20,6 +20,7 @@ type Initial = {
   price_eur: number | null;
   with_priest: boolean;
   is_published: boolean;
+  status: "recruiting" | "full" | "completed" | null;
 };
 
 export function PilgrimageForm({ initial }: { initial: Initial }) {
@@ -56,6 +57,7 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
           cover_image: form.cover_image || null,
           price_eur: form.price_eur ?? null,
           destination_slug: form.destination_slug || null,
+          status: form.status ?? null,
         },
       });
       navigate({ to: "/admin/pilgrimages" });
@@ -120,6 +122,21 @@ export function PilgrimageForm({ initial }: { initial: Initial }) {
           <input type="checkbox" checked={form.is_published} onChange={(e) => set("is_published", e.target.checked)} />
           Опубликовать
         </label>
+      </div>
+
+      <div className="max-w-xs">
+        <label className="block text-sm font-serif mb-1">Статус (необязательно)</label>
+        <select
+          className={cls}
+          value={form.status ?? ""}
+          onChange={(e) => set("status", (e.target.value || null) as Initial["status"])}
+        >
+          <option value="">– не показывать –</option>
+          <option value="recruiting">Идёт набор</option>
+          <option value="full">Группа собрана</option>
+          <option value="completed">Состоялась</option>
+        </select>
+        <p className="text-xs text-muted-foreground mt-1">Если выбрано – статус отображается на карточке поездки на публичной странице.</p>
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
