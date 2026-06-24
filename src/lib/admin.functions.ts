@@ -384,7 +384,7 @@ export const adminListLeads = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     let q = context.supabase
       .from("leads")
-      .select("id, name, phone, email, message, source, is_read, read_at, created_at")
+      .select("id, name, phone, email, message, source, is_read, read_at, created_at, people_count, pilgrimage_id")
       .order("created_at", { ascending: false })
       .limit(500);
 
@@ -419,7 +419,24 @@ export const adminGetLead = createServerFn({ method: "POST" })
     const { data: row, error } = await context.supabase
       .from("leads").select("*").eq("id", data.id).maybeSingle();
     if (error) throw new Error(error.message);
-    return row;
+    if (!row) return null;
+    let pilgrimage: {
+      id: string;
+      slug: string;
+      start_date: string;
+      end_date: string;
+      title_ru: string;
+      title_ro: string;
+    } | null = null;
+    if (row.pilgrimage_id) {
+      const { data: p } = await context.supabase
+        .from("pilgrimages")
+        .select("id, slug, start_date, end_date, title_ru, title_ro")
+        .eq("id", row.pilgrimage_id)
+        .maybeSingle();
+      pilgrimage = p ?? null;
+    }
+    return { ...row, pilgrimage };
   });
 
 export const adminMarkLeadRead = createServerFn({ method: "POST" })
