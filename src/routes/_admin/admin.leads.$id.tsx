@@ -99,9 +99,12 @@ function Page() {
   const pilgDestination = lead.pilgrimage
     ? (lead.pilgrimage.destination_ru || lead.pilgrimage.title_ru)
     : null;
+  const destName = lead.destination
+    ? (lead.destination.short_title_ru || lead.destination.title_ru)
+    : null;
 
   return (
-    <div className="p-4 md:p-8 max-w-2xl md:max-w-5xl">
+    <div className="p-4 md:p-8 max-w-2xl md:max-w-5xl md:pb-24">
       <Link to="/admin/leads" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6">
         <ArrowLeft className="w-4 h-4" /> К списку заявок
       </Link>
@@ -113,7 +116,7 @@ function Page() {
               Заявка · {CATEGORY_LABELS.pilgrimage}
             </div>
             <h1 className="font-serif text-3xl md:text-4xl text-accent font-medium mb-2">
-              {sourceLabel(lead.source)}
+              Паломничество: {destName ?? sourceLabel(lead.source).replace(/^Паломничество:\s*/, "")}
             </h1>
             {lead.pilgrimage && (
               <div className="text-base md:text-lg mb-1">
@@ -187,7 +190,7 @@ function Page() {
 
         {lead.message && (
           <div className="mb-8 md:mb-0">
-            <h2 className="font-serif text-sm text-muted-foreground mb-2">Сообщение</h2>
+            <h2 className="font-serif text-base md:text-lg text-muted-foreground mb-2">Сообщение от посетителя</h2>
             <div className="bg-card border border-border rounded-sm p-4 whitespace-pre-wrap text-foreground leading-relaxed md:max-h-[60vh] md:overflow-y-auto">
               {lead.message}
             </div>
@@ -195,28 +198,30 @@ function Page() {
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 mt-6 md:mt-8 pt-4 border-t border-border md:sticky md:bottom-0 md:bg-background/95 md:backdrop-blur md:-mx-8 md:px-8 md:py-3 md:z-10">
-        <button
-          onClick={toggleRead}
-          className="px-3 py-1.5 text-sm border border-border rounded-sm hover:bg-secondary"
-        >
-          {lead.is_read ? "Отметить непрочитанной" : "Отметить прочитанной"}
-        </button>
-        {isPriest && (
-          <Link
-            to="/admin/priest-faq/new"
-            search={{ question: lead.message ?? "", from_lead: lead.id }}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border border-accent/40 text-accent rounded-sm hover:bg-accent/10"
+      <div className="mt-6 pt-4 border-t border-border md:border-0 md:pt-0 md:mt-0 md:fixed md:bottom-0 md:left-60 md:right-0 md:border-t md:border-border md:bg-background/95 md:backdrop-blur md:z-20">
+        <div className="flex flex-wrap items-center gap-3 md:max-w-5xl md:mx-auto md:px-8 md:py-3">
+          <button
+            onClick={toggleRead}
+            className="px-3 py-1.5 text-sm border border-border rounded-sm hover:bg-secondary"
           >
-            <MessageCircleQuestion className="w-4 h-4" /> Опубликовать как вопрос-ответ
-          </Link>
-        )}
-        <button
-          onClick={handleDelete}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-destructive border border-destructive/30 rounded-sm hover:bg-destructive/10 ml-auto"
-        >
-          <Trash2 className="w-4 h-4" /> Удалить
-        </button>
+            {lead.is_read ? "Отметить непрочитанной" : "Отметить прочитанной"}
+          </button>
+          {isPriest && (
+            <Link
+              to="/admin/priest-faq/new"
+              search={{ question: lead.message ?? "", from_lead: lead.id }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm border border-accent/40 text-accent rounded-sm hover:bg-accent/10"
+            >
+              <MessageCircleQuestion className="w-4 h-4" /> Опубликовать как вопрос-ответ
+            </Link>
+          )}
+          <button
+            onClick={handleDelete}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm text-destructive border border-destructive/30 rounded-sm hover:bg-destructive/10 ml-auto"
+          >
+            <Trash2 className="w-4 h-4" /> Удалить
+          </button>
+        </div>
       </div>
     </div>
   );
