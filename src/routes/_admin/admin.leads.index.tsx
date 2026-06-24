@@ -228,6 +228,9 @@ function Page() {
                         <span className="text-sm text-foreground/80 truncate">{r.name}</span>
                         <span className="text-xs text-muted-foreground shrink-0">{formatLeadDate(r.created_at)}</span>
                       </div>
+                      {r.people_count != null && (
+                        <div className="text-xs text-muted-foreground">Человек: {r.people_count}</div>
+                      )}
                       {r.phone && <div className="text-sm text-accent font-medium">{r.phone}</div>}
                       {r.email && <div className="text-sm text-muted-foreground truncate">{r.email}</div>}
                       {preview && (

@@ -40,6 +40,7 @@ function Page() {
         price_eur: data.price_eur ? Number(data.price_eur) : null,
         with_priest: data.with_priest,
         is_published: data.is_published,
+        status: (data.status as "recruiting" | "full" | "completed" | null) ?? null,
       }} />
     </div>
   );

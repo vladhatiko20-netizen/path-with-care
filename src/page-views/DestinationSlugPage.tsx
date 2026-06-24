@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
@@ -140,6 +140,56 @@ export function buildDestinationJsonLd(data: DestinationLoaderData | undefined, 
       }),
     });
   }
+
+  // Event per pilgrimage (skip status='completed').
+  const host = url.replace(/(https?:\/\/[^/]+).*/, "$1");
+  const slugLower = (d.slug || "").toLowerCase();
+  const titleLower = (d.title_ru + " " + d.title_ro).toLowerCase();
+  const matchingPilgrimages = (data.pilgrimages ?? []).filter((p) => {
+    const dd = (p.destination_ru + " " + p.destination_ro).toLowerCase();
+    return (
+      p.slug.toLowerCase().includes(slugLower) ||
+      dd.includes(slugLower) ||
+      (titleLower && dd.includes(titleLower.split(" ")[0]))
+    );
+  });
+  for (const p of matchingPilgrimages) {
+    if (p.status === "completed") continue;
+    const availability =
+      p.status === "full"
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock";
+    const evt: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: lang === "ru" ? p.title_ru : p.title_ro,
+      startDate: p.start_date,
+      endDate: p.end_date,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: {
+        "@type": "Place",
+        name: lang === "ru" ? p.destination_ru : p.destination_ro,
+      },
+      organizer: {
+        "@type": "Organization",
+        name: "Паломник",
+        url: host,
+      },
+      url,
+    };
+    if (p.price_eur != null) {
+      evt.offers = {
+        "@type": "Offer",
+        price: p.price_eur,
+        priceCurrency: "EUR",
+        availability,
+        url,
+      };
+    }
+    scripts.push({ type: "application/ld+json", children: JSON.stringify(evt) });
+  }
+
   return scripts;
 }
 
@@ -163,6 +213,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
   const captionProps = useLightboxCaptionProps();
   const lightboxPlugins = useLightboxPlugins([Thumbnails, Captions, Zoom], Captions);
   const [prefill, setPrefill] = useState<string>("");
+  const [selectedPilgrimage, setSelectedPilgrimage] = useState<{ id: string; dateLabel: string } | null>(null);
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
@@ -251,10 +302,31 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
       ? `Интересует поездка – ${title} – ${range}`
       : `Mă interesează pelerinajul – ${title} – ${range}`;
     setPrefill(msg);
+    setSelectedPilgrimage({ id: p.id, dateLabel: range });
     if (typeof window !== "undefined") {
       const el = document.getElementById("lead");
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  }
+
+  function statusLabel(s: PilgrimageSummary["status"]): { text: string; cls: string } | null {
+    if (!s) return null;
+    if (s === "recruiting") {
+      return {
+        text: t("Идёт набор", "Se formează grupul"),
+        cls: "bg-gold/15 text-foreground border border-gold/40",
+      };
+    }
+    if (s === "full") {
+      return {
+        text: t("Группа собрана", "Grup complet"),
+        cls: "bg-muted text-muted-foreground border border-border",
+      };
+    }
+    return {
+      text: t("Состоялась", "A avut loc"),
+      cls: "bg-olive/15 text-foreground border border-olive/40",
+    };
   }
 
   return (
@@ -605,7 +677,9 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
             </p>
           ) : (
             <ul className="space-y-3 font-serif">
-              {dates.map((p) => (
+              {dates.map((p) => {
+                const sb = statusLabel(p.status);
+                return (
                 <li
                   key={p.id}
                   onClick={() => selectDate(p)}
@@ -615,6 +689,11 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
                   className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card border border-gold/30 rounded-sm px-6 py-5 cursor-pointer hover:border-gold transition-all duration-300"
                 >
                   <div>
+                    {sb && (
+                      <span className={`inline-block text-[12px] tracking-wide uppercase px-2 py-0.5 rounded-sm mb-2 ${sb.cls}`}>
+                        {sb.text}
+                      </span>
+                    )}
                     <p className="text-[17px] md:text-[24px] text-foreground">{pickL(p.title_ru, p.title_ro)}</p>
                     <p className="text-[17px] md:text-[21px] text-foreground/65 mt-1">
                       <Calendar className="w-4 h-4 text-gold inline mr-2 -mt-0.5" aria-hidden="true" />
@@ -637,7 +716,8 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
                     </button>
                   </div>
                 </li>
-              ))}
+              );
+              })}
             </ul>
           )}
         </div>
@@ -669,7 +749,18 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
         </section>
       )}
 
-      <LeadForm slug={slug} prefill={prefill} onPrefillConsumed={() => setPrefill("")} />
+      <LeadForm
+        slug={slug}
+        prefill={prefill}
+        onPrefillConsumed={() => setPrefill("")}
+        pilgrimageId={selectedPilgrimage?.id ?? null}
+        onClearPilgrimage={() => setSelectedPilgrimage(null)}
+      />
+
+      <ViberFloatingButton
+        destinationName={title}
+        dateLabel={selectedPilgrimage?.dateLabel ?? null}
+      />
 
       {/* Lightbox */}
       {galleryPhotos.length > 0 && (
@@ -701,10 +792,65 @@ const ViberIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill: string; onPrefillConsumed: () => void }) {
+function ViberFloatingButton({ destinationName, dateLabel }: { destinationName: string; dateLabel: string | null }) {
+  const { t } = useLang();
+  const [hidden, setHidden] = useState(false);
+  const ref = useRef<HTMLAnchorElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const target = document.getElementById("lead");
+    if (!target || !("IntersectionObserver" in window)) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) setHidden(e.isIntersecting);
+      },
+      { rootMargin: "0px 0px -20% 0px", threshold: 0.05 },
+    );
+    obs.observe(target);
+    return () => obs.disconnect();
+  }, []);
+
+  const datePart = dateLabel ? t(`, даты ${dateLabel}`, `, datele ${dateLabel}`) : "";
+  const text = t(
+    `Здравствуйте! Интересует паломничество в ${destinationName}${datePart}`,
+    `Bună ziua! Mă interesează pelerinajul în ${destinationName}${datePart}`,
+  );
+  const href = `viber://chat?number=%2B37368778676&text=${encodeURIComponent(text)}`;
+
+  return (
+    <a
+      ref={ref}
+      href={href}
+      aria-label="Viber"
+      className={`fixed right-4 z-40 inline-flex items-center justify-center w-14 h-14 rounded-full shadow-lg transition-opacity duration-200 ${hidden ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+      style={{
+        backgroundColor: "#7360F2",
+        color: "#ffffff",
+        bottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
+      }}
+    >
+      <ViberIcon className="w-7 h-7" />
+    </a>
+  );
+}
+
+function LeadForm({
+  slug,
+  prefill,
+  onPrefillConsumed,
+  pilgrimageId,
+  onClearPilgrimage,
+}: {
+  slug: string;
+  prefill: string;
+  onPrefillConsumed: () => void;
+  pilgrimageId: string | null;
+  onClearPilgrimage: () => void;
+}) {
   const { t } = useLang();
   const submit = useServerFn(createLead);
-  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", message: "", people_count: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -725,11 +871,27 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
       toast.error(t("Проверьте номер телефона", "Verificați numărul de telefon"));
       return;
     }
+    const peopleNum = Number.parseInt(form.people_count, 10);
+    if (!Number.isFinite(peopleNum) || peopleNum < 1 || peopleNum > 100) {
+      toast.error(t("Укажите количество человек (от 1 до 100)", "Indicați numărul de persoane (de la 1 la 100)"));
+      return;
+    }
     setSending(true);
     try {
-      await submit({ data: { ...form, source: `destination:${slug}` } });
+      await submit({
+        data: {
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          message: form.message,
+          source: `destination:${slug}`,
+          people_count: peopleNum,
+          pilgrimage_id: pilgrimageId,
+        },
+      });
       setSent(true);
-      setForm({ name: "", phone: "", email: "", message: "" });
+      setForm({ name: "", phone: "", email: "", message: "", people_count: "" });
+      onClearPilgrimage();
       toast.success(t("Заявка отправлена", "Cererea a fost trimisă"));
     } catch (err) {
       toast.error(t("Не удалось отправить. Попробуйте позже.", "Nu s-a putut trimite. Încercați mai târziu."));
@@ -775,6 +937,20 @@ function LeadForm({ slug, prefill, onPrefillConsumed }: { slug: string; prefill:
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
               <input type="email" maxLength={255} placeholder="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25" />
+            </div>
+            <div className="relative">
+              <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />
+              <input
+                required
+                type="number"
+                min={1}
+                max={100}
+                inputMode="numeric"
+                placeholder={t("Сколько человек", "Câte persoane")}
+                value={form.people_count}
+                onChange={(e) => setForm({ ...form, people_count: e.target.value.replace(/[^\d]/g, "") })}
+                className="w-full pl-11 pr-4 py-3 bg-background border border-border rounded-sm text-[16px] md:text-[18px] focus:outline-none focus:border-gold md:transition-colors md:hover:border-gold md:focus:border-accent md:focus:ring-2 md:focus:ring-accent/25"
+              />
             </div>
             <div className="relative">
               <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-muted-foreground pointer-events-none" aria-hidden="true" />

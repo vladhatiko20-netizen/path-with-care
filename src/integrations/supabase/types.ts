@@ -682,7 +682,9 @@ export type Database = {
           is_read: boolean
           message: string | null
           name: string
+          people_count: number | null
           phone: string | null
+          pilgrimage_id: string | null
           read_at: string | null
           source: string
         }
@@ -693,7 +695,9 @@ export type Database = {
           is_read?: boolean
           message?: string | null
           name: string
+          people_count?: number | null
           phone?: string | null
+          pilgrimage_id?: string | null
           read_at?: string | null
           source: string
         }
@@ -704,11 +708,21 @@ export type Database = {
           is_read?: boolean
           message?: string | null
           name?: string
+          people_count?: number | null
           phone?: string | null
+          pilgrimage_id?: string | null
           read_at?: string | null
           source?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "leads_pilgrimage_id_fkey"
+            columns: ["pilgrimage_id"]
+            isOneToOne: false
+            referencedRelation: "pilgrimages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       pilgrimages: {
         Row: {
@@ -725,6 +739,7 @@ export type Database = {
           price_eur: number | null
           slug: string
           start_date: string
+          status: string | null
           title_ro: string
           title_ru: string
           updated_at: string
@@ -744,6 +759,7 @@ export type Database = {
           price_eur?: number | null
           slug: string
           start_date: string
+          status?: string | null
           title_ro: string
           title_ru: string
           updated_at?: string
@@ -763,6 +779,7 @@ export type Database = {
           price_eur?: number | null
           slug?: string
           start_date?: string
+          status?: string | null
           title_ro?: string
           title_ru?: string
           updated_at?: string

@@ -17,6 +17,7 @@ function Page() {
         destination_slug: null,
         description_ru: null, description_ro: null, cover_image: null,
         price_eur: null, with_priest: false, is_published: false,
+        status: null,
       }} />
     </div>
   );
