@@ -213,6 +213,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
   const captionProps = useLightboxCaptionProps();
   const lightboxPlugins = useLightboxPlugins([Thumbnails, Captions, Zoom], Captions);
   const [prefill, setPrefill] = useState<string>("");
+  const [selectedPilgrimage, setSelectedPilgrimage] = useState<{ id: string; dateLabel: string } | null>(null);
   const [shrineModal, setShrineModal] = useState<number | null>(null);
   const [shrineExpand, setShrineExpand] = useState<number | null>(null);
   const [lightbox, setLightbox] = useState<{ open: boolean; index: number }>({ open: false, index: 0 });
@@ -301,10 +302,31 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
       ? `Интересует поездка – ${title} – ${range}`
       : `Mă interesează pelerinajul – ${title} – ${range}`;
     setPrefill(msg);
+    setSelectedPilgrimage({ id: p.id, dateLabel: range });
     if (typeof window !== "undefined") {
       const el = document.getElementById("lead");
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  }
+
+  function statusLabel(s: PilgrimageSummary["status"]): { text: string; cls: string } | null {
+    if (!s) return null;
+    if (s === "recruiting") {
+      return {
+        text: t("Идёт набор", "Se formează grupul"),
+        cls: "bg-gold/15 text-foreground border border-gold/40",
+      };
+    }
+    if (s === "full") {
+      return {
+        text: t("Группа собрана", "Grup complet"),
+        cls: "bg-muted text-muted-foreground border border-border",
+      };
+    }
+    return {
+      text: t("Состоялась", "A avut loc"),
+      cls: "bg-olive/15 text-foreground border border-olive/40",
+    };
   }
 
   return (
