@@ -36,6 +36,7 @@ const pilgSchema = z.object({
   price_eur: z.number().min(0).max(1000000).nullable().optional(),
   with_priest: z.boolean(),
   is_published: z.boolean(),
+  status: z.enum(["recruiting", "full", "completed"]).nullable().optional(),
 });
 
 const destSchema = z.object({
