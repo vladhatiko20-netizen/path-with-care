@@ -158,15 +158,13 @@
     opacity: 0.6;
   }
 
-  .dropcap::first-letter,
-  .blog-body > p:first-child::first-letter,
-  .blog-body > p:first-of-type::first-letter {
+  .dropcap::first-letter {
     font-family: var(--font-serif);
     float: left;
     font-size: 3.2em;
     line-height: 0.9;
-    padding: 0.05em 0.08em 0 0;
-    margin-right: 0.06em;
+    padding: 0.05em 0 0 0;
+    margin-right: 0.02em;
     color: var(--color-accent);
     font-weight: 500;
   }
