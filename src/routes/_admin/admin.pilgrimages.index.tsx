@@ -26,6 +26,13 @@ function Page() {
     queryFn: () => list(),
   });
 
+  const todayIso = new Date().toISOString().slice(0, 10);
+  function timeStatus(start: string, end: string) {
+    if (end < todayIso) return { label: "Завершена", cls: "bg-muted text-muted-foreground border-border" };
+    if (start <= todayIso && todayIso <= end) return { label: "Проходит сейчас", cls: "bg-amber-100 text-amber-800 border-amber-200" };
+    return { label: "Запланирована", cls: "bg-green-100 text-green-800 border-green-200" };
+  }
+
   type Row = NonNullable<typeof data>[number];
   const toggle = useMutation({
     mutationFn: (vars: { id: string; is_published: boolean }) =>
@@ -97,6 +104,15 @@ function Page() {
                   <td className="px-4 py-3">{p.price_eur ? `€${p.price_eur}` : "–"}</td>
                   <td className="px-4 py-3">{p.with_priest ? "Да" : "Нет"}</td>
                   <td className="px-4 py-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {(() => {
+                        const s = timeStatus(p.start_date, p.end_date);
+                        return (
+                          <span className={cn("inline-flex items-center px-2.5 py-1 rounded-sm text-xs border", s.cls)}>
+                            {s.label}
+                          </span>
+                        );
+                      })()}
                     {p.destination_published === false ? (
                       <span
                         role="status"
@@ -135,6 +151,7 @@ function Page() {
                       <span>{p.is_published ? "Активна" : "Скрыта"}</span>
                     </button>
                     )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
                     <Link to="/admin/pilgrimages/$id" params={{ id: p.id }} className="p-1.5 hover:bg-secondary rounded-sm">

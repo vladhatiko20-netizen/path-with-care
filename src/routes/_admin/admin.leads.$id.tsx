@@ -189,7 +189,7 @@ function Page() {
         </div>
 
         {lead.message && (
-          <div className="mb-8 md:mb-0 md:-mt-6">
+          <div className="mb-8 md:mb-0 md:-mt-20">
             <h2 className="font-serif text-base md:text-lg text-muted-foreground mb-2 md:mb-1">Сообщение от посетителя</h2>
             <div className="bg-card border border-border rounded-sm p-4 whitespace-pre-wrap text-foreground leading-relaxed md:max-h-[60vh] md:overflow-y-auto">
               {lead.message}
