@@ -429,7 +429,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
                   <span className="text-accent mr-2" aria-hidden="true">✦</span>
                   {t("О поездке", "Despre pelerinaj")}
                 </h2>
-                <p className="text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed whitespace-pre-line">{intro}</p>
+                <p className="dropcap text-[17px] lg:text-[18px] text-foreground/85 leading-relaxed whitespace-pre-line">{intro}</p>
               </>
             )}
           </div>
@@ -473,7 +473,7 @@ export function Component({ data, slug }: { data: DestinationLoaderData; slug: s
               <span className="text-accent mr-2" aria-hidden="true">✦</span>
               {t("О поездке", "Despre pelerinaj")}
             </h2>
-            <p className="text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line">{intro}</p>
+            <p className="dropcap text-[17px] text-foreground/85 leading-relaxed whitespace-pre-line">{intro}</p>
           </div>
         </section>
       )}
