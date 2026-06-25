@@ -37,7 +37,7 @@ export function Component({ slug }: { slug: string }) {
           {title}
         </h1>
 
-        <div className="prose-blog blog-body">
+        <div className="prose-blog">
           {isHtml ? (
             <div
               className="text-foreground/85 [&_p]:text-lg [&_p]:leading-relaxed [&_p]:mb-5 [&_h2]:font-serif [&_h2]:text-2xl md:[&_h2]:text-[1.7rem] [&_h2]:font-semibold [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:leading-snug [&_blockquote]:italic [&_blockquote]:text-lg [&_blockquote]:leading-relaxed [&_blockquote]:mb-5 [&_blockquote]:border-l-2 [&_blockquote]:border-gold/50 [&_blockquote]:pl-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-5 [&_ul]:space-y-2 [&_ul]:text-lg [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-5 [&_ol]:space-y-2 [&_ol]:text-lg [&_a]:text-accent [&_a]:underline hover:[&_a]:text-gold [&_strong]:font-semibold [&_em]:italic"
