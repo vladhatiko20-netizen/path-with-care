@@ -109,7 +109,7 @@ function Page() {
         <ArrowLeft className="w-4 h-4" /> К списку заявок
       </Link>
 
-      <header className="mb-6">
+      <header className="mb-6 md:mb-2">
         {isPilg ? (
           <>
             <div className="mb-3 inline-flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase font-medium text-accent bg-accent/10 px-2 py-1 rounded-sm">
@@ -189,8 +189,8 @@ function Page() {
         </div>
 
         {lead.message && (
-          <div className="mb-8 md:mb-0">
-            <h2 className="font-serif text-base md:text-lg text-muted-foreground mb-2">Сообщение от посетителя</h2>
+          <div className="mb-8 md:mb-0 md:-mt-6">
+            <h2 className="font-serif text-base md:text-lg text-muted-foreground mb-2 md:mb-1">Сообщение от посетителя</h2>
             <div className="bg-card border border-border rounded-sm p-4 whitespace-pre-wrap text-foreground leading-relaxed md:max-h-[60vh] md:overflow-y-auto">
               {lead.message}
             </div>
