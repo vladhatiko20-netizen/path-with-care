@@ -352,17 +352,17 @@ export function Component() {
 
       {/* BLOG TEASER */}
       <section className="bg-secondary/50 py-6 md:py-10">
-        <Link to={localize("/blog") as "/blog"} className="block max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center group">
-          <div className="max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          <Link to={localize("/blog") as "/blog"} className="block group max-md:max-h-[250px] overflow-hidden rounded-sm border border-gold/30 shadow-[0_8px_40px_-20px_rgba(61,40,23,0.35)]">
             <img
               src="https://images.pexels.com/photos/10618234/pexels-photo-10618234.jpeg"
               alt={t("Истории паломников", "Povești de pelerini")}
               loading="lazy"
               width={1200}
               height={1200}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
             />
-          </div>
+          </Link>
           <div>
             <p className="overline mb-2">{t("Православный блог", "Blog ortodox")}</p>
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6">
@@ -371,8 +371,15 @@ export function Component() {
             {blogPosts && blogPosts.length > 0 ? (
               <ul className="space-y-3 mb-7">
                 {blogPosts.slice(0, 3).map((post) => (
-                  <li key={post.slug} className="font-serif text-foreground/85 leading-snug border-b border-gold/20 pb-3 last:border-b-0">
-                    – {lang === "ru" ? post.title_ru : post.title_ro}
+                  <li key={post.slug} className="border-b border-gold/20 pb-3 last:border-b-0">
+                    <Link
+                      to={localize("/blog/$slug") as "/blog/$slug"}
+                      params={{ slug: post.slug }}
+                      className="block font-serif text-foreground/85 leading-snug hover:text-accent transition-colors"
+                    >
+                      <span className="text-accent mr-2" aria-hidden="true">✦</span>
+                      {lang === "ru" ? post.title_ru : post.title_ro}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -381,11 +388,14 @@ export function Component() {
                 {t("Скоро здесь появятся новые истории.", "În curând vor apărea povești noi.")}
               </p>
             )}
-            <span className="font-serif text-foreground gold-underline group-hover:text-gold transition-colors">
+            <Link
+              to={localize("/blog") as "/blog"}
+              className="font-serif text-foreground gold-underline hover:text-gold transition-colors"
+            >
               {t("Все истории", "Toate poveștile")} →
-            </span>
+            </Link>
           </div>
-        </Link>
+        </div>
       </section>
 
       {/* ICONS & RELICS */}
