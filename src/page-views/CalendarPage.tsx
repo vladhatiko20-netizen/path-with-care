@@ -39,9 +39,11 @@ export function Component() {
   const navigate = useNavigate();
   const { data: trips } = useSuspenseQuery(pilgrimagesQueryOptions());
 
-  // Group by year-month
+  // Group by year-month, strictly future only
+  const todayIso = new Date().toISOString().slice(0, 10);
   const grouped = new Map<string, { year: number; month: number; trips: PilgrimageSummary[] }>();
   for (const trip of trips) {
+    if (trip.start_date <= todayIso) continue;
     const d = new Date(trip.start_date);
     const key = `${d.getFullYear()}-${d.getMonth()}`;
     if (!grouped.has(key)) grouped.set(key, { year: d.getFullYear(), month: d.getMonth(), trips: [] });

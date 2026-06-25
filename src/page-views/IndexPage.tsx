@@ -73,7 +73,7 @@ export function Component() {
   const dbDestinations = publishedDestinations.filter((d) => !!d.cover_image);
   const todayIso = new Date().toISOString().slice(0, 10);
   const upcoming = allPilgrimages
-    .filter((p) => p.start_date >= todayIso)
+    .filter((p) => p.start_date > todayIso)
     .sort((a, b) => a.start_date.localeCompare(b.start_date))
     .slice(0, 8);
   return (
