@@ -289,7 +289,7 @@ export function Component() {
             <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-6 leading-tight">
               {t("Что такое паломничество?", "Ce este pelerinajul?")}
             </h2>
-            <div className="space-y-4 text-foreground/85 leading-[1.8]">
+            <div className="space-y-4 text-base md:text-lg text-foreground/85 leading-[1.8]">
               <p>{t(
                 "Паломничеством называют путешествие к святым местам с молитвой и открытым сердцем. Туда, где присутствие Божие ощущается особенно глубоко; где жизнь святых угодников и верных последователей Христа связывает прошлое с настоящим; где веками не прерывается молитва и где Церковь бережно хранит живое свидетельство веры.",
                 "Pelerinajul este o călătorie către locurile sfinte, făcută cu rugăciune și cu inima deschisă. Spre locurile unde prezența lui Dumnezeu se simte în chip deosebit de adânc; unde viața sfinților și a credincioșilor care L-au urmat pe Hristos unește trecutul cu prezentul; unde rugăciunea nu s-a întrerupt de veacuri și unde Biserica păstrează cu grijă mărturia vie a credinței."
@@ -324,7 +324,7 @@ export function Component() {
                 {lang === "ru" ? featuredPriest.title_ru : featuredPriest.title_ro}
               </p>
             )}
-            <p className="text-foreground/80 leading-relaxed mb-6 max-w-prose">
+            <p className="text-base md:text-lg text-foreground/80 leading-relaxed mb-6 max-w-prose">
               {t(
                 "Вопросы о подготовке к паломничеству, исповеди, духовной жизни. Отвечают батюшки Кишинёва и духовники, сопровождающие наши группы.",
                 "Întrebări despre pregătirea pentru pelerinaj, spovedanie, viața duhovnicească. Răspund preoții din Chișinău și duhovnicii care însoțesc grupurile."
@@ -383,7 +383,7 @@ export function Component() {
                     <Link
                       to={localize("/blog/$slug") as "/blog/$slug"}
                       params={{ slug: post.slug }}
-                      className="block font-serif text-foreground/85 leading-snug hover:text-accent transition-colors"
+                      className="block font-serif text-base md:text-lg text-foreground/85 leading-snug hover:text-accent transition-colors"
                     >
                       <span className="text-accent mr-2" aria-hidden="true">✦</span>
                       {lang === "ru" ? post.title_ru : post.title_ro}
@@ -428,7 +428,7 @@ export function Component() {
               <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-5 leading-tight">
                 {t("Иконы, ладан, духовная литература", "Icoane, tămâie, literatură duhovnicească")}
               </h2>
-              <p className="text-foreground/75 leading-relaxed mb-6">
+              <p className="text-base md:text-lg text-foreground/75 leading-relaxed mb-6">
                 {catalogIntro}
               </p>
               <div className="hidden md:block">
