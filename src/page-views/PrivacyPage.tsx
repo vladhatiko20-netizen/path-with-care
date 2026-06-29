@@ -2,10 +2,10 @@ import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
 
 export function Component() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <PageShell>
-      <section className="max-w-3xl mx-auto px-6 py-12 md:py-12">
+      <section lang={lang} className="max-w-3xl mx-auto px-6 py-12 md:py-12">
         <p className="overline mb-5">{t("Документ", "Document")}</p>
         <h1 className="font-serif text-4xl md:text-6xl font-light text-foreground mb-8 leading-tight break-words hyphens-auto">
           {t("Политика конфиденциальности", "Politica de confidențialitate")}

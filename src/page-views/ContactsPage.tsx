@@ -37,10 +37,10 @@ export function Component() {
             <div>
               <p className="overline mb-2">{t("Телефоны", "Telefoane")}</p>
               <p className="text-lg text-foreground">
-                Анна: <a href="tel:+37368778676" className="text-accent hover:underline">+373 68 77 86 76</a>
+                <a href="tel:+37368778676" className="text-accent hover:underline">Анна: +373 68 77 86 76</a>
               </p>
               <p className="text-lg text-foreground">
-                Наталья: <a href="tel:+37368787599" className="text-accent hover:underline">+373 68 78 75 99</a>
+                <a href="tel:+37368787599" className="text-accent hover:underline">Наталья: +373 68 78 75 99</a>
               </p>
             </div>
             <div>
