@@ -26,12 +26,10 @@ export function Footer() {
           <div className="mt-5 space-y-1.5 text-sm text-foreground/80">
             <p>bd. Dacia 20, of. 81, Chișinău</p>
             <p>
-              <a href="tel:+37368778676" className="hover:text-gold transition-colors">+373 68 77 86 76</a>{" "}
-              – {t("Анна", "Anna")}
+              <a href="tel:+37368778676" className="hover:text-gold transition-colors">+373 68 77 86 76 – {t("Анна", "Anna")}</a>
             </p>
             <p>
-              <a href="tel:+37368787599" className="hover:text-gold transition-colors">+373 68 78 75 99</a>{" "}
-              – {t("Наталья", "Natalia")}
+              <a href="tel:+37368787599" className="hover:text-gold transition-colors">+373 68 78 75 99 – {t("Наталья", "Natalia")}</a>
             </p>
             <p>
               <a href="mailto:palomnik.moldova@gmail.com" className="hover:text-gold transition-colors">
@@ -70,13 +68,13 @@ export function Footer() {
               {t(`По благословению ${BLESSING_BY}`, `Cu binecuvântarea ${BLESSING_BY}`)}
             </p>
           )}
-          <p className="text-xs text-muted-foreground leading-relaxed">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {t(
               "Лицензия: Министерство культуры Республики Молдова",
               "Licență: Ministerul Culturii al Republicii Moldova"
             )}
           </p>
-          <p className="text-xs text-muted-foreground mt-4">© 2026 Eldorado Tur SRL</p>
+          <p className="text-sm text-muted-foreground mt-4">© 2026 Eldorado Tur SRL</p>
           <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
             <Link to={localize("/privacy") as "/privacy"} className="hover:text-foreground">{t("Конфиденциальность", "Confidențialitate")}</Link>
             <Link to={localize("/public-offer") as "/public-offer"} className="hover:text-foreground">{t("Публичная оферта", "Ofertă publică")}</Link>
