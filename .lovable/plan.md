@@ -1,28 +1,23 @@
-## Цель
-На главной странице промо-блок «Иконы и святыни» должен использовать вступительный текст из админки (`catalog_page.intro_ru` / `intro_ro`), который уже редактируется на `/admin/catalog/page` и сейчас отображается только на странице `/catalog`. Текущий захардкоженный абзац оставить как fallback на случай, если поле в БД пустое.
+Wave D1 — Fill in real Privacy Policy text (RU + RO)
 
-## Что меняется
-Только frontend, один файл: `src/page-views/IndexPage.tsx`.
+## Scope
+Single file: `src/page-views/PrivacyPage.tsx`. Do not touch any other file.
 
-### Промо-блок каталога (строки 423–428)
-- Прочитать уже доступный `catalogPageData.page` (запрос `catalogPageQueryOptions` уже выполняется, server fn `getCatalogPageData` уже возвращает `intro_ru` / `intro_ro` — новых запросов и серверных изменений не нужно).
-- Вычислить `catalogIntro` по текущему языку через существующий `useLang()`:
-  - `lang === "ru"` → `page?.intro_ru?.trim() || <текущий RU-хардкод>`
-  - `lang === "ro"` → `page?.intro_ro?.trim() || <текущий RO-хардкод>`
-- Подставить `catalogIntro` в `<p>` вместо `t(...)` с двумя литералами.
+## What to change
+Replace the single placeholder `<p className="text-lg font-serif italic text-muted-foreground">` after the `<h1>` with the full privacy policy body, wired through the existing `t(ru, ro)` / `useLang()` mechanism.
 
-### Что НЕ меняется
-- Хедлайн «Иконы, ладан, духовная литература», оверлайн «По предзаказу», ссылка «Каталог →», hero-изображение, layout, классы Tailwind — без изменений.
-- `/admin/catalog/page`, `CatalogPageForm`, server-функции, схема БД — без изменений.
-- Страница `/catalog` — без изменений (использует тот же `intro` с теми же дефолтами).
-- Никакого `dangerouslySetInnerHTML`: intro в БД хранится как plain text, рендерим как plain text (так же, как на `/catalog`).
+## Content rules
+- Insert both RU and RO texts exactly as provided — no paraphrasing, summarizing, translating, or shortening.
+- Render each `##` section line as an `<h2>` subheading (use the page's existing heading style: `font-serif`, etc.).
+- Render all lines under a `##` as `<p>` paragraphs.
+- In the "Кто обрабатывает ваши данные" / "Cine prelucrează datele" block, keep the IDNO, address, phone, and email lines each on their own line (use `<br />` or separate `<p>` tags).
+- Do NOT introduce any em-dash (U+2014). Use the existing short dashes as written.
 
-## Поведение
-- Поле intro в админке пустое → на главной показывается прежний текст (полная обратная совместимость).
-- Поле заполнено → главная и `/catalog` показывают один и тот же абзац, синхронно для RU и RO.
-- Длинные тире (U+2014) не вводятся.
+## What to keep intact
+- The `<h1>` heading text and its `text-3xl md:text-6xl` sizing.
+- The `<section lang={lang}>` wrapper.
+- The `PageShell` wrapper.
+- The `overline` paragraph above the h1.
 
-## Проверка после реализации
-1. На главной (`/` и `/ro`) при пустом intro отображается прежний хардкод.
-2. После сохранения intro_ru / intro_ro в `/admin/catalog/page` текст на главной обновляется и совпадает с `/catalog`.
-3. `tsgo` проходит, build не ломается.
+## Deliverable
+After implementation, report: both RU and RO bodies are in place, confirm no em-dash was introduced, and confirm the contact block lines render separately.
