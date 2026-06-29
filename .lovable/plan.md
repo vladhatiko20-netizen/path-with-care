@@ -1,23 +1,16 @@
-Wave D1 — Fill in real Privacy Policy text (RU + RO)
+## Что я вижу
 
-## Scope
-Single file: `src/page-views/PrivacyPage.tsx`. Do not touch any other file.
+Проверил состояние проекта:
+- Оба роут-файла удалены: `src/routes/public-offer.tsx` и `src/routes/ro.public-offer.tsx` отсутствуют.
+- `src/routeTree.gen.ts` уже пересобран — в нём **нет** упоминаний `PublicOffer` или `public-offer`.
+- `PublicOfferPage.tsx`, ссылка в футере, запись в sitemap и строка в `llms.txt` — всё удалено.
 
-## What to change
-Replace the single placeholder `<p className="text-lg font-serif italic text-muted-foreground">` after the `<h1>` with the full privacy policy body, wired through the existing `t(ru, ro)` / `useLang()` mechanism.
+То есть код в порядке. Консультант прав по сути: ошибка `500 на /src/routeTree.gen.ts` и `Failed to fetch dynamically imported module` — это рассинхрон превью с уже пересобранным кодом. Старая вкладка превью держит модуль, который ссылался на удалённые роуты, и Vite-HMR на это спотыкается.
 
-## Content rules
-- Insert both RU and RO texts exactly as provided — no paraphrasing, summarizing, translating, or shortening.
-- Render each `##` section line as an `<h2>` subheading (use the page's existing heading style: `font-serif`, etc.).
-- Render all lines under a `##` as `<p>` paragraphs.
-- In the "Кто обрабатывает ваши данные" / "Cine prelucrează datele" block, keep the IDNO, address, phone, and email lines each on their own line (use `<br />` or separate `<p>` tags).
-- Do NOT introduce any em-dash (U+2014). Use the existing short dashes as written.
+## План
 
-## What to keep intact
-- The `<h1>` heading text and its `text-3xl md:text-6xl` sizing.
-- The `<section lang={lang}>` wrapper.
-- The `PageShell` wrapper.
-- The `overline` paragraph above the h1.
+1. Перезапустить dev-сервер (`code--restart_dev_server`), чтобы Vite сбросил кэш модулей и отдал свежий `routeTree.gen.ts`.
+2. Попросить вас обновить превью (Ctrl/Cmd+R) — после рестарта старый модуль в браузере всё ещё держится, нужен hard refresh.
+3. Если после этого ошибка останется — снять вывод dev-сервера (`sqlite3 /tmp/sandbox-state.db ...`) и разобрать конкретную строку.
 
-## Deliverable
-After implementation, report: both RU and RO bodies are in place, confirm no em-dash was introduced, and confirm the contact block lines render separately.
+Ничего в коде менять не нужно — удаление выполнено чисто.
