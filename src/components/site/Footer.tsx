@@ -77,7 +77,6 @@ export function Footer() {
           <p className="text-sm text-muted-foreground mt-4">© 2026 Eldorado Tur SRL</p>
           <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
             <Link to={localize("/privacy") as "/privacy"} className="hover:text-foreground">{t("Конфиденциальность", "Confidențialitate")}</Link>
-            <Link to={localize("/public-offer") as "/public-offer"} className="hover:text-foreground">{t("Публичная оферта", "Ofertă publică")}</Link>
           </div>
         </div>
       </div>

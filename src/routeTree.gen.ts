@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WithPriestRouteImport } from './routes/with-priest'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoRouteImport } from './routes/ro'
-import { Route as PublicOfferRouteImport } from './routes/public-offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
 import { Route as LoginRouteImport } from './routes/login'
@@ -26,7 +25,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as RoIndexRouteImport } from './routes/ro.index'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
 import { Route as RoWithPriestRouteImport } from './routes/ro.with-priest'
-import { Route as RoPublicOfferRouteImport } from './routes/ro.public-offer'
 import { Route as RoPrivacyRouteImport } from './routes/ro.privacy'
 import { Route as RoOrthodoxCalendarRouteImport } from './routes/ro.orthodox-calendar'
 import { Route as RoContactsRouteImport } from './routes/ro.contacts'
@@ -79,11 +77,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const RoRoute = RoRouteImport.update({
   id: '/ro',
   path: '/ro',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicOfferRoute = PublicOfferRouteImport.update({
-  id: '/public-offer',
-  path: '/public-offer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -148,11 +141,6 @@ const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
 const RoWithPriestRoute = RoWithPriestRouteImport.update({
   id: '/with-priest',
   path: '/with-priest',
-  getParentRoute: () => RoRoute,
-} as any)
-const RoPublicOfferRoute = RoPublicOfferRouteImport.update({
-  id: '/public-offer',
-  path: '/public-offer',
   getParentRoute: () => RoRoute,
 } as any)
 const RoPrivacyRoute = RoPrivacyRouteImport.update({
@@ -363,7 +351,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
-  '/public-offer': typeof PublicOfferRoute
   '/ro': typeof RoRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
@@ -376,7 +363,6 @@ export interface FileRoutesByFullPath {
   '/ro/contacts': typeof RoContactsRoute
   '/ro/orthodox-calendar': typeof RoOrthodoxCalendarRoute
   '/ro/privacy': typeof RoPrivacyRoute
-  '/ro/public-offer': typeof RoPublicOfferRoute
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
@@ -420,7 +406,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
-  '/public-offer': typeof PublicOfferRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -432,7 +417,6 @@ export interface FileRoutesByTo {
   '/ro/contacts': typeof RoContactsRoute
   '/ro/orthodox-calendar': typeof RoOrthodoxCalendarRoute
   '/ro/privacy': typeof RoPrivacyRoute
-  '/ro/public-offer': typeof RoPublicOfferRoute
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations': typeof DestinationsIndexRoute
   '/ro': typeof RoIndexRoute
@@ -478,7 +462,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
-  '/public-offer': typeof PublicOfferRoute
   '/ro': typeof RoRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
@@ -491,7 +474,6 @@ export interface FileRoutesById {
   '/ro/contacts': typeof RoContactsRoute
   '/ro/orthodox-calendar': typeof RoOrthodoxCalendarRoute
   '/ro/privacy': typeof RoPrivacyRoute
-  '/ro/public-offer': typeof RoPublicOfferRoute
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
@@ -537,7 +519,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
-    | '/public-offer'
     | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
@@ -550,7 +531,6 @@ export interface FileRouteTypes {
     | '/ro/contacts'
     | '/ro/orthodox-calendar'
     | '/ro/privacy'
-    | '/ro/public-offer'
     | '/ro/with-priest'
     | '/destinations/'
     | '/ro/'
@@ -594,7 +574,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
-    | '/public-offer'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
@@ -606,7 +585,6 @@ export interface FileRouteTypes {
     | '/ro/contacts'
     | '/ro/orthodox-calendar'
     | '/ro/privacy'
-    | '/ro/public-offer'
     | '/ro/with-priest'
     | '/destinations'
     | '/ro'
@@ -651,7 +629,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
-    | '/public-offer'
     | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
@@ -664,7 +641,6 @@ export interface FileRouteTypes {
     | '/ro/contacts'
     | '/ro/orthodox-calendar'
     | '/ro/privacy'
-    | '/ro/public-offer'
     | '/ro/with-priest'
     | '/destinations/'
     | '/ro/'
@@ -710,7 +686,6 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
-  PublicOfferRoute: typeof PublicOfferRoute
   RoRoute: typeof RoRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
@@ -740,13 +715,6 @@ declare module '@tanstack/react-router' {
       path: '/ro'
       fullPath: '/ro'
       preLoaderRoute: typeof RoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/public-offer': {
-      id: '/public-offer'
-      path: '/public-offer'
-      fullPath: '/public-offer'
-      preLoaderRoute: typeof PublicOfferRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -838,13 +806,6 @@ declare module '@tanstack/react-router' {
       path: '/with-priest'
       fullPath: '/ro/with-priest'
       preLoaderRoute: typeof RoWithPriestRouteImport
-      parentRoute: typeof RoRoute
-    }
-    '/ro/public-offer': {
-      id: '/ro/public-offer'
-      path: '/public-offer'
-      fullPath: '/ro/public-offer'
-      preLoaderRoute: typeof RoPublicOfferRouteImport
       parentRoute: typeof RoRoute
     }
     '/ro/privacy': {
@@ -1184,7 +1145,6 @@ interface RoRouteChildren {
   RoContactsRoute: typeof RoContactsRoute
   RoOrthodoxCalendarRoute: typeof RoOrthodoxCalendarRoute
   RoPrivacyRoute: typeof RoPrivacyRoute
-  RoPublicOfferRoute: typeof RoPublicOfferRoute
   RoWithPriestRoute: typeof RoWithPriestRoute
   RoIndexRoute: typeof RoIndexRoute
   RoBlogSlugRoute: typeof RoBlogSlugRoute
@@ -1200,7 +1160,6 @@ const RoRouteChildren: RoRouteChildren = {
   RoContactsRoute: RoContactsRoute,
   RoOrthodoxCalendarRoute: RoOrthodoxCalendarRoute,
   RoPrivacyRoute: RoPrivacyRoute,
-  RoPublicOfferRoute: RoPublicOfferRoute,
   RoWithPriestRoute: RoWithPriestRoute,
   RoIndexRoute: RoIndexRoute,
   RoBlogSlugRoute: RoBlogSlugRoute,
@@ -1221,7 +1180,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
-  PublicOfferRoute: PublicOfferRoute,
   RoRoute: RoRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
