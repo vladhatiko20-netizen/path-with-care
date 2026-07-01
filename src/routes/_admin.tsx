@@ -144,7 +144,7 @@ function AdminLayout() {
     <div className="min-h-screen bg-background md:flex">
       {/* Mobile top bar */}
       <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-4 h-14 border-b border-border bg-card">
-        <Link to="/" className="font-serif text-base text-foreground">Паломник · Админ</Link>
+        <span className="font-serif text-base text-foreground">Паломник · Админ</span>
         <button
           onClick={() => setMobileOpen(true)}
           className="p-2 -mr-2 text-foreground"
