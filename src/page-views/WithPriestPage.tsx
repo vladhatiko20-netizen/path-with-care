@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { User, CheckCircle } from "lucide-react";
 import { PageShell } from "@/components/site/PageShell";
 import { useLang } from "@/lib/i18n";
-import heroImg from "@/assets/hero-priest.jpg";
 import { listPublishedClergy } from "@/lib/clergy.functions";
 import { createLead } from "@/lib/leads.functions";
 import { listPublishedPriestFaq } from "@/lib/priest-faq.functions";
@@ -31,15 +30,11 @@ export function Component() {
   const { data: faq } = useSuspenseQuery(priestFaqQueryOptions);
   return (
     <PageShell>
-      <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
-        <img src={heroImg} alt={t("Священник в молитве", "Preot în rugăciune")} className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/75" />
-        <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 md:pb-14 w-full">
-          <p className="overline text-white/90 mb-3">{t("ДУХОВНОЕ СОПРОВОЖДЕНИЕ", "ÎNDRUMARE DUHOVNICEASCĂ")}</p>
-          <h1 className="font-serif text-4xl md:text-6xl text-white font-light leading-tight drop-shadow-lg">
-            {t("Диалог со священником", "Dialog cu preotul")}
-          </h1>
-        </div>
+      <section className="max-w-5xl mx-auto px-6 pt-12 md:pt-12 pb-2">
+        <p className="overline mb-5">{t("ДУХОВНОЕ СОПРОВОЖДЕНИЕ", "ÎNDRUMARE DUHOVNICEASCĂ")}</p>
+        <h1 className="font-serif text-3xl md:text-6xl font-light text-foreground leading-tight break-words">
+          {t("Диалог со священником", "Dialog cu preotul")}
+        </h1>
       </section>
 
       {priests.length > 0 && (

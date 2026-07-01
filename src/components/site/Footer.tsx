@@ -68,14 +68,8 @@ export function Footer() {
               {t(`По благословению ${BLESSING_BY}`, `Cu binecuvântarea ${BLESSING_BY}`)}
             </p>
           )}
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {t(
-              "Лицензия: Министерство культуры Республики Молдова",
-              "Licență: Ministerul Culturii al Republicii Moldova"
-            )}
-          </p>
           <p className="text-sm text-muted-foreground mt-4">© 2026 Eldorado Tur SRL</p>
-          <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
+          <div className="mt-4 flex gap-4 text-sm text-muted-foreground">
             <Link to={localize("/privacy") as "/privacy"} className="hover:text-foreground">{t("Конфиденциальность", "Confidențialitate")}</Link>
           </div>
         </div>
