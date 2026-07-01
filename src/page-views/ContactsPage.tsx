@@ -5,7 +5,6 @@ import { PageShell } from "@/components/site/PageShell";
 import { MessageCircle } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { createLead } from "@/lib/leads.functions";
-import heroImg from "@/assets/hero-contacts.jpg";
 import { VoiceInput } from "@/components/voice/VoiceInput";
 
 export function Component() {
@@ -16,15 +15,11 @@ export function Component() {
   const submit = useServerFn(createLead);
   return (
     <PageShell>
-      <section className="relative h-[46vh] md:h-[62vh] min-h-[370px] flex items-end overflow-hidden">
-        <img src={heroImg} alt={t("Православный храм в Кишинёве", "Biserică ortodoxă în Chișinău")} className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/75" />
-        <div className="relative z-10 max-w-5xl mx-auto px-6 pb-10 md:pb-14 w-full">
-          <p className="overline text-white/90 mb-3">{t("СВЯЗАТЬСЯ С НАМИ", "CONTACTAȚI-NE")}</p>
-          <h1 className="font-serif text-4xl md:text-6xl text-white font-light leading-tight drop-shadow-lg">
-            {t("Контакты", "Contacte")}
-          </h1>
-        </div>
+      <section className="max-w-6xl mx-auto px-6 pt-12 md:pt-12 pb-2">
+        <p className="overline mb-5">{t("СВЯЗАТЬСЯ С НАМИ", "CONTACTAȚI-NE")}</p>
+        <h1 className="font-serif text-3xl md:text-6xl font-light text-foreground leading-tight break-words">
+          {t("Контакты", "Contacte")}
+        </h1>
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-10 md:py-10">
