@@ -1,5 +1,4 @@
 import { defineTool } from "@lovable.dev/mcp-js";
-import { z } from "zod";
 import { listPilgrimages } from "@/lib/pilgrimages.functions";
 
 export default defineTool({
@@ -17,6 +16,3 @@ export default defineTool({
     };
   },
 });
-
-// keep z import used for future validation extension
-void z;
