@@ -97,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Паломник",
-          url: "https://path-with-care.lovable.app",
+          url: "https://palomnik.md",
           description: "Православные паломнические поездки из Кишинёва.",
           parentOrganization: { "@type": "Organization", name: "SRL Eldorado Tur" },
           address: {
@@ -115,7 +115,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Паломник",
-          url: "https://path-with-care.lovable.app",
+          url: "https://palomnik.md",
         }),
       },
     ],

@@ -44,7 +44,7 @@ let _capabilityCache: { value: { available: boolean }; expires: number } | undef
 export const getVoiceCapability = createServerFn({ method: "GET" }).handler(async () => {
   const now = Date.now();
   if (_capabilityCache && _capabilityCache.expires > now) return _capabilityCache.value;
-  const hasKey = !!process.env.LOVABLE_API_KEY;
+  const hasKey = !!process.env.OPENAI_API_KEY;
   const available = voiceFeaturesEnabled() && hasKey;
   const value = { available };
   _capabilityCache = { value, expires: now + 60_000 };
@@ -95,7 +95,7 @@ async function callProviderTranscribe(
   filename: string,
   requestedLang: "ru" | "ro" | null,
 ): Promise<{ text: string; lang: "ru" | "ro" | null }> {
-  const apiKey = process.env.LOVABLE_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("voice_unavailable");
 
   const upstream = new FormData();
@@ -104,8 +104,8 @@ async function callProviderTranscribe(
   // for Romanian only; Russian works perfectly on mini and stays cheaper.
   const model =
     requestedLang === "ro"
-      ? "openai/gpt-4o-transcribe"
-      : "openai/gpt-4o-mini-transcribe";
+      ? "gpt-4o-transcribe"
+      : "gpt-4o-mini-transcribe";
   upstream.append("model", model);
   upstream.append("file", audio, filename);
   if (requestedLang) {
@@ -123,7 +123,7 @@ async function callProviderTranscribe(
   }
   // Non-streaming JSON keeps things simple and returns usage for billing.
 
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/transcriptions", {
+  const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}` },
     body: upstream,
@@ -164,7 +164,7 @@ export const transcribeAudio = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data }) => {
-    if (!voiceFeaturesEnabled() || !process.env.LOVABLE_API_KEY) {
+    if (!voiceFeaturesEnabled() || !process.env.OPENAI_API_KEY) {
       throw new Error("voice_unavailable");
     }
 

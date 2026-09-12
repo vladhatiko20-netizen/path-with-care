@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { listPublicDestinations } from "@/lib/destinations.functions";
 import { listBlogPosts } from "@/lib/blog.functions";
 
-const BASE_URL = "https://path-with-care.lovable.app";
+const BASE_URL = "https://palomnik.md";
 
 interface SitemapEntry {
   path: string;
