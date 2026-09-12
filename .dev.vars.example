@@ -1,0 +1,7 @@
+# Секреты для локального wrangler dev и для `wrangler secret put` в проде.
+# Скопировать в .dev.vars (в .gitignore) и заполнить. Значения НЕ коммитить.
+SUPABASE_URL="https://caaykkqunibcwzbdqsjm.supabase.co"
+SUPABASE_PUBLISHABLE_KEY="<anon key, тот же что в .env>"
+SUPABASE_SERVICE_ROLE_KEY="<service_role key: Supabase → Project Settings → API Keys>"
+OPENAI_API_KEY="<sk-... ключ OpenAI для голосовых вопросов>"
+VOICE_FEATURES_ENABLED="true"
