@@ -14,7 +14,6 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoRouteImport } from './routes/ro'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
-import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as CatalogRouteImport } from './routes/catalog'
@@ -35,15 +34,12 @@ import { Route as RoBlogRouteImport } from './routes/ro.blog'
 import { Route as RoAboutRouteImport } from './routes/ro.about'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
-import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as RoDestinationsIndexRouteImport } from './routes/ro.destinations.index'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin/admin.index'
 import { Route as RoDestinationsSlugRouteImport } from './routes/ro.destinations.$slug'
 import { Route as RoBlogSlugRouteImport } from './routes/ro.blog_.$slug'
 import { Route as AdminAdminBackupRouteImport } from './routes/_admin/admin.backup'
 import { Route as AdminAdminAboutRouteImport } from './routes/_admin/admin.about'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AdminAdminPriestFaqIndexRouteImport } from './routes/_admin/admin.priest-faq.index'
 import { Route as AdminAdminPilgrimagesIndexRouteImport } from './routes/_admin/admin.pilgrimages.index'
 import { Route as AdminAdminLeadsIndexRouteImport } from './routes/_admin/admin.leads.index'
@@ -91,11 +87,6 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const OrthodoxCalendarRoute = OrthodoxCalendarRouteImport.update({
   id: '/orthodox-calendar',
   path: '/orthodox-calendar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -197,18 +188,6 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const RoDestinationsIndexRoute = RoDestinationsIndexRouteImport.update({
   id: '/destinations/',
   path: '/destinations/',
@@ -239,12 +218,6 @@ const AdminAdminAboutRoute = AdminAdminAboutRouteImport.update({
   path: '/admin/about',
   getParentRoute: () => AdminRoute,
 } as any)
-const Char91DotmcpChar93InvokeToolToolRoute =
-  Char91DotmcpChar93InvokeToolToolRouteImport.update({
-    id: '/.mcp/invoke-tool/$tool',
-    path: '/.mcp/invoke-tool/$tool',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AdminAdminPriestFaqIndexRoute =
   AdminAdminPriestFaqIndexRouteImport.update({
     id: '/admin/priest-faq/',
@@ -376,14 +349,11 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/login': typeof LoginRoute
-  '/mcp': typeof McpRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/ro': typeof RoRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
-  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/ro/about': typeof RoAboutRoute
@@ -396,7 +366,6 @@ export interface FileRoutesByFullPath {
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/about': typeof AdminAdminAboutRoute
   '/admin/backup': typeof AdminAdminBackupRoute
   '/ro/blog/$slug': typeof RoBlogSlugRoute
@@ -435,13 +404,10 @@ export interface FileRoutesByTo {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/login': typeof LoginRoute
-  '/mcp': typeof McpRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
-  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/ro/about': typeof RoAboutRoute
@@ -454,7 +420,6 @@ export interface FileRoutesByTo {
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations': typeof DestinationsIndexRoute
   '/ro': typeof RoIndexRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/about': typeof AdminAdminAboutRoute
   '/admin/backup': typeof AdminAdminBackupRoute
   '/ro/blog/$slug': typeof RoBlogSlugRoute
@@ -495,14 +460,11 @@ export interface FileRoutesById {
   '/catalog': typeof CatalogRoute
   '/contacts': typeof ContactsRoute
   '/login': typeof LoginRoute
-  '/mcp': typeof McpRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/ro': typeof RoRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
-  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
-  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog_/$slug': typeof BlogSlugRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/ro/about': typeof RoAboutRoute
@@ -515,7 +477,6 @@ export interface FileRoutesById {
   '/ro/with-priest': typeof RoWithPriestRoute
   '/destinations/': typeof DestinationsIndexRoute
   '/ro/': typeof RoIndexRoute
-  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_admin/admin/about': typeof AdminAdminAboutRoute
   '/_admin/admin/backup': typeof AdminAdminBackupRoute
   '/ro/blog_/$slug': typeof RoBlogSlugRoute
@@ -556,14 +517,11 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/login'
-    | '/mcp'
     | '/orthodox-calendar'
     | '/privacy'
     | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/.mcp/list-tools'
-    | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
     | '/destinations/$slug'
     | '/ro/about'
@@ -576,7 +534,6 @@ export interface FileRouteTypes {
     | '/ro/with-priest'
     | '/destinations/'
     | '/ro/'
-    | '/.mcp/invoke-tool/$tool'
     | '/admin/about'
     | '/admin/backup'
     | '/ro/blog/$slug'
@@ -615,13 +572,10 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/login'
-    | '/mcp'
     | '/orthodox-calendar'
     | '/privacy'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/.mcp/list-tools'
-    | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
     | '/destinations/$slug'
     | '/ro/about'
@@ -634,7 +588,6 @@ export interface FileRouteTypes {
     | '/ro/with-priest'
     | '/destinations'
     | '/ro'
-    | '/.mcp/invoke-tool/$tool'
     | '/admin/about'
     | '/admin/backup'
     | '/ro/blog/$slug'
@@ -674,14 +627,11 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/contacts'
     | '/login'
-    | '/mcp'
     | '/orthodox-calendar'
     | '/privacy'
     | '/ro'
     | '/sitemap.xml'
     | '/with-priest'
-    | '/.mcp/list-tools'
-    | '/.well-known/oauth-protected-resource'
     | '/blog_/$slug'
     | '/destinations/$slug'
     | '/ro/about'
@@ -694,7 +644,6 @@ export interface FileRouteTypes {
     | '/ro/with-priest'
     | '/destinations/'
     | '/ro/'
-    | '/.mcp/invoke-tool/$tool'
     | '/_admin/admin/about'
     | '/_admin/admin/backup'
     | '/ro/blog_/$slug'
@@ -735,18 +684,14 @@ export interface RootRouteChildren {
   CatalogRoute: typeof CatalogRoute
   ContactsRoute: typeof ContactsRoute
   LoginRoute: typeof LoginRoute
-  McpRoute: typeof McpRoute
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
   RoRoute: typeof RoRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
-  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
-  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BlogSlugRoute: typeof BlogSlugRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
   DestinationsIndexRoute: typeof DestinationsIndexRoute
-  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -784,13 +729,6 @@ declare module '@tanstack/react-router' {
       path: '/orthodox-calendar'
       fullPath: '/orthodox-calendar'
       preLoaderRoute: typeof OrthodoxCalendarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -933,20 +871,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/.mcp/list-tools': {
-      id: '/.mcp/list-tools'
-      path: '/.mcp/list-tools'
-      fullPath: '/.mcp/list-tools'
-      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/ro/destinations/': {
       id: '/ro/destinations/'
       path: '/destinations'
@@ -988,13 +912,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/about'
       preLoaderRoute: typeof AdminAdminAboutRouteImport
       parentRoute: typeof AdminRoute
-    }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_admin/admin/priest-faq/': {
       id: '/_admin/admin/priest-faq/'
@@ -1261,19 +1178,14 @@ const rootRouteChildren: RootRouteChildren = {
   CatalogRoute: CatalogRoute,
   ContactsRoute: ContactsRoute,
   LoginRoute: LoginRoute,
-  McpRoute: McpRoute,
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
   RoRoute: RoRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
-  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
-  Char91DotwellKnownChar93OauthProtectedResourceRoute:
-    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BlogSlugRoute: BlogSlugRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
   DestinationsIndexRoute: DestinationsIndexRoute,
-  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
