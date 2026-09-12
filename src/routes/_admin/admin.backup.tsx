@@ -140,7 +140,7 @@ function BackupPage() {
         Бэкап делается вручную: автоматических копий контента нет.
       </p>
       <p className="text-sm text-muted-foreground mb-2">
-        Скачанный архив храните вне Lovable – в Project Knowledge или на диске.
+        Скачанный архив храните отдельно от сайта: на диске или в облачном хранилище.
       </p>
       <p className="text-sm text-muted-foreground mb-6">
         Код сайта версионируется отдельно через Git; содержимое базы сохраняется
