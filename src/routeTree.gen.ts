@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WithPriestRouteImport } from './routes/with-priest'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RoRouteImport } from './routes/ro'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as OrthodoxCalendarRouteImport } from './routes/orthodox-calendar'
@@ -72,6 +73,11 @@ const WithPriestRoute = WithPriestRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoRoute = RoRouteImport.update({
@@ -352,6 +358,7 @@ export interface FileRoutesByFullPath {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/ro': typeof RoRouteWithChildren
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -406,6 +413,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -463,6 +471,7 @@ export interface FileRoutesById {
   '/orthodox-calendar': typeof OrthodoxCalendarRoute
   '/privacy': typeof PrivacyRoute
   '/ro': typeof RoRouteWithChildren
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/with-priest': typeof WithPriestRoute
   '/blog_/$slug': typeof BlogSlugRoute
@@ -520,6 +529,7 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/ro'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/orthodox-calendar'
     | '/privacy'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog/$slug'
@@ -630,6 +641,7 @@ export interface FileRouteTypes {
     | '/orthodox-calendar'
     | '/privacy'
     | '/ro'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/with-priest'
     | '/blog_/$slug'
@@ -687,6 +699,7 @@ export interface RootRouteChildren {
   OrthodoxCalendarRoute: typeof OrthodoxCalendarRoute
   PrivacyRoute: typeof PrivacyRoute
   RoRoute: typeof RoRouteWithChildren
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WithPriestRoute: typeof WithPriestRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -708,6 +721,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ro': {
@@ -1181,6 +1201,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrthodoxCalendarRoute: OrthodoxCalendarRoute,
   PrivacyRoute: PrivacyRoute,
   RoRoute: RoRouteWithChildren,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WithPriestRoute: WithPriestRoute,
   BlogSlugRoute: BlogSlugRoute,

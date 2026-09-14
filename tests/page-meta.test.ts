@@ -54,6 +54,7 @@ const EXCLUDED = new Set([
   "_admin.tsx",          // admin layout (admin pages are noindex/internal)
   "login.tsx",           // auth screen, internal
   "sitemap[.]xml.ts",    // server route, no head
+  "robots[.]txt.ts",     // server route, no head
 ]);
 
 function listPageRoutes(): string[] {
