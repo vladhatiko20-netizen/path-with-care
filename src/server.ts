@@ -90,6 +90,36 @@ function isAuthorized(request: Request, user: string, password: string): boolean
   return timingSafeEqual(decoded.slice(0, sep), user) && timingSafeEqual(decoded.slice(sep + 1), password);
 }
 
+// Cookie-пропуск: после успешного Basic Auth ставим cookie, потому что
+// запросы админки несут свой Authorization: Bearer (Supabase) и браузер
+// не может добавить в них Basic-пароль. Значение cookie = HMAC(пароль).
+const COOKIE = "palomnik_preview";
+let tokenCache: { password: string; token: string } | undefined;
+
+async function previewToken(password: string): Promise<string> {
+  if (tokenCache?.password === password) return tokenCache.token;
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode("palomnik-preview-v1"));
+  const token = Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  tokenCache = { password, token };
+  return token;
+}
+
+function cookieValue(request: Request, name: string): string | undefined {
+  const raw = request.headers.get("cookie") ?? "";
+  for (const part of raw.split(";")) {
+    const [k, ...v] = part.trim().split("=");
+    if (k === name) return v.join("=");
+  }
+  return undefined;
+}
+
+function withCookie(response: Response, token: string): Response {
+  const headers = new Headers(response.headers);
+  headers.append("set-cookie", `${COOKIE}=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`);
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function gateResponse(): Response {
   return new Response(
     "<!doctype html><meta charset=utf-8><title>Паломник</title>" +
@@ -117,6 +147,7 @@ export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     const gate = (env ?? {}) as GateEnv;
     const password = (gate.SITE_PASSWORD ?? process.env.SITE_PASSWORD)?.trim();
+    let setCookieToken: string | undefined;
     if (password) {
       const url = new URL(request.url);
       if (url.pathname === "/robots.txt") {
@@ -124,15 +155,22 @@ export default {
           headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": "noindex, nofollow", "cache-control": "no-store" },
         });
       }
-      if (!isAuthorized(request, (gate.SITE_USER ?? process.env.SITE_USER)?.trim() || "palomnik", password)) {
-        return gateResponse();
+      const token = await previewToken(password);
+      const hasCookie = cookieValue(request, COOKIE) === token;
+      if (!hasCookie) {
+        if (!isAuthorized(request, (gate.SITE_USER ?? process.env.SITE_USER)?.trim() || "palomnik", password)) {
+          return gateResponse();
+        }
+        setCookieToken = token;
       }
     }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       const normalized = await normalizeCatastrophicSsrResponse(response);
-      return password ? withNoIndex(normalized) : normalized;
+      if (!password) return normalized;
+      const noIndex = withNoIndex(normalized);
+      return setCookieToken ? withCookie(noIndex, setCookieToken) : noIndex;
     } catch (error) {
       console.error(error);
       return brandedErrorResponse();
